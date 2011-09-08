@@ -96,7 +96,6 @@ class Conferencer_CustomPostType {
 	
 	function columns($columns) {
 		unset($columns['date']);
-		$columns['conferencer_'.$this->slug.'_order'] = "Order";
 		return $columns;
 	}
 	
@@ -104,10 +103,6 @@ class Conferencer_CustomPostType {
 		global $post;
 				
 		switch (str_replace('conferencer_'.$this->slug.'_', '', $column)) {
-			case 'order':
-				echo get_post_meta($post->ID, 'conferencer_order', true);
-				break;
-				
 			case 'session_count':
 				$session_query = new WP_Query(array(
 					'post_type' => 'session',
