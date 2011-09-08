@@ -117,7 +117,6 @@ class Conferencer {
 		);
 		
 		$cpts = array(
-			'company' => "Companies",
 			'speaker' => "Speakers",
 			'track' => "Tracks",
 			'room' => "Rooms",

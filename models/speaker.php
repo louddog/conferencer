@@ -30,9 +30,8 @@ class Conferencer_Speaker extends Conferencer_CustomPostType {
 				'label' => "Title",
 			),
 			'company' => array(
-				'type' => 'select',
+				'type' => 'text',
 				'label' => "Company",
-				'options' => $company_options,
 			),
 		));
 	}
