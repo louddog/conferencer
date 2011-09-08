@@ -7,11 +7,9 @@ Version: 1.0
 Author URI: http://conferencer.louddog.com/
 */
 
-// TODO: remove companies, instead use textbox in speaker
 // TODO: allow sponsored sessions
 // TODO: move admin sidebar post types links to top level
 // TODO: fix relationship diagram
-// TODO: restructure repo to only include plugin dir
 
 if (!function_exists('debug')) {
 	function debug($var) {
