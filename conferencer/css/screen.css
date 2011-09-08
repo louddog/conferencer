@@ -1,0 +1,12 @@
+.widget_conferencer_sponsors_widget .sponsors {
+	position: relative;
+}
+
+.widget_conferencer_sponsors_widget .sponsor {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	width: 100%;
+	text-align: center;
+}

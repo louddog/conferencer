@@ -1,0 +1,21 @@
+fieldset#conference_options table { width: 98%; }
+
+fieldset#conference_options td.label { white-space: nowrap; }
+
+fieldset#conference_options td.input { width: 100%; }
+fieldset#conference_options input.text { width: 100%; }
+fieldset#conference_options input.int { width: 40px; }
+fieldset#conference_options input.money { width: 70px; }
+
+#conferencer_settings .levels td {
+	padding: 2px 5px;
+	border: 1px solid #EEE;
+	background-color: #F7F7F7;
+	white-space: nowrap;
+	color: #333;
+	font-weight: normal;
+}
+
+#conferencer_settings .levels {
+	margin-bottom: 20px;
+}
