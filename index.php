@@ -108,7 +108,7 @@ class Conferencer {
 	        'edit_posts',
 	        'conferencer',
 	        array(&$this, 'overview'),
-	        CONFERENCER_URL.'images/calendar-month.png',
+	        false,
 	        41
 		);
 		

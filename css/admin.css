@@ -1,3 +1,52 @@
+/* Admin menu icons */
+
+#toplevel_page_conferencer .wp-menu-image img { display: none; }
+
+#toplevel_page_conferencer .wp-menu-image,
+#menu-posts-session .wp-menu-image,
+#menu-posts-speaker .wp-menu-image,
+#menu-posts-room .wp-menu-image,
+#menu-posts-time_slot .wp-menu-image,
+#menu-posts-track .wp-menu-image,
+#menu-posts-sponsor .wp-menu-image,
+#menu-posts-sponsor_level .wp-menu-image {
+	background: url(images/admin-icons.png) no-repeat left top !important;
+}
+
+#toplevel_page_conferencer .wp-menu-image { background-position: 0px -18px !important; }
+#toplevel_page_conferencer:hover .wp-menu-image,
+#toplevel_page_conferencer.wp-has-current-submenu .wp-menu-image { background-position: 0px 6px !important; }
+
+#menu-posts-session .wp-menu-image { background-position: -28px -18px !important; }
+#menu-posts-session:hover .wp-menu-image,
+#menu-posts-session.wp-has-current-submenu .wp-menu-image { background-position: -28px 6px !important; }
+
+#menu-posts-speaker .wp-menu-image { background-position: -56px -18px !important; }
+#menu-posts-speaker:hover .wp-menu-image,
+#menu-posts-speaker.wp-has-current-submenu .wp-menu-image {	background-position: -56px 6px !important; }
+
+#menu-posts-room .wp-menu-image { background-position: -84px -18px !important; }
+#menu-posts-room:hover .wp-menu-image,
+#menu-posts-room.wp-has-current-submenu .wp-menu-image {	background-position: -84px 6px !important; }
+
+#menu-posts-time_slot .wp-menu-image { background-position: -112px -18px !important; }
+#menu-posts-time_slot:hover .wp-menu-image,
+#menu-posts-time_slot.wp-has-current-submenu .wp-menu-image {	background-position: -112px 6px !important; }
+
+#menu-posts-track .wp-menu-image { background-position: -140px -18px !important; }
+#menu-posts-track:hover .wp-menu-image,
+#menu-posts-track.wp-has-current-submenu .wp-menu-image {	background-position: -140px 6px !important; }
+
+#menu-posts-sponsor .wp-menu-image { background-position: -168px -18px !important; }
+#menu-posts-sponsor:hover .wp-menu-image,
+#menu-posts-sponsor.wp-has-current-submenu .wp-menu-image {	background-position: -168px 6px !important; }
+
+#menu-posts-sponsor_level .wp-menu-image { background-position: -196px -18px !important; }
+#menu-posts-sponsor_level:hover .wp-menu-image,
+#menu-posts-sponsor_level.wp-has-current-submenu .wp-menu-image {	background-position: -196px 6px !important; }
+
+/* Post edit page options */
+
 fieldset#conference_options table { width: 98%; }
 
 fieldset#conference_options td.label { white-space: nowrap; }
@@ -6,6 +55,8 @@ fieldset#conference_options td.input { width: 100%; }
 fieldset#conference_options input.text { width: 100%; }
 fieldset#conference_options input.int { width: 40px; }
 fieldset#conference_options input.money { width: 70px; }
+
+/* Settings page */
 
 #conferencer_settings .levels td {
 	padding: 2px 5px;
