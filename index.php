@@ -7,9 +7,7 @@ Version: 1.0
 Author URI: http://conferencer.louddog.com/
 */
 
-// TODO: allow sponsored sessions
-// TODO: move admin sidebar post types links to top level
-// TODO: fix relationship diagram
+// TODO: make admin menu positions more robust (both items and separator)
 
 if (!function_exists('debug')) {
 	function debug($var) {
@@ -111,28 +109,8 @@ class Conferencer {
 	        'conferencer',
 	        array(&$this, 'overview'),
 	        CONFERENCER_URL.'images/calendar-month.png',
-	        50
+	        41
 		);
-		
-		$cpts = array(
-			'speaker' => "Speakers",
-			'track' => "Tracks",
-			'room' => "Rooms",
-			'time_slot' => "Time Slots",
-			'session' => "Sessions",
-			'sponsor' => "Sponsors",
-			'sponsor_level' => "Sponsor Levels",
-		);
-		
-		foreach ($cpts as $slug => $title) {
-			add_submenu_page(
-				'conferencer',
-				$title,
-				$title,
-				'edit_posts',
-				'edit.php?post_type='.$slug
-			);
-		}
 		
 		add_submenu_page(
 			'conferencer',
@@ -142,6 +120,8 @@ class Conferencer {
 			'conferencer_settings',
 			array(&$this, 'settings')
 		);
+		
+		$GLOBALS['menu'][40] = array('', 'read', 'separator-2', '', 'wp-menu-separator');
 	}
 	
 	static $priority_post_types = array(

@@ -2,7 +2,7 @@
 
 class Conferencer_CustomPostType {
 	var $slug = 'custom_post_type';
-	var $archive_slug = 'custom_post_types';
+	var $archive_slug = false; // use pluralized string if you want an archive page
 	var $singular = "Item";
 	var $plural = "Items";
 	
@@ -36,14 +36,12 @@ class Conferencer_CustomPostType {
 				'search_items' => "Search $this->plural",
 				'not_found' => "No $this->plural found",
 				'not_found_in_trash' => "No $this->plural found in Trash",
-				'menu_name' => $this->plural,
 			),
 			'public' => true,
-			'show_ui' => true,
-			'show_in_menu' => false,
+			'menu_position' => 42,
 			'capability_type' => 'post',
 			'hierarchical' => false,
-			'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'custom-fields'),
+			'supports' => array('title', 'editor', 'excerpt', 'thumbnail', 'custom-fields', 'comments', 'revisions'),
 			'has_archive' => $this->archive_slug,
 			'rewrite' => array(
 				'slug' => $this->archive_slug,
