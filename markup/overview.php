@@ -1,7 +1,7 @@
 <h2>Conferencer</h2>
 
 <p>Welcome to the Conferencer Wordpress Plugin.  This plugin will give you the tools you will need to create, manage, and display your conference information.  This diagram shows the different types of information that will define your conference and how they are related to each other.</p>
-<p>Each <strong>session</strong> in your conference is assigned a <strong>room</strong>, a <strong>time slot</strong>, a <strong>track</strong>, and <strong>speakers</strong>.  Each <strong>speaker</strong> will be assigned to a <strong>company</strong>.  In addition, you're conference can have <strong>sponsors</strong>, which can be assigned to different <strong>sponsor levels</strong>.  Notice that the diagram shows these "one-to-many" relationships.  Each track will have any number of sessions.  Each company will have any number of speakers.</p>
+<p>Each <strong>session</strong> in your conference is assigned a <strong>room</strong>, a <strong>time slot</strong>, <strong>tracks</strong>, <strong>speakers</strong>, and <strong>sponsors</strong>.  Sponsors are assigned to different <strong>sponsor levels</strong>.  Notice that the diagram shows these "one-to-many" relationships.  Each room will have any number of sessions.  Each sponsor level will have any number of sponsors.  Notice that some "to-many" relationships go both ways.  A session can have any number of speakers, and a speaker can be assigned to any number of sessions.</p>
 
 <img src="<?php echo CONFERENCER_URL; ?>/images/relationship-diagram.gif" alt="relationship diaram" />
 
