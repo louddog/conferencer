@@ -15,6 +15,11 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				'type' => 'boolean',
 				'label' => "Keynote",
 			),
+			'room' => array(
+				'type' => 'select',
+				'label' => "Room",
+				'options' => array(), // set below
+			),
 			'time_slot' => array(
 				'type' => 'select',
 				'label' => "Time Slot",
@@ -30,16 +35,20 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				'label' => "Speakers",
 				'options' => array(), // set below
 			),
-			'room' => array(
-				'type' => 'select',
-				'label' => "Room",
+			'sponsors' => array(
+				'type' => 'multi-select',
+				'label' => "Sponsors",
 				'options' => array(), // set below
 			),
 		));
 
 		foreach ($this->options as $key => $option) {
+			$post_type = $key;
+			if ($post_type == 'speakers') $post_type = 'speaker';
+			if ($post_type == 'sponsors') $post_type = 'sponsor';
+			
 			$query = new WP_Query(array(
-				'post_type' => $key == 'speakers' ? 'speaker' : $key,
+				'post_type' => $post_type,
 				'posts_per_page' => -1, // show all
 				'orderby' => 'title',
 				'order' => 'ASC',
@@ -70,22 +79,27 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 		parent::detail_trash($post_id);
 		
 		$post = get_post($post_id);
+		$types = array(
+			'speaker' => 'conferencer_speakers',
+			'sponsor' => 'conferencer_sponsors',
+		);
 		
-		if ($post->post_type == 'speaker') {
+		if (array_key_exists($post->post_type, $types)) {
 			$query = new WP_Query(array(
 				'post_type' => 'session',
 				'posts_per_page' => -1, // get all
 			));
 			
 			foreach ($query->posts as $session) {
-				$IDs = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
-				$newIDs = array();
-				if (is_array($IDs)) {
-					foreach ($IDs as $ID) {
-						if ($ID != $post_id) $newIDs[] = $ID;
+				foreach ($types as $type => $option) {				
+					$oldIDs = unserialize(get_post_meta($session->ID, $option, true));
+					$newIDs = array();
+				
+					if (is_array($oldIDs)) {
+						foreach ($oldIDs as $oldID) if ($oldID != $post_id) $newIDs[] = $oldID;
+						update_post_meta($session->ID, $option, serialize($newIDs));
+						if (count($oldIDs) != count($newIDs)) Conferencer::add_admin_message("Removed this $type from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.");
 					}
-					update_post_meta($session->ID, 'conferencer_speakers', serialize($newIDs));
-					if (count($IDs) != count($newIDs)) ConferenceScheduler::add_admin_message("Removed this speaker from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.");
 				}
 			}
 		}
@@ -118,6 +132,7 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 		$columns['conferencer_session_track'] = "Track";
 		$columns['conferencer_session_room'] = "Room";
 		$columns['conferencer_session_time_slot'] = "Time Slot";
+		$columns['conferencer_session_sponsors'] = "Sponsors";
 		return $columns;
 	}
 	
@@ -150,6 +165,26 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				}
 				
 				echo implode(', ', $speakerLinks);
+				break;
+			case 'sponsors':
+				$sponsor_ids = unserialize(get_post_meta($post->ID, 'conferencer_sponsors', true));
+				if (!$sponsor_ids) $sponsor_ids = array();
+			
+				$sponsor_query = new WP_Query(array(
+					'post_type' => 'sponsor',
+					'post_per_page' => -1, // get all
+				));
+				
+				$sponsorLinks = array();
+				foreach ($sponsor_query->posts as $sponsor) {
+					if (!in_array($sponsor->ID, $sponsor_ids)) continue;
+					$sponsorLinks[] =
+						"<a href='post.php?action=edit&post=$sponsor->ID'>".
+						str_replace(' ', '&nbsp;', $sponsor->post_title).
+						"</a>";
+				}
+				
+				echo implode(', ', $sponsorLinks);
 				break;
 			case 'track':
 				if ($id = intVal(get_post_meta($post->ID, 'conferencer_track', true))) {
