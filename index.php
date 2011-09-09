@@ -37,7 +37,15 @@ class Conferencer {
 	
 	function include_files() {
 		include CONFERENCER_PATH.'/custom_post_type.php';
-		foreach (array('models', 'widgets', 'shortcodes') as $dir) {
+		include CONFERENCER_PATH.'/models/session.php';
+		include CONFERENCER_PATH.'/models/speaker.php';
+		include CONFERENCER_PATH.'/models/room.php';
+		include CONFERENCER_PATH.'/models/time_slot.php';
+		include CONFERENCER_PATH.'/models/track.php';
+		include CONFERENCER_PATH.'/models/sponsor.php';
+		include CONFERENCER_PATH.'/models/sponsor_level.php';
+		
+		foreach (array('widgets', 'shortcodes') as $dir) {
 			$d = dir(CONFERENCER_PATH."/$dir");
 			while ($file = $d->read()) {
 				if (in_array($file, array('.', '..'))) continue;
