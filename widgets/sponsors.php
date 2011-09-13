@@ -132,34 +132,43 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 			$image_sizes = get_option('conferencer_sponsors_widget_image_sizes', array());
 		?>
 		
-		<label>Logo sizes:</label>
-		<table>
-			<tr>
-				<th>level</th>
-				<th>width</th>
-				<th>height</th>
-			</tr>
-			<?php foreach ($levels as $level) { ?>
+		<?php if (count($levels)) { ?>
+		
+			<label>Logo sizes:</label>
+			<table>
 				<tr>
-					<td><?php echo $level->post_title; ?></td>
-					<td>
-						<input
-							type="text"
-							size="4"
-							name="width[<?php echo $level->ID; ?>]"
-							value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['width']; ?>"
-						/>
-					</td>
-					<td>
-						<input
-							type="text"
-							size="4"
-							name="height[<?php echo $level->ID; ?>]"
-							value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['height']; ?>"
-						/>
-					</td>
+					<th>level</th>
+					<th>width</th>
+					<th>height</th>
 				</tr>
-			<?php } ?>
-		</table>
+				<?php foreach ($levels as $level) { ?>
+					<tr>
+						<td><?php echo $level->post_title; ?></td>
+						<td>
+							<input
+								type="text"
+								size="4"
+								name="width[<?php echo $level->ID; ?>]"
+								value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['width']; ?>"
+							/>
+						</td>
+						<td>
+							<input
+								type="text"
+								size="4"
+								name="height[<?php echo $level->ID; ?>]"
+								value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['height']; ?>"
+							/>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		
+		<?php } else { ?>
+			
+			<p>Once you define some sponsor levels, you can set their logo size for this widget here.</p>
+			
+		<?php } ?>
+		
 	<?php }
 }
