@@ -9,7 +9,7 @@
 
 <p>Each type of information will have an archive page.  For example, you're site will have a page listing all the rooms for your conference.</p>
 
-<p>The plugin also creates widgets for use in your site's sidebar.  For example, you'll find a sponsor slideshow widget on <a href="widgets.php">widgets page</a>, ready to drop into your site.</p>
+<p>The plugin also creates widgets for use in your site's sidebar.  For example, you'll find a sponsor slideshow widget on <a href="<?php echo admin_url('widgets.php'); ?>">widgets page</a>, ready to drop into your site.</p>
 
 <h3>Where do I start?</h3>
-<p>Likely you have a lot of data input ahead of you.  You can start anywhere you like, by creating an entry for one of the conference data types.  How about creating a <a href="post-new.php?post_type=session">session</a> now?</p>
+<p>Likely you have a lot of data input ahead of you.  You can start anywhere you like, by creating an entry for one of the conference data types.  How about creating a <a href="<?php echo admin_url('post-new.php?post_type=session'); ?>">session</a> now?</p>

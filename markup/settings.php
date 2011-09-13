@@ -37,7 +37,7 @@
 
 										<td><?php echo $post->post_title; ?></td>
 
-										<td><a href="post.php?action=edit&post=<?php echo $post->ID; ?>">edit</a></td>
+										<td><a href="<?php echo admin_url('post.php?action=edit&post='.$post->ID); ?>">edit</a></td>
 									</tr>
 								<?php } ?>
 							</tbody>
