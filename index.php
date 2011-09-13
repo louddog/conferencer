@@ -7,8 +7,6 @@ Version: 1.0
 Author URI: http://conferencer.louddog.com/
 */
 
-// TODO: make admin menu positions more robust (both items and separator)
-
 if (!function_exists('debug')) {
 	function debug($var) {
 		echo "<pre style='background-color: #EEE; padding: 5px;'>";
@@ -22,30 +20,34 @@ session_start();
 define('CONFERENCER_PATH', dirname(__FILE__));
 define('CONFERENCER_URL', plugin_dir_url(__FILE__));
 
+include CONFERENCER_PATH.'/functions.php';
+
 new Conferencer();
 class Conferencer {
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
-		include CONFERENCER_PATH.'/functions.php';
-		$this->include_files();
 		add_action('init', array(&$this, 'styles_and_scriptst'));
-		add_action('admin_init', array(&$this, 'save_settings'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 		register_activation_hook(__FILE__, array(&$this, 'activate'));
 		add_theme_support('post-thumbnails');
+		$this->include_files();
 	}
 	
 	function include_files() {
-		include CONFERENCER_PATH.'/custom_post_type.php';
-		include CONFERENCER_PATH.'/models/session.php';
-		include CONFERENCER_PATH.'/models/speaker.php';
-		include CONFERENCER_PATH.'/models/room.php';
-		include CONFERENCER_PATH.'/models/time_slot.php';
-		include CONFERENCER_PATH.'/models/track.php';
-		include CONFERENCER_PATH.'/models/sponsor.php';
-		include CONFERENCER_PATH.'/models/sponsor_level.php';
+		$includes = array(
+			'/custom_post_type.php',
+			'/models/session.php',
+			'/models/speaker.php',
+			'/models/room.php',
+			'/models/time_slot.php',
+			'/models/track.php',
+			'/models/sponsor.php',
+			'/models/sponsor_level.php',
+		);
 		
-		foreach (array('widgets', 'shortcodes') as $dir) {
+		foreach ($includes as $include) include CONFERENCER_PATH.$include;
+		
+		foreach (array('settings', 'widgets', 'shortcodes') as $dir) {
 			$d = dir(CONFERENCER_PATH."/$dir");
 			while ($file = $d->read()) {
 				if (in_array($file, array('.', '..'))) continue;
@@ -120,50 +122,13 @@ class Conferencer {
 	        41
 		);
 		
-		add_submenu_page(
-			'conferencer',
-			"Settings",
-			"Settings",
-			'edit_posts',
-			'conferencer_settings',
-			array(&$this, 'settings')
-		);
-		
 		$GLOBALS['menu'][40] = array('', 'read', 'separator-2', '', 'wp-menu-separator');
 	}
-	
-	static $priority_post_types = array(
-		'track' => "Tracks",
-		'room' => "Rooms",
-		'speaker' => "Speakers",
-		'sponsor' => "Sponsors",
-		'sponsor_level' => "Sponsor Levels",
-		'company' => "Companies",
-	);
 	
 	function overview() {
 		include CONFERENCER_PATH.'/markup/overview.php';
 	}
 	
-	function settings() {
-		if (!current_user_can('edit_posts')) wp_die("You do not have sufficient permissions to access this page.");
-		include CONFERENCER_PATH.'/markup/settings.php';
-	}
-	
-	function save_settings() {
-		if (isset($_POST['conferencer_sponsor_level_id'])) {
-			foreach (self::$priority_post_types as $slug => $heading) {
-				foreach ($_POST['conferencer_'.$slug.'_id'] as $order => $id) {
-					update_post_meta(intVal($id), 'conferencer_order', $order);
-				}
-			}
-
-			Conferencer::add_admin_message("Settings Saved");
-			header("Location: ".$_SERVER['REQUEST_URI']);
-			die;
-		}
-	}
-
 	function admin_notices() {
 		if (is_array($_SESSION['conferencer-notices'])) {
 			echo '<div class="updated"><p>'.implode('</p><p>', $_SESSION['conferencer-notices']).'</p></div>';
