@@ -26,30 +26,17 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 		global $wp_query;
 		
 		extract($args);
-
-		$level_query = new WP_Query(array(
-			'post_type' => 'sponsor_level',
-			'posts_per_page' => -1, // get all
-		));
 		
-		$sponsor_query = new WP_Query(array(
-			'post_type' => 'sponsor',
-			'posts_per_page' => -1, // get all
-		));
-		
-		$levels = array();
-		foreach ($level_query->posts as $level) {
-			$level->sponsors = array();
-			$levels[$level->ID] = $level;
+		$levels = Conferencer::get_list('sponsor_level');
+		foreach ($levels as $id => $level) {
+			$levels[$id]->sponsors = array();
 		}
 		
-		uasort($levels, array('Conferencer', 'order_sort'));
-		
-		foreach ($sponsor_query->posts as $sponsor) {
-			$level_id = get_post_meta($sponsor->ID, 'sponsor_level', true);
+		foreach (Conferencer::get_list('sponsor') as $sponsor) {
+			$level_id = get_post_meta($sponsor->ID, 'conferencer_level', true);
 			$levels[$level_id]->sponsors[$sponsor->ID] = $sponsor;
 		}
-		
+
 		foreach ($levels as $id => $level) {
 			shuffle($levels[$id]->sponsors);
 		}
@@ -62,28 +49,37 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 		);
 
 		echo $before_widget.$before_title.$title.$after_title;
-		if (count($sponsor_query->posts)) foreach ($levels as $level) { ?>
-			<div class="sponsor_level sponsor_<?php echo $level->post_name; ?>">
-				<h4><?php echo $level->post_title; ?></h4>
-				<div class="sponsors">
-					<?php foreach ($level->sponsors as $sponsor) { ?>
-						<a class="sponsor" href="<?php echo get_post_meta($sponsor->ID, 'sponsor_url', true); ?>" target="_blank">
-							<?php
-								if (has_post_thumbnail($sponsor->ID)) {
-									echo get_the_post_thumbnail(
-										$sponsor->ID,
-										'sponsors_widget_'.get_post_meta($sponsor->ID, 'sponsor_level', true),
-										array(
-											'alt' => $sponsor->post_title,
-											'title' => $sponsor->post_title,
-										)
-									);
-								} else echo $sponsor->post_title;
-							?>
-						</a>
-					<?php } ?>
+		foreach ($levels as $level) { ?>
+			<?php if (count($level->sponsors)) { ?>
+				<div class="sponsor_level sponsor_<?php echo $level->post_name; ?>">
+					<h4><?php echo $level->post_title; ?></h4>
+					<div class="sponsors">
+						<?php foreach ($level->sponsors as $sponsor) { ?>
+							<div class="sponsor">
+								<?php $url = get_post_meta($sponsor->ID, 'conferencer_url', true); ?>
+								<?php if (!empty($url)) { ?>
+									<a class="sponsor" href="<?php echo $url; ?>" target="_blank">
+								<?php } ?>
+									<?php
+										if (has_post_thumbnail($sponsor->ID)) {
+											echo get_the_post_thumbnail(
+												$sponsor->ID,
+												'sponsors_widget_'.get_post_meta($sponsor->ID, 'conferencer_level', true),
+												array(
+													'alt' => $sponsor->post_title,
+													'title' => $sponsor->post_title,
+												)
+											);
+										} else echo $sponsor->post_title;
+									?>
+								<?php if (!empty($url)) { ?>
+									</a>
+								<?php } ?>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
-			</div>
+			<?php } ?>
 		<?php } // foreach
 		
 		echo $after_widget;
@@ -92,8 +88,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
-		
-		
+
 		$image_sizes = array();
 		if (is_array($_POST['width'])) {
 			foreach ($_POST['width'] as $id => $width) {
