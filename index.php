@@ -173,8 +173,8 @@ class Conferencer {
 	}
 	
 	function order_sort($a, $b) {
-		$aOrder = get_post_meta($a->ID, $a->post_type.'_order', true);
-		$bOrder = get_post_meta($b->ID, $b->post_type.'_order', true);
+		$aOrder = get_post_meta($a->ID, 'conferencer_order', true);
+		$bOrder = get_post_meta($b->ID, 'conferencer_order', true);
 		
 		if ($aOrder == $bOrder) return 0;
 		return $aOrder < $bOrder ? -1 : 1;
@@ -186,8 +186,8 @@ class Conferencer {
 	}
 	
 	function start_time_sort($a, $b) {
-		$aOrder = get_post_meta($a->ID, $a->post_type.'_starts', true);
-		$bOrder = get_post_meta($b->ID, $b->post_type.'_starts', true);
+		$aOrder = get_post_meta($a->ID, 'conferencer_starts', true);
+		$bOrder = get_post_meta($b->ID, 'conferencer_starts', true);
 		
 		if ($aOrder == $bOrder) return 0;
 		return $aOrder < $bOrder ? -1 : 1;
