@@ -64,8 +64,7 @@ class Conferencer_CustomPostType {
 			"Conferencer Details",
 			array($this, 'options'),
 			$this->slug,
-			'side',
-			'default'
+			'side'
 		);
 	}
 	
