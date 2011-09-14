@@ -59,9 +59,9 @@ class Conferencer {
 	function styles_and_scriptst() {
 		wp_register_style(
 			'jquery-ui',
-			CONFERENCER_URL.'css/jquery-ui-1.8.14.custom.css',
+			CONFERENCER_URL.'css/jquery-ui-1.8.16.custom.css',
 			false,
-			'1.8.14'
+			'1.8.16'
 		);
 
 		wp_register_style(
@@ -82,7 +82,7 @@ class Conferencer {
 			'jquery-ui',
 			CONFERENCER_URL.'js/jquery-ui-1.8.16.custom.min.js',
 			array('jquery'),
-			'1.0',
+			'1.8.16',
 			true
 		);
 
