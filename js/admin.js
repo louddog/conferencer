@@ -1,11 +1,9 @@
 jQuery(function($) {
-	$('#conferencer_settings .levels tbody').sortable({
-		items: 'tr',
-		handle: '.ui-icon',
+	$('#conferencer_reordering .items').sortable({
 		axis: 'y',
-		containment: '.post_types',
-		revert: 50,
-		tolerance: 'pointer'
+		tolerance: 'pointer',
+		containment: 'parent',
+		opacity: 0.8
 	});
 	
 	$('#conference_options .add-another').click(function() {

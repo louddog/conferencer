@@ -31,9 +31,9 @@ class Conferencer_Settings_Order {
 		if (!current_user_can('edit_posts')) wp_die("You do not have sufficient permissions to access this page.");
 		?>
 		
-		<div id="conferencer_settings" class="wrap">
+		<div id="conferencer_reordering" class="wrap">
 			<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
-				<?php wp_nonce_field('nonce_conferencer_settings_order'); ?>
+				<?php wp_nonce_field('nonce_conferencer_reordering_order'); ?>
 
 				<h2>Re-order posts</h2>
 				<p>Drag rows up and down to re-order posts' priority.  Be sure to save when you are done.</p>
@@ -52,22 +52,17 @@ class Conferencer_Settings_Order {
 						<?php if (count($posts)) { ?>
 							<div class="post_type">
 								<h4><?php echo $heading; ?></h4>
-								<table class="levels" cellspacing="0">
-									<tbody class="rows">
-										<?php foreach ($posts as $post) { ?>
-											<tr class="ui-state-default">
-												<td>
-													<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-													<input class="post-id" type="hidden" name="conferencer_<?php echo $slug; ?>_id[]" value="<?php echo $post->ID; ?>" />
-												</td>
-
-												<td><?php echo $post->post_title; ?></td>
-
-												<td><a href="<?php echo admin_url('post.php?action=edit&post='.$post->ID); ?>">edit</a></td>
-											</tr>
-										<?php } ?>
-									</tbody>
-								</table>
+								<ul class="items">
+									<?php foreach ($posts as $post) { ?>
+										<li class="ui-state-default">
+											<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+											<input class="post-id" type="hidden" name="conferencer_<?php echo $slug; ?>_id[]" value="<?php echo $post->ID; ?>" />
+											<a href="<?php echo admin_url('post.php?action=edit&post='.$post->ID); ?>">
+												<?php echo $post->post_title; ?>
+											</a>
+										</li>
+									<?php } ?>
+								</ul>
 							</div> <!-- .post_type -->
 						<?php } // if?>
 					<?php } // foreach ?>
@@ -81,7 +76,7 @@ class Conferencer_Settings_Order {
 	}
 	
 	function save() {
-		if (isset($_POST['conferencer_reordering']) && check_admin_referer('nonce_conferencer_settings_order')) {
+		if (isset($_POST['conferencer_reordering']) && check_admin_referer('nonce_conferencer_reordering_order')) {
 			foreach (self::$priority_post_types as $slug => $heading) {
 				if (isset($_POST['conferencer_'.$slug.'_id'])) {
 					foreach ($_POST['conferencer_'.$slug.'_id'] as $order => $id) {

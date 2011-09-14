@@ -58,17 +58,25 @@ fieldset#conference_options input.date { width: 50%; }
 fieldset#conference_options input.time { width: 45%; }
 fieldset#conference_options input.money { width: 70px; }
 
-/* Settings page */
+/* Reordering */
 
-#conferencer_settings .levels td {
-	padding: 2px 5px;
-	border: 1px solid #EEE;
-	background-color: #F7F7F7;
-	white-space: nowrap;
-	color: #333;
-	font-weight: normal;
+#conferencer_reordering .post_type {
+	margin-bottom: 20px;
 }
 
-#conferencer_settings .levels {
-	margin-bottom: 20px;
+#conferencer_reordering .items {
+	width: 300px;
+}
+
+#conferencer_reordering .items li {
+	padding: 5px 8px 5px 5px;
+}
+
+#conferencer_reordering .items li:hover {
+	cursor: move;
+}
+
+#conferencer_reordering .ui-icon {
+	float: left;
+	margin-right: 5px;
 }
