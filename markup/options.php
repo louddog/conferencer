@@ -31,13 +31,21 @@
 							value="<?php echo htmlentities($value); ?>"
 						/>
 					<?php } else if ($option['type'] == 'date-time') { ?>
-						<?php // TODO: put in a good JS picker, and use for time slots ?>
 						<input
 							class="date"
 							type="text"
-							name="<?php echo $name; ?>"
-							id="<?php echo $name; ?>"
-							value="<?php echo htmlentities($value); ?>"
+							name="<?php echo $name; ?>[date]"
+							id="<?php echo $name.'_date'; ?>"
+							value="<?php if ($value) echo date('n/j/Y', $value); ?>"
+							placeholder="mm/dd/yyyy"
+						/>
+						<input
+							class="time"
+							type="text"
+							name="<?php echo $name; ?>[time]"
+							id="<?php echo $name.'_time'; ?>"
+							value="<?php if ($value) echo date('g:ia', $value); ?>"
+							placeholder="hh:mm am"
 						/>
 					<?php } else if ($option['type'] == 'money') { ?>
 						<input

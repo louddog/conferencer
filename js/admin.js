@@ -15,4 +15,22 @@ jQuery(function($) {
 		
 		return false;
 	});
+	
+	$('#conference_options .date').datepicker({
+		showOtherMonths: true,
+		onSelect: function(selectedDate) {
+			var api = $(this).data('datepicker');
+			var date = $.datepicker.parseDate(
+				api.settings.dateFormat || $.datepicker._defaults.dateFormat,
+				selectedDate,
+				api.settings
+			);
+			
+			if (this.id == 'conferencer_starts_date') {
+				$('#conferencer_ends_date').datepicker('option', 'minDate', date);
+			} else {
+				$('#conferencer_starts_date').datepicker('option', 'maxDate', date);
+			}
+		}
+	});
 });

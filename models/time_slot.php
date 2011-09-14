@@ -12,11 +12,11 @@ class Conferencer_TimeSlot extends Conferencer_CustomPostType {
 		
 		$this->options = array_merge($this->options, array(
 			'starts' => array(
-				'type' => 'text',
+				'type' => 'date-time',
 				'label' => "Start Time",
 			),
 			'ends' => array(
-				'type' => 'text',
+				'type' => 'date-time',
 				'label' => "End Time",
 			),
 			'no_sessions' => array(
@@ -30,25 +30,6 @@ class Conferencer_TimeSlot extends Conferencer_CustomPostType {
 		));
 	}
 	
-	function options($post, $modified = array()) {
-		if ($starts = floatVal(get_post_meta($post->ID, 'conferencer_starts', true))) {
-			$modified['conferencer_starts'] = date('n/j/y, g:ia', $starts);
-		}
-		
-		if ($ends = floatVal(get_post_meta($post->ID, 'conferencer_ends', true))) {
-			$modified['conferencer_ends'] = date('n/j/y, g:ia', $ends);
-		}
-		
-		parent::options($post, $modified);
-	}
-	
-	
-	function save_post($post_id) {
-		$_POST['conferencer_starts'] = strtotime($_POST['conferencer_starts']);
-		$_POST['conferencer_ends'] = strtotime($_POST['conferencer_ends']);
-		parent::save_post($post_id);
-	}
-
 	function columns($columns) {
 		$columns = parent::columns($columns);
 		$columns['conferencer_time_slot_day'] = "Day";

@@ -87,6 +87,18 @@ class Conferencer_CustomPostType {
 			if ($option['type'] == 'int') $value = intval($value);
 			if ($option['type'] == 'money') $value = floatVal($value);
 			if ($option['type'] == 'multi-select') $value = serialize($_POST['conferencer_'.$key]);
+			if ($option['type'] == 'date-time') {
+				$date = getdate(strtotime($_POST['conferencer_'.$key]['date']));
+				$time = getdate(strtotime($_POST['conferencer_'.$key]['time']));
+				$value = mktime(
+					$time['hours'],
+					$time['minutes'],
+					$time['seconds'],
+					$date['mon'],
+					$date['mday'],
+					$date['year']
+				);
+			}
 			
 			update_post_meta($post_id, 'conferencer_'.$key, $value);
 		}

@@ -54,6 +54,8 @@ fieldset#conference_options td.label { white-space: nowrap; }
 fieldset#conference_options td.input { width: 100%; }
 fieldset#conference_options input.text { width: 100%; }
 fieldset#conference_options input.int { width: 40px; }
+fieldset#conference_options input.date { width: 50%; }
+fieldset#conference_options input.time { width: 45%; }
 fieldset#conference_options input.money { width: 70px; }
 
 /* Settings page */

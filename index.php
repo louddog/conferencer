@@ -79,9 +79,9 @@ class Conferencer {
 		);
 
 		wp_register_script(
-			'conferencer-admin',
-			CONFERENCER_URL.'js/admin.js',
-			array('jquery-ui-sortable'),
+			'jquery-ui',
+			CONFERENCER_URL.'js/jquery-ui-1.8.16.custom.min.js',
+			array('jquery'),
 			'1.0',
 			true
 		);
@@ -93,7 +93,15 @@ class Conferencer {
 			'1.0',
 			true
 		);
-	
+
+		wp_register_script(
+			'conferencer-admin',
+			CONFERENCER_URL.'js/admin.js',
+			array('jquery-ui'),
+			'1.0',
+			true
+		);
+
 		wp_register_script(
 			'conferencer',
 			CONFERENCER_URL.'js/site.js',
