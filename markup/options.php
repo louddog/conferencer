@@ -2,6 +2,7 @@
 	<table>
 		<?php foreach($this->options as $name => $option) { ?>
 			<?php
+				if ($option['type'] == 'internal') continue;
 				$name = "conferencer_$name";
 				$value = isset($$name) ? $$name : get_post_meta($post->ID, $name, true);
 			?>

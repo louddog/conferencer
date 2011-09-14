@@ -18,7 +18,7 @@ class Conferencer_CustomPostType {
 		add_action('manage_posts_custom_column', array(&$this, 'column'));
 		
 		$this->options['order'] = array(
-			'type' => 'int',
+			'type' => 'internal',
 			'label' => "Order",
 		);
 	}
@@ -81,6 +81,8 @@ class Conferencer_CustomPostType {
 		if (!current_user_can('edit_post', $post_id)) return;
 		
 		foreach($this->options as $key => $option) {
+			if ($option['type'] == 'internal') continue;
+			
 			$value = trim($_POST['conferencer_'.$key]);
 			
 			if ($option['type'] == 'int') $value = intval($value);
