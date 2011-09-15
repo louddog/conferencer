@@ -42,7 +42,7 @@ jQuery(function($) {
 	// regenerate logos
 	
 	var logos = {
-		ids: conferencer_logo_regeneration_ids,
+		ids: typeof(conferencer_logo_regeneration_ids) != 'undefined' ? conferencer_logo_regeneration_ids : [],
 		ndx: 0
 	};
 
