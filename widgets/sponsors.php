@@ -143,6 +143,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 							<input
 								type="text"
 								size="4"
+								class="conferencer_widget_logo_size"
 								name="width[<?php echo $level->ID; ?>]"
 								value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['width']; ?>"
 							/>
@@ -151,6 +152,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 							<input
 								type="text"
 								size="4"
+								class="conferencer_widget_logo_size"
 								name="height[<?php echo $level->ID; ?>]"
 								value="<?php if (array_key_exists($level->ID, $image_sizes)) echo $image_sizes[$level->ID]['height']; ?>"
 							/>

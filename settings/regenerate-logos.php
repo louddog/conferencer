@@ -4,7 +4,10 @@ new Conferencer_Rengerate_Logos();
 class Conferencer_Rengerate_Logos {
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
-		add_action('wp_ajax_regenerate_logo', array(&$this, 'ajax_regenerate_logo'));
+		add_action('admin_notices', array(&$this, 'admin_notice'));
+		add_action('wp_ajax_conferencer_logo_regenerate', array(&$this, 'ajax_logo_regenerate'));
+		add_action('wp_ajax_conferencer_logo_regeneration_needed', array(&$this, 'ajax_logo_regeneration_needed'));
+		add_action('wp_ajax_conferencer_logo_regeneration_done', array(&$this, 'ajax_logo_regeneration_done'));
 	}
 	
 	function admin_menu() {
@@ -17,6 +20,12 @@ class Conferencer_Rengerate_Logos {
 			array(&$this, 'page')
 		);
 	}
+	
+	function admin_notice() { ?>
+	    <div id="conferencer_logo_regeneration_needed" class="updated<?php if (!get_option('conferencer_logo_regeneration_needed')) echo " closed"; ?>">
+			<p>You've changed the logo sizes.  You'll need to <a href="<?php echo admin_url('admin.php?page=conferencer_regenerate-logos'); ?>">regenerate the logos</a>.</p>
+		</div>
+	<?php }
 	
 	function page() {
 		if (!current_user_can('edit_posts')) wp_die("You do not have sufficient permissions to access this page.");
@@ -55,18 +64,31 @@ class Conferencer_Rengerate_Logos {
 		<?php
 	}
 	
-	function ajax_regenerate_logo() {
+	function ajax_logo_regenerate() {
 		@error_reporting(0); // Don't break the JSON result
-		@set_time_limit(900); // 5 minutes per image
-		
+		@set_time_limit(900); // 5 minutes
 		header('Content-type: application/json');
-		
 		$titleLink = "<a href='".admin_url('post.php?action=edit&post='.$_REQUEST['id'])."'>".get_the_title($_REQUEST['id'])."</a>: ";
-		
-		if (Conferencer::regenerate_logo($_REQUEST['id'])) {
-			die(json_encode(array('success' => $titleLink." successfully resized")));
-		} else {
-			die(json_encode(array('error' => $titleLink.Conferencer::$regenerate_logo_error)));
-		}
+		die(json_encode(
+			Conferencer::regenerate_logo($_REQUEST['id'])
+				? array('success' => $titleLink." successfully resized")
+				: array('error' => $titleLink.Conferencer::$regenerate_logo_error)
+		));
 	}
+
+	function ajax_logo_regeneration_needed() {
+		@error_reporting(0); // Don't break the JSON result
+		@set_time_limit(900); // 5 minutes
+		update_option('conferencer_logo_regeneration_needed', true);
+		header('Content-type: application/json');
+		die(json_encode(true));
+	}
+
+	function ajax_logo_regeneration_done() {
+		@error_reporting(0); // Don't break the JSON result
+		@set_time_limit(900); // 5 minutes
+		update_option('conferencer_logo_regeneration_needed', false);
+		header('Content-type: application/json');
+		die(json_encode(true));
+	}	
 }
