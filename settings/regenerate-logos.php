@@ -49,7 +49,8 @@ class Conferencer_Rengerate_Logos {
 			<?php if (count($ids)) { ?>
 				
 				<p class="submit"><input type="submit" class="button-primary" name="conferencer_regenerate_logos" id="conferencer_regenerate_logos_button" value="Regenerate" /></p>
-				<div id="conferencer_regenerate_logos_console"><!-- JS --></div>
+				<div id="conferencer_regenerate_logos_progress"></div>
+				<ul id="conferencer_regenerate_logos_console"><!-- JS --></ul>
 				
 				<script> conferencer_logo_regeneration_ids = [<?php echo implode(',', $ids); ?>]; </script>
 				

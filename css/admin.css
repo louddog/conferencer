@@ -83,4 +83,18 @@ fieldset#conference_options input.money { width: 70px; }
 
 /* Logo Regeneration */
 
-#conferencer_logo_regeneration_needed.closed { display: none; }
+#conferencer_logo_regeneration_needed.closed {
+	display: none;
+}
+
+#conferencer_regenerate_logos_progress {
+	height: 22px;
+}
+
+#conferencer_regenerate_logos_progress.animated .ui-progressbar-value {
+	background-image: url(images/pbar-ani.gif);
+}
+
+#conferencer_regenerate_logos_console {
+	margin: 10px 0;
+}
