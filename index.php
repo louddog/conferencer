@@ -29,6 +29,7 @@ class Conferencer {
 		add_action('init', array(&$this, 'styles_and_scriptst'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 		register_activation_hook(__FILE__, array(&$this, 'activate'));
+		register_deactivation_hook(__FILE__, array(&$this, 'deactivate'));
 		add_theme_support('post-thumbnails');
 		$this->include_files();
 	}
@@ -138,28 +139,32 @@ class Conferencer {
 	}
 	
 	function admin_notices() {
-		if (is_array($_SESSION['conferencer-notices'])) {
-			echo '<div class="updated"><p>'.implode('</p><p>', $_SESSION['conferencer-notices']).'</p></div>';
-			unset($_SESSION['conferencer-notices']);
-			?>
-			<script>
-				jQuery(function($) {
-					setTimeout(function() {
-						$('.updated').slideUp();
-					}, 5000);
-				});
-			</script>
-			<?php
+		$messages = get_option('conferencer_messages', array());
+		if (count($messages)) {
+			foreach ($messages as $message) { ?>
+				<div class="updated">
+					<p><?php echo $message; ?></p>
+				</div>
+			<?php }
+			delete_option('conferencer_messages');
 		}
 	}
 	
-	function add_admin_message($message) {
-		$_SESSION['conferencer-notices'][] = $message;
+	function add_admin_notice($message) {
+		$messages = get_option('conferencer_messages', array());
+		$messages[] = $message;
+		update_option('conferencer_messages', $messages);
 	}
 	
 	function activate() {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
+	}
+	
+	function deactivate() {
+		delete_option('conferencer_messages');
+		delete_option('conferencer_logo_regeneration_needed');
+		delete_option('conferencer_sponsors_widget_image_sizes');
 	}
 	
 	static $regenerate_logo_error = false;

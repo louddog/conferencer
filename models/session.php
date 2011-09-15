@@ -84,6 +84,8 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 			'sponsor' => 'conferencer_sponsors',
 		);
 		
+		$messages = get_option('conferencer_messages', array());
+		
 		if (array_key_exists($post->post_type, $types)) {
 			$query = new WP_Query(array(
 				'post_type' => 'session',
@@ -98,7 +100,7 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 					if (is_array($oldIDs)) {
 						foreach ($oldIDs as $oldID) if ($oldID != $post_id) $newIDs[] = $oldID;
 						update_post_meta($session->ID, $option, serialize($newIDs));
-						if (count($oldIDs) != count($newIDs)) Conferencer::add_admin_message("Removed this $type from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.");
+						if (count($oldIDs) != count($newIDs)) $messages[] = "Removed this $type from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.";
 					}
 				}
 			}
@@ -120,9 +122,11 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 			
 			foreach ($query->posts as $session) {
 				update_post_meta($session->ID, $meta_key, false);
-				ConferenceScheduler::add_admin_message("Removed this ".$this->options[$post->post_type]['label']." from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.");
+				$messages[] = "Removed this ".$this->options[$post->post_type]['label']." from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.";
 			}
 		}
+		
+		update_option('conferencer_messages', $messages);
 	}
 	
 	function columns($columns) {

@@ -84,8 +84,9 @@ class Conferencer_Settings_Order {
 					}
 				}
 			}
+			
+			Conferencer::add_admin_notice("Ordering saved.");
 
-			Conferencer::add_admin_message("Settings Saved");
 			header("Location: ".$_SERVER['REQUEST_URI']);
 			die;
 		}
