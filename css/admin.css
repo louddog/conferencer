@@ -80,3 +80,7 @@ fieldset#conference_options input.money { width: 70px; }
 	float: left;
 	margin-right: 5px;
 }
+
+/* Logo Regeneration */
+
+#conferencer_logo_regeneration_needed.closed { display: none; }
