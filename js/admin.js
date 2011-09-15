@@ -46,7 +46,7 @@ jQuery(function($) {
 		ndx: 0
 	};
 
-	$('#conferencer_regenerate_logos').click(function() {
+	$('#conferencer_regenerate_logos_button').click(function() {
 		$('#conferencer_regenerate_logos_console').html("<p>regenerating logos</p>");
 		logos.ndx = 0;
 		regenerateNextLogo();
