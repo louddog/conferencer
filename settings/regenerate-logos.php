@@ -4,7 +4,7 @@ new Conferencer_Rengerate_Logos();
 class Conferencer_Rengerate_Logos {
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
-		add_action('wp_ajax_regenerate_logos', array(&$this, 'ajax_regenerate_logos'));
+		add_action('wp_ajax_regenerate_logo', array(&$this, 'ajax_regenerate_logo'));
 	}
 	
 	function admin_menu() {
@@ -36,32 +36,10 @@ class Conferencer_Rengerate_Logos {
 			
 			<?php if (count($ids)) { ?>
 				
-				<p class="submit"><input type="submit" class="button-primary" name="conferencer_regenerate_logos" value="Regenerate" /></p>
-				<div id="regenerate_logos_console"><!-- JS --></div>
+				<p class="submit"><input type="submit" class="button-primary" name="conferencer_regenerate_logos" id="conferencer_regenerate_logos" value="Regenerate" /></p>
+				<div id="conferencer_regenerate_logos_console"><!-- JS --></div>
 				
-				<script>
-					jQuery(function($) {
-						var ids = [<?php echo implode(',', $ids); ?>];
-
-						function regenerateNextLogo() {
-							var id = ids.shift();
-
-							if (id) {
-								$('#regenerate_logos_console').append('<br />resizing #' + id + ': ');
-								$.post(ajaxurl, { action: "regenerate_logos", id: id }, function(response) {
-									$('#regenerate_logos_console').append(response.success ? response.success : response.error);
-									regenerateNextLogo();
-								});
-							} else {
-								$('#regenerate_logos_console').append('<br />complete');
-							}
-						}
-
-						$('[name=conferencer_regenerate_logos]').click(function() {
-							regenerateNextLogo();
-						});
-					});
-				</script>
+				<script> conferencer_logo_regeneration_ids = [<?php echo implode(',', $ids); ?>]; </script>
 				
 			<?php } else { ?>
 				
@@ -74,31 +52,18 @@ class Conferencer_Rengerate_Logos {
 		<?php
 	}
 	
-	function ajax_regenerate_logos() {
+	function ajax_regenerate_logo() {
 		@error_reporting(0); // Don't break the JSON result
 		@set_time_limit(900); // 5 minutes per image
 		
 		header('Content-type: application/json');
-
-		if (!current_user_can('manage_options')) die(json_encode(array('error' => "You do not have the correct permissions to resize logos.")));
-
-		$id = $_REQUEST['id'];
-		$sponsor = get_post($id);
-		if (!$sponsor || 'sponsor' != $sponsor->post_type) die(json_encode(array('error' => "Failed resize: $id is an invalid sponsor ID.")));
-
-		$thumbID = get_post_thumbnail_id($sponsor->ID);
-		if (!$thumbID) die(json_encode(array('error' => "This sponsor does not have a thumbnail.")));
-
-		$path = get_attached_file($thumbID);
-		if (false === $path || !file_exists($path)) die(json_encode(array('error' => "The originally uploaded file cannot be found.")));
-
-		$metadata = wp_generate_attachment_metadata($thumbID, $path);
-		if (is_wp_error($metadata)) die(json_encode(array('error' => $metadata->get_error_message())));
-		if (empty($metadata)) die(json_encode(array('error' => "Unknown logo resizing failure.")));
-
-		// If this fails, then it just means that nothing was changed (old value == new value)
-		wp_update_attachment_metadata($thumbID, $metadata);
-
-		die(json_encode(array('success' => "The logo for ".get_the_title($sponsor->ID)." was successfully resized.")));
+		
+		$titleLink = "<a href='".admin_url('post.php?action=edit&post='.$_REQUEST['id'])."'>".get_the_title($_REQUEST['id'])."</a>: ";
+		
+		if (Conferencer::regenerate_logo($_REQUEST['id'])) {
+			die(json_encode(array('success' => $titleLink." successfully resized")));
+		} else {
+			die(json_encode(array('error' => $titleLink.Conferencer::$regenerate_logo_error)));
+		}
 	}
 }

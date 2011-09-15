@@ -1,10 +1,15 @@
 jQuery(function($) {
+	
+	// all for post sorting on reordering admin page
+	
 	$('#conferencer_reordering .items').sortable({
 		axis: 'y',
 		tolerance: 'pointer',
 		containment: 'parent',
 		opacity: 0.8
 	});
+	
+	// all for addition of options for multiple select
 	
 	$('#conference_options .add-another').click(function() {
 		var list = $(this).prev();
@@ -13,6 +18,8 @@ jQuery(function($) {
 		
 		return false;
 	});
+	
+	// date picker for post admin options
 	
 	$('#conference_options .date').datepicker({
 		showOtherMonths: true,
@@ -31,4 +38,27 @@ jQuery(function($) {
 			}
 		}
 	});
+	
+	// regenerate logos
+	
+	var logos = {
+		ids: conferencer_logo_regeneration_ids,
+		ndx: 0
+	};
+
+	$('#conferencer_regenerate_logos').click(function() {
+		$('#conferencer_regenerate_logos_console').html("<p>regenerating logos</p>");
+		logos.ndx = 0;
+		regenerateNextLogo();
+	});
+
+	function regenerateNextLogo() {
+		var id = logos.ids[logos.ndx++];
+		if (id) {
+			$.post(ajaxurl, { action: "regenerate_logo", id: id }, function(response) {
+				$('#conferencer_regenerate_logos_console').append("<p>" + (response.success ? response.success : response.error) + "</p>");
+				regenerateNextLogo();
+			});
+		} else $('#conferencer_regenerate_logos_console').append("<p>complete</p>");
+	}
 });
