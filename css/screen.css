@@ -23,6 +23,12 @@
 	border: 1px solid #EEE;
 }
 
+.conferencer_agenda tr.day td {
+	font-weight: bold;
+	font-style: italic;
+	background-color: #EEE;
+}
+
 .conferencer_agenda tr.non-session {
 	background-color: #F9F9F9;
 }

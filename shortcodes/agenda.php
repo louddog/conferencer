@@ -18,10 +18,15 @@ function conferencer_agenda_shortcode($options) {
 		'show_empty_cells' => true,
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
+		'days_on_one_table' => true,
+		'row_day_format' => 'l, F j, Y',
+		'row_time_format' => 'g:ia',
+		'show_row_ends' => false,
 	), robustAtts($options));
 
 	if (!in_array($options['column_type'], array('track', 'room'))) $options['column_type'] = false;
 	if (!$options['show_empty_cells']) $options['show_empty_rows'] = $options['show_empty_columns'] = false;
+	if (empty($options['row_day_format'])) $options['row_day_format'] = false;
 	
 	extract($options);
 	
@@ -113,7 +118,10 @@ function conferencer_agenda_shortcode($options) {
 		}
 	}
 	
+	$row_starts = $last_row_starts = false;
+	
 	ob_start();
+	
 	?>
 	
 	<div class="conferencer_agenda">
@@ -135,11 +143,24 @@ function conferencer_agenda_shortcode($options) {
 					</tr>
 				</thead>
 			<?php } ?>
+			
 			<tbody>
 				<?php foreach ($agenda as $time_slot_id => $cells) { ?>
 				
 					<?php
 						if (!$time_slot_id) continue; // no time slot
+						
+						$last_row_starts = $row_starts;
+						$row_starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
+						$row_ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
+						
+						if ($row_day_format && date('w', $row_starts) != date('w', $last_row_starts)) { ?>
+							<tr class="day">
+								<td<?php if ($column_type) echo ' colspan="'.(count($column_posts) + 1).'"'; ?>>
+									<?php echo date($row_day_format, $row_starts); ?>
+								</td>
+							</tr>
+						<?php }
 					
 						$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
 						$no_sessions = deep_empty($cells);
@@ -154,7 +175,10 @@ function conferencer_agenda_shortcode($options) {
 					
 						<td>
 							<a href="<?php echo get_permalink($time_slot_id); ?>">
-								<?php echo date('g:ia', get_post_meta($time_slot_id, 'conferencer_starts', true)); ?>
+								<?php echo date($row_time_format, $row_starts); ?>
+								<?php if ($show_row_ends) { ?>
+									&ndash; <?php echo date($row_time_format, $row_ends); ?>
+								<?php } ?>
 							</a>
 						</td>
 
