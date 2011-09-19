@@ -19,9 +19,9 @@ class Conferencer_TimeSlot extends Conferencer_CustomPostType {
 				'type' => 'date-time',
 				'label' => "End Time",
 			),
-			'no_sessions' => array(
+			'non_session' => array(
 				'type' => 'boolean',
-				'label' => "No Sessions",
+				'label' => "Non Session",
 			),
 			'link' => array(
 				'type' => 'text',

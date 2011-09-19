@@ -126,7 +126,7 @@ class Conferencer_CustomPostType {
 					),
 				));
 
-				echo get_post_meta($post->ID, 'conferencer_no_sessions', true)
+				echo get_post_meta($post->ID, 'conferencer_non_session', true)
 					? "not allowed"
 					: $session_query->post_count;
 

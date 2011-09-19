@@ -58,7 +58,7 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				$text = '';
 				
 				if ($key == 'time_slot') {
-					if (get_post_meta($item->ID, 'conferencer_no_sessions', true)) continue;
+					if (get_post_meta($item->ID, 'conferencer_non_session', true)) continue;
 					
 					$starts = floatVal(get_post_meta($item->ID, 'conferencer_starts', true));
 					$ends = floatVal(get_post_meta($item->ID, 'conferencer_ends', true));
