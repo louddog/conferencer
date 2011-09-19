@@ -15,10 +15,13 @@ function conferencer_agenda_shortcode($options) {
 		'column_type' => 'track',
 		'show_unscheduled' => true,
 		'session_tooltips' => true,
+		'show_empty_cells' => true,
 		'show_empty_rows' => true,
+		'show_empty_columns' => true,
 	), robustAtts($options));
 
 	if (!in_array($options['column_type'], array('track', 'room'))) $options['column_type'] = false;
+	if (!$options['show_empty_cells']) $options['show_empty_rows'] = $options['show_empty_columns'] = false;
 	
 	extract($options);
 	
@@ -57,9 +60,11 @@ function conferencer_agenda_shortcode($options) {
 	}
 	
 	if ($column_type) {
+		$column_post_counts = array();
 		$column_posts = Conferencer::get_list($column_type);
 		foreach ($agenda as $time_slot_id => $time_slot) {
 			foreach ($column_posts as $column_post_id => $column_post) {
+				$column_post_counts[$column_post_id] = 0;
 				$agenda[$time_slot_id][$column_post_id] = array();
 			}
 		}
@@ -78,14 +83,36 @@ function conferencer_agenda_shortcode($options) {
 		
 		if ($column_type) {
 			$column_id = get_post_meta($session->ID, 'conferencer_'.$column_type, true);
-			if ($time_slot_id && $column_id) $agenda[$time_slot_id][$column_id][$session->ID] = $session;
-			else $unscheduled[] = $session;
+			if ($time_slot_id && $column_id) {
+				$agenda[$time_slot_id][$column_id][$session->ID] = $session;
+				$column_post_counts[$column_id]++;
+			} else $unscheduled[] = $session;
 		} else {
 			if ($time_slot_id) $agenda[$time_slot_id][$session->ID] = $session;
 			else $unscheduled[] = $session;
 		}
 	}
+	
+	if (!$show_empty_rows) {
+		foreach ($agenda as $time_slot_id => $cells) {
+			$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
+			if (!$non_session && deep_empty($cells)) unset($agenda[$time_slot_id]);
+		}
+	}
+	
+	if (!$show_empty_columns) {
+		$empty_column_post_ids = array();
+		foreach ($column_posts as $column_post_id => $column_post) {
+			if (!$column_post_counts[$column_post_id]) $empty_column_post_ids[] = $column_post_id;
+		}
 		
+		foreach ($agenda as $time_slot_id => $cells) {
+			foreach ($empty_column_post_ids as $empty_column_post_id) {
+				unset($agenda[$time_slot_id][$empty_column_post_id]);
+			}
+		}
+	}
+	
 	ob_start();
 	?>
 	
@@ -95,7 +122,10 @@ function conferencer_agenda_shortcode($options) {
 				<thead>
 					<tr>
 						<th></th>
-						<?php foreach ($column_posts as $column_post) { ?>
+						<?php foreach ($column_posts as $column_post_id => $column_post) { ?>
+							
+							<?php if (!$show_empty_columns && in_array($column_post_id, $empty_column_post_ids)) continue; ?>
+							
 							<th class="conferencer_agenda_column_<?php echo $column_post->post_name; ?>">
 								<a href="<?php echo get_permalink($column_post->ID); ?>">
 									<?php echo $column_post->post_title; ?>
@@ -114,8 +144,6 @@ function conferencer_agenda_shortcode($options) {
 						$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
 						$no_sessions = deep_empty($cells);
 					
-						if (!$non_session && $no_sessions && !$show_empty_rows) continue;
-
 						$classes = array();
 						if ($non_session) $classes[] = 'non-session';
 						else if ($no_sessions) $classes[] = 'no-sessions';
