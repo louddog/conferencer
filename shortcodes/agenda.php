@@ -129,12 +129,12 @@ function conferencer_agenda_shortcode($options) {
 			<?php if ($column_type) { ?>
 				<thead>
 					<tr>
-						<th></th>
+						<th class="column_time_slot"></th>
 						<?php foreach ($column_posts as $column_post_id => $column_post) { ?>
 							
 							<?php if (!$show_empty_columns && in_array($column_post_id, $empty_column_post_ids)) continue; ?>
 							
-							<th class="conferencer_agenda_column_<?php echo $column_post->post_name; ?>">
+							<th class="column_<?php echo $column_post->post_name; ?>">
 								<a href="<?php echo get_permalink($column_post->ID); ?>">
 									<?php echo $column_post->post_title; ?>
 								</a>

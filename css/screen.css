@@ -14,13 +14,21 @@
 /* Agenda */
 
 .conferencer_agenda .grid {
+	table-layout: fixed;
 	border-collapse: collapse;
 }
 
-.conferencer_agenda tr,
+.conferencer_agenda th {
+	text-align: center;
+}
+.conferencer_agenda th,
 .conferencer_agenda td {
 	padding: 2px 4px;
 	border: 1px solid #EEE;
+}
+
+.conferencer_agenda .column_time_slot {
+	width: 100px;
 }
 
 .conferencer_agenda tr.day td {
@@ -39,6 +47,21 @@
 
 .conferencer_agenda .session {
 	position: relative;
+	padding: 5px 0;
+	border-bottom: 1px solid #EEE;
+}
+
+.conferencer_agenda .session:first-child {
+	padding-top: 0px;
+}
+
+.conferencer_agenda .session:last-child {
+	padding-bottom: 0px;
+	border-bottom: none;
+}
+
+.conferencer_agenda .session .title {
+	font-weight: bold;
 }
 
 .conferencer_agenda .session-tooltip {
