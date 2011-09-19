@@ -92,15 +92,16 @@
 .conferencer_agenda .session-tooltip .arrow,
 .conferencer_agenda .session-tooltip .inner-arrow {
 	position: absolute;
-	bottom: -40px;
+	bottom: -20px;
 	left: 30px;
 	width: 0px;
 	height: 0px;
 	border: 20px solid transparent;
+	border-bottom: 0px;
 	border-top-color: #000;
 }
 
 .conferencer_agenda .session-tooltip .inner-arrow {
-	bottom: -36px;
+	bottom: -16px;
 	border-top-color: #FFF;
 }
