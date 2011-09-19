@@ -22,6 +22,10 @@ function conferencer_agenda_shortcode($options) {
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
+		'link_sessions' => true,
+		'link_speakers' => true,
+		'link_time_slots' => true,
+		'link_columns' => true,
 	), robustAtts($options));
 
 	if (!in_array($options['column_type'], array('track', 'room'))) $options['column_type'] = false;
@@ -35,12 +39,22 @@ function conferencer_agenda_shortcode($options) {
 
 			<div class="session">
 				<p class="title">
-					<a href="<?php echo get_permalink($session->ID); ?>">
+					<?php if ($link_sessions) { ?>
+						<a href="<?php echo get_permalink($session->ID); ?>">
+					<?php } ?>
 						<?php echo $session->post_title; ?>
-					</a>
+					<?php if ($link_sessions) { ?>
+						</a>
+					<?php } ?>
 				</p>
 			
-				<p class="speakers"><?php echo comma_sep_links($session->speakers); ?></p>
+				<p class="speakers">
+					<?php
+						echo $link_speakers
+							? comma_sep_links($session->speakers)
+							: comma_sep_titles($session->speakers);
+					?>
+				</p>
 
 				<?php if ($session_tooltips) { ?>
 					<div class="session-tooltip">
@@ -135,9 +149,15 @@ function conferencer_agenda_shortcode($options) {
 							<?php if (!$show_empty_columns && in_array($column_post_id, $empty_column_post_ids)) continue; ?>
 							
 							<th class="column_<?php echo $column_post->post_name; ?>">
-								<a href="<?php echo get_permalink($column_post->ID); ?>">
+								<?php if ($link_columns) { ?>
+									<a href="<?php echo get_permalink($column_post->ID); ?>">
+								<?php } ?>
+								
 									<?php echo $column_post->post_title; ?>
-								</a>
+								
+								<?php if ($link_columns) { ?>
+									</a>
+								<?php } ?>
 							</th>
 						<?php } ?>
 					</tr>
@@ -174,20 +194,28 @@ function conferencer_agenda_shortcode($options) {
 					<tr<?php echo $classes; ?>>
 					
 						<td>
-							<a href="<?php echo get_permalink($time_slot_id); ?>">
+							<?php if ($link_time_slots) { ?>
+								<a href="<?php echo get_permalink($time_slot_id); ?>">
+							<?php } ?>
 								<?php echo date($row_time_format, $row_starts); ?>
 								<?php if ($show_row_ends) { ?>
 									&ndash; <?php echo date($row_time_format, $row_ends); ?>
 								<?php } ?>
-							</a>
+							<?php if ($link_time_slots) { ?>
+								</a>
+							<?php } ?>
 						</td>
 
 						<?php if ($non_session) { ?>
 
 							<td<?php if ($column_type) echo ' colspan="'.count($column_posts).'"'; ?>>
-								<a href="<?php echo get_permalink($time_slot_id); ?>">
+								<?php if ($link_time_slots) { ?>
+									<a href="<?php echo get_permalink($time_slot_id); ?>">
+								<?php } ?>
 									<?php echo get_the_title($time_slot_id); ?>
-								</a>
+								<?php if ($link_time_slots) { ?>
+									</a>
+								<?php } ?>
 							</td>
 
 						<?php } else if ($column_type) { ?>
