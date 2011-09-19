@@ -12,13 +12,13 @@ add_shortcode('agenda', 'conferencer_agenda_shortcode');
 
 function conferencer_agenda_shortcode($options) {
 	$options = shortcode_atts(array(
-		'column_type' => 'track', // TODO: implement other columns
+		'column_type' => 'track',
 		'show_unscheduled' => true,
 		'session_tooltips' => true,
 		'show_empty_rows' => true,
 	), robustAtts($options));
 
-	if (in_array($options['column_type'], array('none'))) $options['column_type'] = false;
+	if (!in_array($options['column_type'], array('track', 'room'))) $options['column_type'] = false;
 	
 	extract($options);
 	
@@ -49,25 +49,24 @@ function conferencer_agenda_shortcode($options) {
 		<?php }
 	}
 
-	$time_slots = Conferencer::get_list('time_slot', 'start_time_sort');
-	$tracks = Conferencer::get_list('track');
-	$sessions = Conferencer::get_list('session', 'title_sort');
-	$speakers = Conferencer::get_list('speaker');
-	
 	$agenda = array();
 	$unscheduled = array();
 	
-	foreach ($time_slots as $time_slot_id => $time_slot) {
+	foreach (Conferencer::get_list('time_slot', 'start_time_sort') as $time_slot_id => $time_slot) {
 		$agenda[$time_slot_id] = array();
-		
-		if ($column_type == 'track') {
-			foreach ($tracks as $track_id => $track) {
-				$agenda[$time_slot_id][$track_id] = array();
+	}
+	
+	if ($column_type) {
+		$column_posts = Conferencer::get_list($column_type);
+		foreach ($agenda as $time_slot_id => $time_slot) {
+			foreach ($column_posts as $column_post_id => $column_post) {
+				$agenda[$time_slot_id][$column_post_id] = array();
 			}
 		}
 	}
 	
-	foreach ($sessions as $session) {
+	$speakers = Conferencer::get_list('speaker');
+	foreach (Conferencer::get_list('session', 'title_sort') as $session) {
 		$time_slot_id = get_post_meta($session->ID, 'conferencer_time_slot', true);
 
 		$session->speakers = array();
@@ -78,8 +77,7 @@ function conferencer_agenda_shortcode($options) {
 		}
 		
 		if ($column_type) {
-			if ($column_type == 'track') $column_id = get_post_meta($session->ID, 'conferencer_track', true);
-			
+			$column_id = get_post_meta($session->ID, 'conferencer_'.$column_type, true);
 			if ($time_slot_id && $column_id) $agenda[$time_slot_id][$column_id][$session->ID] = $session;
 			else $unscheduled[] = $session;
 		} else {
@@ -97,10 +95,10 @@ function conferencer_agenda_shortcode($options) {
 				<thead>
 					<tr>
 						<th></th>
-						<?php foreach ($tracks as $track) { ?>
-							<th class="conferencer_track_<?php echo $track->post_name; ?>">
-								<a href="<?php echo get_permalink($track->ID); ?>">
-									<?php echo $track->post_title; ?>
+						<?php foreach ($column_posts as $column_post) { ?>
+							<th class="conferencer_agenda_column_<?php echo $column_post->post_name; ?>">
+								<a href="<?php echo get_permalink($column_post->ID); ?>">
+									<?php echo $column_post->post_title; ?>
 								</a>
 							</th>
 						<?php } ?>
@@ -108,13 +106,13 @@ function conferencer_agenda_shortcode($options) {
 				</thead>
 			<?php } ?>
 			<tbody>
-				<?php foreach ($agenda as $time_slot_id => $column_ids) { ?>
+				<?php foreach ($agenda as $time_slot_id => $cells) { ?>
 				
 					<?php
 						if (!$time_slot_id) continue; // no time slot
 					
 						$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
-						$no_sessions = deep_empty($column_ids);
+						$no_sessions = deep_empty($cells);
 					
 						if (!$non_session && $no_sessions && !$show_empty_rows) continue;
 
@@ -134,7 +132,7 @@ function conferencer_agenda_shortcode($options) {
 
 						<?php if ($non_session) { ?>
 
-							<td colspan="<?php echo count($tracks); ?>">
+							<td<?php if ($column_type) echo ' colspan="'.count($column_posts).'"'; ?>>
 								<a href="<?php echo get_permalink($time_slot_id); ?>">
 									<?php echo get_the_title($time_slot_id); ?>
 								</a>
@@ -142,10 +140,10 @@ function conferencer_agenda_shortcode($options) {
 
 						<?php } else if ($column_type) { ?>
 
-							<?php foreach ($column_ids as $column_sesssions) { ?>
-								<td class="<?php if (empty($column_sesssions)) echo 'no-sessions'; ?>">
+							<?php foreach ($cells as $cell_sessions) { ?>
+								<td class="<?php if (empty($cell_sessions)) echo 'no-sessions'; ?>">
 									<?php
-										foreach ($column_sesssions as $session) {
+										foreach ($cell_sessions as $session) {
 											conferencer_agenda_display_session($session, $options);
 										}
 									?>
@@ -154,9 +152,9 @@ function conferencer_agenda_shortcode($options) {
 
 						<?php } else { ?>
 							
-							<td class="<?php if (empty($column_ids)) echo 'no-sessions'; ?>">
+							<td class="<?php if (empty($cells)) echo 'no-sessions'; ?>">
 								<?php
-									foreach ($column_ids as $session) {
+									foreach ($cells as $session) {
 										conferencer_agenda_display_session($session, $options);
 									}
 								?>
