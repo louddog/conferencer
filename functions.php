@@ -40,3 +40,9 @@ if (!function_exists('deep_empty')) {
 		} else return empty($var);
 	}
 }
+
+if (!function_exists('output_classes')) {
+	function output_classes($classes) {
+		if (count($classes)) echo ' class="'.implode(' ', $classes).'"';
+	}
+}
