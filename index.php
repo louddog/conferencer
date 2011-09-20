@@ -24,13 +24,10 @@ include CONFERENCER_PATH.'/functions.php';
 
 new Conferencer();
 class Conferencer {
-	static $post_types_with_sessions = array('speaker', 'room', 'time_slot', 'track', 'sponsor');
-	
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scriptst'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
-		add_filter('the_content', array(&$this, 'add_sessions_to_content'));
 		register_activation_hook(__FILE__, array(&$this, 'activate'));
 		register_deactivation_hook(__FILE__, array(&$this, 'deactivate'));
 		add_theme_support('post-thumbnails');
@@ -157,13 +154,6 @@ class Conferencer {
 		$messages = get_option('conferencer_messages', array());
 		$messages[] = $message;
 		update_option('conferencer_messages', $messages);
-	}
-	
-	function add_sessions_to_content($content) {
-		if (in_array(get_post_type(), Conferencer::$post_types_with_sessions)) {
-			$content .= do_shortcode('[sessions]');
-		}
-		return $content;
 	}
 	
 	function activate() {
