@@ -1,5 +1,8 @@
 <?php
 
+// TODO: use a "no track" or equivalent column for sessions on time x track grid
+// TODO: use a "no room" or equivalent column for sessions on time x room grid 
+
 /* ============================================================================
 
 	You can override the cell display function in your own template's
