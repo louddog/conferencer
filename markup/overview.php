@@ -14,4 +14,7 @@
 <h3>Where do I start?</h3>
 <p>Likely you have a lot of data input ahead of you.  You can start anywhere you like, by creating an entry for one of the conference data types.  How about creating a <a href="<?php echo admin_url('post-new.php?post_type=session'); ?>">session</a> now?</p>
 
-<?php // TODO: explain "non-session"  vs. 'no-sessions' ?>
+<?php
+	// TODO: explain "non-session"  vs. 'no-sessions'
+	// TODO: remind designer of template possibilities (like use of featured image)
+?>
