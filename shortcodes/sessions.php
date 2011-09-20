@@ -33,18 +33,12 @@ function conferencer_sessions_shortcode($options) {
 					<ul>
 						<?php foreach ($sessions as $session) { ?>
 							<li>
-								<?php if ($link_sessions) { ?>
-									<a href="<?php echo get_permalink($session->ID); ?>">
-								<?php } ?>
-									<?php echo $session->post_title; ?>
-								<?php if ($link_sessions) { ?>
-									</a>
-								<?php } ?>
-								
-								<?php if ($show_speakers) { ?>
-									<?php // TODO: this comma needs to be up against the title ?>
-									, by <?php echo comma_seperated($session->speakers, $link_speakers); ?>
-								<?php } ?>
+								<?php
+									$html = $session->post_title;
+									if ($link_sessions) $html = "<a href='".get_permalink($session->ID)."'>$html</a>";
+									if ($show_speakers) $html .= ", by ".comma_seperated($session->speakers, $link_speakers);
+									echo $html;
+								?>
 							</li>
 						<?php } ?>
 					</ul>
