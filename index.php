@@ -245,6 +245,7 @@ class Conferencer {
 			foreach ($speaker_ids as $speaker_id) {
 				$sessions[$session_id]->speakers[$speaker_id] = $speakers[$speaker_id];
 			}
+			uasort($sessions[$session_id]->speakers, array('Conferencer', 'order_sort'));
 		}
 	}
 	
