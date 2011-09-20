@@ -1,11 +1,62 @@
 <?php
 
+// TODO: Allow tabbed days
+
 /* ============================================================================
 
 	You can override the cell display function in your own template's
 	functions.php.  Simply define:
 		conferencer_agenda_display_session($session, $options = array())
+		
+	Short Code Options
+	
+	column_type: [track, room, false]
+		set which post type to use for columns
+		use false to display sessions all in one column
+	
+	session_tooltips: [true, false]
+		whether to add content that displays a tooltip on hover
+	
+	show_empty_rows: [true, false]
+		whether to show table rows that don't have sessions
+	
+	show_empty_columns: [true, false]
+		whether to show table columns that don't have sessions
+		
+	show_empty_cells: [true, false]
+		if false, overrides show_empty_rows and show_empty_columns with false
 
+	row_day_format: PHP date() format string or false
+		formats the date used on day row separators
+		if false, day row separators are not displayed
+		
+	row_time_format: PHP date() format string
+		formats the date used for time slots
+		
+	show_row_ends: [true, false]
+		if true, displays an ending time for time slots
+		uses the row_time_format
+		
+	link_sessions: [true, false]
+		whether to link session to their pages'
+		
+	link_speakers: [true, false]
+		whether to link speakers to their pages'
+		
+	link_time_slots: [true, false]
+		whether to link time slots to their pages'
+		
+	link_columns: [true, false]
+		whether to link columns headers to their pages'
+		
+	unassigned_column_header_text: (string)
+		text used in the column header for unassigned sessions
+		
+	unscheduled_row_text: (string)
+		text used for the row of unscheduled sessions
+		displayed in the day row separator, if used
+		otherwise, displayed in the row's first cell (where time slots are displayed)
+	
 ============================================================================ */
 
 add_shortcode('agenda', 'conferencer_agenda_shortcode');
@@ -14,10 +65,9 @@ function conferencer_agenda_shortcode($options) {
 	$options = shortcode_atts(array(
 		'column_type' => 'track',
 		'session_tooltips' => true,
-		'show_empty_cells' => true,
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
-		'days_on_one_table' => true,
+		'show_empty_cells' => true,
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
@@ -25,7 +75,7 @@ function conferencer_agenda_shortcode($options) {
 		'link_speakers' => true,
 		'link_time_slots' => true,
 		'link_columns' => true,
-		'unscheduled_column_header_text' => 'N/A',
+		'unassigned_column_header_text' => 'N/A',
 		'unscheduled_row_text' => 'Unscheduled',
 	), robustAtts($options));
 
@@ -33,7 +83,6 @@ function conferencer_agenda_shortcode($options) {
 	
 	if (!in_array($options['column_type'], array('track', 'room'))) $options['column_type'] = false;
 	if (!$options['show_empty_cells']) $options['show_empty_rows'] = $options['show_empty_columns'] = false;
-	if (empty($options['row_day_format'])) $options['row_day_format'] = false;
 	
 	extract($options);
 	
@@ -161,7 +210,7 @@ function conferencer_agenda_shortcode($options) {
 		if (count($column_post_counts[0])) {
 			// extra column header for sessions not assigned to a column
 			$column_headers[] = array(
-				'title' => $unscheduled_column_header_text,
+				'title' => $unassigned_column_header_text,
 				'class' => 'column_not_applicable',
 				'link' => false,
 			);
@@ -222,8 +271,9 @@ function conferencer_agenda_shortcode($options) {
 						$no_sessions = deep_empty($cells);
 						
 						// Show row seperators for days
+						$show_day_row = $row_day_format !== false && date('w', $row_starts) != date('w', $last_row_starts);
 						
-						if ($row_day_format && date('w', $row_starts) != date('w', $last_row_starts)) { ?>
+						if ($show_day_row) { ?>
 							<tr class="day">
 								<td colspan="<?php echo $column_type ? count($column_headers) + 1 : 2; ?>">
 									<?php echo $row_starts ? date($row_day_format, $row_starts) : $unscheduled_row_text; ?>
@@ -249,7 +299,7 @@ function conferencer_agenda_shortcode($options) {
 									if ($show_row_ends) $html .= " &ndash; ".date($row_time_format, $row_ends);
 									if ($link_time_slots) $html = "<a href='".get_permalink($time_slot_id)."'>$html</a>";
 									echo $html;
-								}
+								} else if (!$show_day_row) echo $unscheduled_row_text;
 							?>
 						</td>
 						
