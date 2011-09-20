@@ -1,18 +1,5 @@
 <?php
 
-if (!function_exists('robustAtts')) {
-		function robustAtts($atts) {
-		if (!is_array($atts)) return $atts;
-		$new_atts = array();
-		foreach ($atts as $key => $value) {
-			if (is_string($value) && $value == 'true') $value = true;
-			if (is_string($value) && $value == 'false') $value = false;
-			$new_atts[$key] = $value;
-		}
-		return $new_atts;
-	}
-}
-
 if (!function_exists('comma_seperated')) {
 	function comma_seperated($posts, $link = true, $serial_and = true) {
 		if (!is_array($posts)) return '';

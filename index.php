@@ -37,6 +37,7 @@ class Conferencer {
 	function include_files() {
 		$includes = array(
 			'/custom_post_type.php',
+			'/shortcode.php',
 			'/models/session.php',
 			'/models/speaker.php',
 			'/models/room.php',

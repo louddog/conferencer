@@ -1,13 +1,21 @@
 <?php
 
-new Conferencer_Sesssions_Shortcode();
-class Conferencer_Sesssions_Shortcode {
+new Conferencer_Shortcode_Sesssions();
+class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	var $shortcode = 'sessions';
+	var $defaults = array(
+		'title' => "Sessions",
+		'no_sessions_message' => "There aren't any sessions scheduled for this yet.",
+		'show_speakers' => true,
+		'link_sessions' => true,
+		'link_speakers' => true,
+	);
+
 	static $post_types_with_sessions = array('speaker', 'room', 'time_slot', 'track', 'sponsor');
 	
 	function __construct() {
+		parent::__construct();
 		add_filter('the_content', array(&$this, 'add_to_content'));
-		add_shortcode($this->shortcode, array(&$this, 'content'));
 	}
 	
 	function add_to_content($content) {
@@ -18,15 +26,8 @@ class Conferencer_Sesssions_Shortcode {
 	}
 
 	function content($options) {
-		$options = shortcode_atts(array(
-			'title' => "Sessions",
-			'no_sessions_message' => "There aren't any sessions scheduled for this yet.",
-			'show_speakers' => true,
-			'link_sessions' => true,
-			'link_speakers' => true,
-		), robustAtts($options));
-
-		extract($options);
+		$this->set_options($options);
+		extract($this->options);
 	
 		global $post;
 		if (!in_array($post->post_type, self::$post_types_with_sessions)) {
