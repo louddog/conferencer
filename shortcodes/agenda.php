@@ -1,8 +1,5 @@
 <?php
 
-// TODO: use a "no track" or equivalent column for sessions on time x track grid
-// TODO: use a "no room" or equivalent column for sessions on time x room grid 
-
 /* ============================================================================
 
 	You can override the cell display function in your own template's
@@ -16,7 +13,6 @@ add_shortcode('agenda', 'conferencer_agenda_shortcode');
 function conferencer_agenda_shortcode($options) {
 	$options = shortcode_atts(array(
 		'column_type' => 'track',
-		'show_unscheduled' => true,
 		'session_tooltips' => true,
 		'show_empty_cells' => true,
 		'show_empty_rows' => true,
@@ -29,6 +25,8 @@ function conferencer_agenda_shortcode($options) {
 		'link_speakers' => true,
 		'link_time_slots' => true,
 		'link_columns' => true,
+		'unscheduled_column_header_text' => 'N/A',
+		'unscheduled_row_text' => 'Unscheduled',
 	), robustAtts($options));
 
 	// Massage Options
@@ -77,24 +75,26 @@ function conferencer_agenda_shortcode($options) {
 	// Define main agenda variable
 
 	$agenda = array();
-	$unscheduled = array();
 	
 	// Fill agenda with empty time slot rows
 	
 	foreach (Conferencer::get_list('time_slot', 'start_time_sort') as $time_slot_id => $time_slot) {
 		$agenda[$time_slot_id] = array();
 	}
+	$agenda[0] = array(); // for unscheduled time slots
 	
 	// If the agenda is split into columns, fill rows with empty "cell" arrays
 	
 	if ($column_type) {
 		$column_post_counts = array();
 		$column_posts = Conferencer::get_list($column_type);
+		
 		foreach ($agenda as $time_slot_id => $time_slot) {
 			foreach ($column_posts as $column_post_id => $column_post) {
 				$column_post_counts[$column_post_id] = 0;
 				$agenda[$time_slot_id][$column_post_id] = array();
 			}
+			$agenda[$time_slot_id][0] = array();
 		}
 	}
 	
@@ -107,16 +107,16 @@ function conferencer_agenda_shortcode($options) {
 	
 	foreach ($sessions as $session) {
 		$time_slot_id = get_post_meta($session->ID, 'conferencer_time_slot', true);
+		if (!$time_slot_id) $time_slot_id = 0;
 
 		if ($column_type) {
 			$column_id = get_post_meta($session->ID, 'conferencer_'.$column_type, true);
-			if ($time_slot_id && $column_id) {
-				$agenda[$time_slot_id][$column_id][$session->ID] = $session;
-				$column_post_counts[$column_id]++;
-			} else $unscheduled[] = $session;
+			if (!$column_id) $column_id = 0;
+			
+			$agenda[$time_slot_id][$column_id][$session->ID] = $session;
+			$column_post_counts[$column_id]++;
 		} else {
-			if ($time_slot_id) $agenda[$time_slot_id][$session->ID] = $session;
-			else $unscheduled[] = $session;
+			$agenda[$time_slot_id][$session->ID] = $session;
 		}
 	}
 	
@@ -141,6 +141,40 @@ function conferencer_agenda_shortcode($options) {
 			}
 		}
 	}
+	
+	// Set up column headers
+	
+	if ($column_type) {
+		$column_headers = array();
+		
+		// post column headers
+		foreach ($column_posts as $column_post) {
+			if (!$show_empty_columns && in_array($column_post->ID, $empty_column_post_ids)) continue;
+			
+			$column_headers[] = array(
+				'title' => $column_post->post_title,
+				'class' => 'column_'.$column_post->post_name,
+				'link' => $link_columns ? get_permalink($column_post->ID) : false,
+			);
+		}
+		
+		if (count($column_post_counts[0])) {
+			// extra column header for sessions not assigned to a column
+			$column_headers[] = array(
+				'title' => $unscheduled_column_header_text,
+				'class' => 'column_not_applicable',
+				'link' => false,
+			);
+		} else {
+			// remove cells if no un-assigned sessions
+			foreach ($agenda as $time_slot_id => $cells) {
+				unset($agenda[$time_slot_id][0]);
+			}
+		}
+	}
+	
+	// Remove unscheduled time slot, if without sessions
+	if (deep_empty($agenda[0])) unset($agenda[0]);
 
 	// Start buffering output
 
@@ -157,21 +191,16 @@ function conferencer_agenda_shortcode($options) {
 				<thead>
 					<tr>
 						<th class="column_time_slot"></th>
-						<?php foreach ($column_posts as $column_post_id => $column_post) { ?>
+						<?php foreach ($column_headers as $column_header) { ?>
 							
-							<?php if (!$show_empty_columns && in_array($column_post_id, $empty_column_post_ids)) continue; ?>
-							
-							<th class="column_<?php echo $column_post->post_name; ?>">
-								<?php if ($link_columns) { ?>
-									<a href="<?php echo get_permalink($column_post->ID); ?>">
-								<?php } ?>
-								
-									<?php echo $column_post->post_title; ?>
-								
-								<?php if ($link_columns) { ?>
-									</a>
-								<?php } ?>
+							<th class="<?php echo $column_header['class']; ?>">
+								<?php
+									$html = $column_header['title'];
+									if ($column_header['link']) $html = "<a href='".$column_header['link']."'>$html</a>";
+									echo $html;
+								?>
 							</th>
+							
 						<?php } ?>
 					</tr>
 				</thead>
@@ -196,8 +225,8 @@ function conferencer_agenda_shortcode($options) {
 						
 						if ($row_day_format && date('w', $row_starts) != date('w', $last_row_starts)) { ?>
 							<tr class="day">
-								<td<?php if ($column_type) echo ' colspan="'.(count($column_posts) + 1).'"'; ?>>
-									<?php echo date($row_day_format, $row_starts); ?>
+								<td colspan="<?php echo $column_type ? count($column_headers) + 1 : 2; ?>">
+									<?php echo $row_starts ? date($row_day_format, $row_starts) : $unscheduled_row_text; ?>
 								</td>
 							</tr>
 						<?php }
@@ -213,24 +242,22 @@ function conferencer_agenda_shortcode($options) {
 					
 						<?php // Time slot column -------------------------- ?>
 					
-						<td>
-							<?php if ($link_time_slots) { ?>
-								<a href="<?php echo get_permalink($time_slot_id); ?>">
-							<?php } ?>
-								<?php echo date($row_time_format, $row_starts); ?>
-								<?php if ($show_row_ends) { ?>
-									&ndash; <?php echo date($row_time_format, $row_ends); ?>
-								<?php } ?>
-							<?php if ($link_time_slots) { ?>
-								</a>
-							<?php } ?>
+						<td class="time_slot">
+							<?php
+								if ($time_slot_id) {
+									$html = date($row_time_format, $row_starts);
+									if ($show_row_ends) $html .= " &ndash; ".date($row_time_format, $row_ends);
+									if ($link_time_slots) $html = "<a href='".get_permalink($time_slot_id)."'>$html</a>";
+									echo $html;
+								}
+							?>
 						</td>
 						
 						<?php // Display session cells --------------------- ?>
 
 						<?php if ($non_session) { // display a non-sessioned time slot ?>
 
-							<td<?php if ($column_type) echo ' colspan="'.count($column_posts).'"'; ?>>
+							<td class="sessions" colspan="<?php echo $column_type ? count($column_headers) : 1; ?>">
 								<?php if ($link_time_slots) { ?>
 									<a href="<?php echo get_permalink($time_slot_id); ?>">
 								<?php } ?>
@@ -243,7 +270,7 @@ function conferencer_agenda_shortcode($options) {
 						<?php } else if ($column_type) { // if split into columns, multiple cells  ?>
 
 							<?php foreach ($cells as $cell_sessions) { ?>
-								<td class="<?php if (empty($cell_sessions)) echo 'no-sessions'; ?>">
+								<td class="sessions <?php if (empty($cell_sessions)) echo 'no-sessions'; ?>">
 									<?php
 										foreach ($cell_sessions as $session) {
 											conferencer_agenda_display_session($session, $options);
@@ -254,7 +281,7 @@ function conferencer_agenda_shortcode($options) {
 
 						<?php } else { // all sessions in one cell ?>
 							
-							<td class="<?php if (empty($cells)) echo 'no-sessions'; ?>">
+							<td class="sessions <?php if (empty($cells)) echo 'no-sessions'; ?>">
 								<?php
 									foreach ($cells as $session) {
 										conferencer_agenda_display_session($session, $options);
@@ -268,15 +295,6 @@ function conferencer_agenda_shortcode($options) {
 			</tbody>
 		</table>
 	
-		<?php if ($show_unscheduled && count($unscheduled)) { ?>
-			<h3>Unscheduled</h3>
-			<ul class="unscheduled">
-				<?php foreach ($unscheduled as $session) { ?>
-					<li><?php conferencer_agenda_display_session($session, $options); ?></li>
-				<?php } ?>
-			</ul>
-		<?php } ?>
-		
 	</div> <!-- .conferencer_agenda -->
 	
 	<?php
