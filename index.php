@@ -24,10 +24,13 @@ include CONFERENCER_PATH.'/functions.php';
 
 new Conferencer();
 class Conferencer {
+	static $post_types_with_sessions = array('speaker', 'room', 'time_slot', 'track', 'sponsor');
+	
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scriptst'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
+		add_filter('the_content', array(&$this, 'add_sessions_to_content'));
 		register_activation_hook(__FILE__, array(&$this, 'activate'));
 		register_deactivation_hook(__FILE__, array(&$this, 'deactivate'));
 		add_theme_support('post-thumbnails');
@@ -156,6 +159,13 @@ class Conferencer {
 		update_option('conferencer_messages', $messages);
 	}
 	
+	function add_sessions_to_content($content) {
+		if (in_array(get_post_type(), Conferencer::$post_types_with_sessions)) {
+			$content .= do_shortcode('[sessions]');
+		}
+		return $content;
+	}
+	
 	function activate() {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
@@ -225,6 +235,19 @@ class Conferencer {
 	
 	// static user functions =========================================================
 	
+	function attach_speakers(&$sessions) {
+		$speakers = Conferencer::get_list('speaker');
+		
+		foreach ($sessions as $session_id => $session) {
+			$session->speakers = array();
+			$speaker_ids = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
+			if (!$speaker_ids) $speaker_ids = array();
+			foreach ($speaker_ids as $speaker_id) {
+				$sessions[$session_id]->speakers[$speaker_id] = $speakers[$speaker_id];
+			}
+		}
+	}
+	
 	function get_list($post_type, $sort = 'order_sort') {
 		$query = new WP_Query(array(
 			'post_type' => $post_type,
@@ -239,6 +262,29 @@ class Conferencer {
 		if (method_exists('Conferencer', $sort)) uasort($list, array('Conferencer', $sort));
 		
 		return $list;
+	}
+	
+	function get_sessions($post_id) {
+		$query = new WP_Query(array(
+			'post_type' => 'session',
+			'posts_per_page' => -1, // get all
+			'meta_query' => array(
+				array(
+					'key' => 'conferencer_'.get_post_type($post_id),
+					'value' => $post_id,
+				)
+			),
+		));
+		
+		$sessions = array();
+		foreach ($query->posts as $session) {
+			$sessions[$session->ID] = $session;
+		}
+		
+		uasort($sessions, array('Conferencer', 'order_sort'));
+		uasort($sessions, array('Conferencer', 'start_time_sort'));
+		
+		return $sessions;
 	}
 	
 	function order_sort($a, $b) {

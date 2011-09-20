@@ -49,17 +49,13 @@ function conferencer_agenda_shortcode($options) {
 				</p>
 			
 				<p class="speakers">
-					<?php
-						echo $link_speakers
-							? comma_sep_links($session->speakers)
-							: comma_sep_titles($session->speakers);
-					?>
+					<?php echo comma_seperated($session->speakers, $link_speakers); ?>
 				</p>
 
 				<?php if ($session_tooltips) { ?>
 					<div class="session-tooltip">
 						<h3 class="title"><?php echo $session->post_title; ?></h3>
-						<p class="speakers"><?php echo comma_sep_titles($session->speakers); ?></p>
+						<p class="speakers"><?php echo comma_seperated($session->speakers, false); ?></p>
 						<p class="excerpt"><?php echo $session->post_excerpt; ?></p>
 						<div class="arrow"></div>
 						<div class="inner-arrow"></div>
@@ -89,17 +85,12 @@ function conferencer_agenda_shortcode($options) {
 		}
 	}
 	
-	$speakers = Conferencer::get_list('speaker');
-	foreach (Conferencer::get_list('session', 'title_sort') as $session) {
+	$sessions = Conferencer::get_list('session', 'title_sort');
+	Conferencer::attach_speakers($sessions);
+	
+	foreach ($sessions as $session) {
 		$time_slot_id = get_post_meta($session->ID, 'conferencer_time_slot', true);
 
-		$session->speakers = array();
-		$speaker_ids = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
-		if (!$speaker_ids) $speaker_ids = array();
-		foreach ($speaker_ids as $speaker_id) {
-			$session->speakers[$speaker_id] = $speakers[$speaker_id];
-		}
-		
 		if ($column_type) {
 			$column_id = get_post_meta($session->ID, 'conferencer_'.$column_type, true);
 			if ($time_slot_id && $column_id) {

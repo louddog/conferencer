@@ -13,25 +13,20 @@ if (!function_exists('robustAtts')) {
 	}
 }
 
-if (!function_exists('comma_sep_links')) {
-	function comma_sep_links($posts) {
+if (!function_exists('comma_seperated')) {
+	function comma_seperated($posts, $link = true, $serial_and = true) {
 		if (!is_array($posts)) return '';
-		$links = array();
+		
+		$items = array();
+		$count = 0;
 		foreach ($posts as $post) {
-			$links[] = "<a href='".get_permalink($post->ID)."'>$post->post_title</a>";
+			$item = $post->post_title;
+			if ($link) $item = "<a href='".get_permalink($post->ID)."'>$item</a>";
+			if ($serial_and && ++$count > 1 && $count == count($posts)) $item = " and $item";
+			$items[] = $item;
 		}
-		return implode(', ', $links);
-	}
-}
-
-if (!function_exists('comma_sep_titles')) {
-	function comma_sep_titles($posts) {
-		if (!is_array($posts)) return '';
-		$titles = array();
-		foreach ($posts as $post) {
-			$titles[] = $post->post_title;
-		}
-		return implode(', ', $titles);
+		
+		return implode(', ', $items);
 	}
 }
 
