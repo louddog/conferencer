@@ -40,6 +40,7 @@ class Conferencer {
 			'/shortcode.php',
 			'/models/session.php',
 			'/models/speaker.php',
+			'/models/company.php',
 			'/models/room.php',
 			'/models/time_slot.php',
 			'/models/track.php',

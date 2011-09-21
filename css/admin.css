@@ -9,7 +9,8 @@
 #menu-posts-time_slot .wp-menu-image,
 #menu-posts-track .wp-menu-image,
 #menu-posts-sponsor .wp-menu-image,
-#menu-posts-sponsor_level .wp-menu-image {
+#menu-posts-sponsor_level .wp-menu-image,
+#menu-posts-company .wp-menu-image {
 	background: url(images/admin-icons.png) no-repeat left top !important;
 }
 
@@ -44,6 +45,10 @@
 #menu-posts-sponsor_level .wp-menu-image { background-position: -196px -18px !important; }
 #menu-posts-sponsor_level:hover .wp-menu-image,
 #menu-posts-sponsor_level.wp-has-current-submenu .wp-menu-image {	background-position: -196px 6px !important; }
+
+#menu-posts-company .wp-menu-image { background-position: -224px -18px !important; }
+#menu-posts-company:hover .wp-menu-image,
+#menu-posts-company.wp-has-current-submenu .wp-menu-image {	background-position: -224px 6px !important; }
 
 /* Post edit page options */
 
