@@ -3,7 +3,6 @@
 // TODO: Allow tabbed days
 // TODO: broken layout: single day, multi-time-slot, no sessions
 // TODO: empty rows and columns seem to not be showing up by default
-// TODO: add room to tooltip (to content if no tooltip)
 // TODO: maybe don't use <p> tags in session grid (still use in tooltip)
 
 /* ============================================================================
@@ -334,26 +333,24 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 		<div class="session">
 			<p class="title">
-				<?php if ($link_sessions) { ?>
-					<a href="<?php echo get_permalink($session->ID); ?>">
-				<?php } ?>
-					<?php echo $session->post_title; ?>
-				<?php if ($link_sessions) { ?>
-					</a>
-				<?php } ?>
+				<?php
+					$html = $session->post_title;
+					if ($link_sessions) $html = "<a href='".get_permalink($session->ID)."'>$html</a>";
+					echo $html;
+				?>
 			</p>
-	
-			<p class="speakers">
-				<?php echo comma_separated($session->speakers, $link_speakers); ?>
-			</p>
+			
+			<?php
+				$show = $session_tooltips ? 'speakers' : 'speakers,room';
+				echo do_shortcode("[session-meta post_id='$session->ID' show='$show' speakers_prefix='with ' room_prefix='in ']");
+			?>
 
 			<?php if ($session_tooltips) { ?>
 				<div class="session-tooltip">
 					<h3 class="title"><?php echo $session->post_title; ?></h3>
-					<p class="speakers"><?php echo comma_separated($session->speakers, false); ?></p>
+					<?php echo do_shortcode($sc = "[session-meta post_id='$session->ID' show='speakers,room']"); ?>
 					<p class="excerpt"><?php echo generate_excerpt($session); ?></p>
-					<div class="arrow"></div>
-					<div class="inner-arrow"></div>
+					<div class="arrow"></div><div class="inner-arrow"></div>
 				</div>
 			<?php } ?>
 		
