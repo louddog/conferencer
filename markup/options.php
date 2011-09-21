@@ -1,8 +1,10 @@
 <fieldset id="conference_options">
 	<table>
+		<?php $user_option_count = 0; ?>
 		<?php foreach($this->options as $name => $option) { ?>
 			<?php
 				if ($option['type'] == 'internal') continue;
+				$user_option_count++;
 				$name = "conferencer_$name";
 				$value = isset($$name) ? $$name : get_post_meta($post->ID, $name, true);
 			?>
@@ -108,4 +110,7 @@
 			</tr>
 		<?php } ?>
 	</table>
+	<?php if (!$user_option_count) { ?>
+		<p>There aren't any Conferencer options for <?php echo $this->plural; ?>.</p>
+	<?php } ?>
 </fieldset>
