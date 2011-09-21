@@ -4,6 +4,35 @@ new Conferencer_Shortcode_Sesssion_Meta();
 class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	var $shortcode = 'session-meta';
 	var $defaults = array(
+		'show' => "time,speakers,room,track,sponsors",
+		
+		'show_time' => true,
+		'show_speakers' => true,
+		'show_room' => true,
+		'show_track' => true,
+		'show_sponsors' => true,
+
+		'time_prefix' => "",
+		'speaker_prefix' => "Presented by ",
+		'room_prefix' => "Located in ",
+		'track_prefix' => "In track ",
+		'sponsor_prefix' => "Sponsored by ",
+
+		'time_suffix' => "",
+		'speaker_suffix' => "",
+		'room_suffix' => "",
+		'track_suffix' => "",
+		'sponsor_suffix' => "",
+
+		'date_format' => 'l, F j, Y',
+		'time_format' => 'g:ia',
+		'time_separator' => ' &ndash; ',
+		
+		'link_titles' => true,
+		'link_speakers' => true,
+		'link_room' => true,
+		'link_track' => true,
+		'link_sponsors' => true,
 	);
 
 	function __construct() {
@@ -25,46 +54,64 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		if (get_post_type() != 'session') return "Error: Shortcode: 'session-meta' can only be used within Conferencer Sessions.";
 
 		$this->set_options($options);
+		if ($this->options['link_titles'] === false) {
+			$this->options['link_speakers'] = false;
+			$this->options['link_room'] = false;
+			$this->options['link_track'] = false;
+			$this->options['link_sponsors'] = false;
+		}
 		extract($this->options);
 	
 		global $post;
 	
-		ob_start(); 
+		$meta = array();
+		foreach (explode(',', $show) as $type) {
+			$type = trim($type);
+			
+			switch ($type) {
+				case 'time':
+					if ($time_slot_id = get_post_meta($post->ID, 'conferencer_time_slot', true)) {
+						$starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
+						$ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
+						$html = date($date_format, $starts).", ".date($time_format, $starts).$time_separator.date($time_format, $ends);
+						$meta[] = $time_prefix.$html.$time_suffix;
+					}
+					break;
 		
-		$html = array();
+				case 'speakers':
+					if (count($speakers = Conferencer::get_speakers($post))) {
+						$meta[] = $speaker_prefix.comma_separated($speakers, $link_speakers).$speaker_suffix;
+					}
+					break;
 		
-		// Time
-		if ($time_slot_id = get_post_meta($post->ID, 'conferencer_time_slot', true)) {
-			$starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
-			$ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
-			$html[] = date('l, F j, Y', $starts).", ".date('g:ia', $starts)." to ".date('g:ia', $ends);
+
+				case 'room':
+					if ($room_id = get_post_meta($post->ID, 'conferencer_room', true)) {
+						$html = get_the_title($room_id);
+						if ($link_room) $html = "<a href='".get_permalink($room_id)."'>$html</a>";
+						$meta[] = $room_prefix.$html.$room_suffix;
+					}
+					break;
+
+				case 'track':
+					if ($track_id = get_post_meta($post->ID, 'conferencer_track', true)) {
+						$html = get_the_title($track_id);
+						if ($link_track) $html = "<a href='".get_permalink($track_id)."'>$html</a>";
+						$meta[] = $track_prefix.$html.$track_suffix;
+					}
+					break;
+
+				case 'sponsors':
+					if (count($sponsors = Conferencer::get_sponsors($post))) {
+						$meta[] = $sponsor_prefix.comma_separated($sponsors, $link_sponsors).$sponsors_suffix;
+					}
+					break;
+					
+				default:
+					$meta[] = "Unknown session attribute";
+			}
 		}
-		
-		// Speakers
-		if (count($speakers = Conferencer::get_speakers($post))) {
-			$html[] = "Presented by ".comma_separated($speakers);
-		}
-		
-		// Room
-		if ($room_id = get_post_meta($post->ID, 'conferencer_room', true)) {
-			$html[] = "Located in <a href='".get_permalink($room_id)."'>".get_the_title($room_id)."</a>";
-		}
-		
-		// Track
-		if ($track_id = get_post_meta($post->ID, 'conferencer_track', true)) {
-			$html[] = "In track <a href='".get_permalink($track_id)."'>".get_the_title($track_id)."</a>";
-		}
-		
-		// Sponsors
-		if (count($sponsors = Conferencer::get_sponsors($post))) {
-			$html[] = "Sponsored by ".comma_separated($sponsors);
-		}
-		
-		// Glue it together
-		if (count($html)) {
-			echo "<p class='session-meta'>".implode("<br />", $html)."</p>";
-		}
-		
-		return ob_get_clean();
+
+		return count($meta) ? "<p class='session-meta'>".implode("<br />", $meta)."</p>" : '';
 	}
 }
