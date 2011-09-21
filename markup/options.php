@@ -39,6 +39,9 @@
 							id="<?php echo $name.'_date'; ?>"
 							value="<?php if ($value) echo date('n/j/Y', $value); ?>"
 							placeholder="mm/dd/yyyy"
+							<?php if ($this->earliest_time_slot_date) { // TODO: test this on first time slot ?>
+								default="<?php echo date('n/j/Y', $this->earliest_time_slot_date); ?>"
+							<?php } ?>
 						/>
 						<input
 							class="time"
