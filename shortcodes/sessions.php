@@ -26,7 +26,7 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	}
 
 	function content($options) {
-		if (!in_array($post->post_type, self::$post_types_with_sessions)) return "Error: Shortcode: 'sessions' can only be used within Conferencer post types: speaker, room, time_slot, track, and sponsor.";
+		if (!in_array(get_post_type(), self::$post_types_with_sessions)) return "Error: Shortcode: 'sessions' can only be used within Conferencer post types: speaker, room, time_slot, track, and sponsor.";
 
 		$this->set_options($options);
 		extract($this->options);
