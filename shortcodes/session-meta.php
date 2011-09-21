@@ -8,13 +8,6 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		
 		'show' => "time,speakers,room,track,sponsors",
 		
-		'show_title' => true,
-		'show_time' => true,
-		'show_speakers' => true,
-		'show_room' => true,
-		'show_track' => true,
-		'show_sponsors' => true,
-
 		'title_prefix' => "",
 		'time_prefix' => "",
 		'speakers_prefix' => "Presented by ",
