@@ -28,6 +28,18 @@ if (!function_exists('deep_empty')) {
 	}
 }
 
+if (!function_exists('deep_trim')) {
+	function deep_trim($var) {
+		if (is_array($var)) {
+			$array = array();
+			foreach ($var as $key => $value) {
+				$array[$key] = deep_trim($value);
+			}
+			return $array;
+		} else return trim($var);
+	}
+}
+
 if (!function_exists('output_classes')) {
 	function output_classes($classes) {
 		if (count($classes)) echo ' class="'.implode(' ', $classes).'"';

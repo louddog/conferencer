@@ -83,7 +83,7 @@ class Conferencer_CustomPostType {
 		foreach($this->options as $key => $option) {
 			if ($option['type'] == 'internal') continue;
 			
-			$value = trim($_POST['conferencer_'.$key]);
+			$value = deep_trim($_POST['conferencer_'.$key]);
 			
 			if ($option['type'] == 'int') $value = intval($value);
 			if ($option['type'] == 'money') $value = floatVal($value);
