@@ -227,18 +227,51 @@ class Conferencer {
 	
 	// static user functions =========================================================
 	
+	function get_sponsors($session) {
+		static $all_sponsors = false;
+		if (!$all_sponsors) $all_sponsors = self::get_list('sponsor');
+		
+		$sponsors = array();
+		$ids = unserialize(get_post_meta($session->ID, 'conferencer_sponsors', true));
+		if (!$ids) $ids = array();
+		foreach ($ids as $id) {
+			$sponsors[$id] = $all_sponsors[$id];
+		}
+		
+		uasort($sponsors, array('Conferencer', 'order_sort'));
+		
+		return $sponsors;
+	}
+	
+	function get_speakers($session) {
+		static $all_speakers = false;
+		if (!$all_speakers) $all_speakers = self::get_list('speaker');
+		
+		$speakers = array();
+		$ids = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
+		if (!$ids) $ids = array();
+		foreach ($ids as $id) {
+			$speakers[$id] = $all_speakers[$id];
+		}
+		uasort($speakers, array('Conferencer', 'order_sort'));
+		
+		return $speakers;
+	}
+	
 	function attach_speakers(&$sessions) {
+		$single = false;
+		if (!is_array($sessions)) {
+			$single = true;
+			$sessions = array($sessions->ID => $sessions);
+		}
+		
 		$speakers = Conferencer::get_list('speaker');
 		
 		foreach ($sessions as $session_id => $session) {
-			$session->speakers = array();
-			$speaker_ids = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
-			if (!$speaker_ids) $speaker_ids = array();
-			foreach ($speaker_ids as $speaker_id) {
-				$sessions[$session_id]->speakers[$speaker_id] = $speakers[$speaker_id];
-			}
-			uasort($sessions[$session_id]->speakers, array('Conferencer', 'order_sort'));
+			$session->speakers = self::get_speakers($session);
 		}
+		
+		if ($single) $sessions = array_pop($sessions);
 	}
 	
 	function get_list($post_type, $sort = 'order_sort') {

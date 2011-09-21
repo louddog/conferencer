@@ -15,10 +15,10 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	
 	function __construct() {
 		parent::__construct();
-		add_filter('the_content', array(&$this, 'add_to_content'));
+		add_filter('the_content', array(&$this, 'add_to_page'));
 	}
 	
-	function add_to_content($content) {
+	function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_sessions)) {
 			$content .= do_shortcode('[sessions]');
 		}
@@ -26,13 +26,12 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	}
 
 	function content($options) {
+		if (!in_array($post->post_type, self::$post_types_with_sessions)) return "Error: Shortcode: 'sessions' can only be used within Conferencer post types: speaker, room, time_slot, track, and sponsor.";
+
 		$this->set_options($options);
 		extract($this->options);
 	
 		global $post;
-		if (!in_array($post->post_type, self::$post_types_with_sessions)) {
-			return "Error: [sessions] can only be used within Conferencer post types: speaker, room, time_slot, track, and sponsor.";
-		}
 	
 		$sessions = Conferencer::get_sessions($post->ID);
 		Conferencer::attach_speakers($sessions);
