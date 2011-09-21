@@ -8,18 +8,21 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		
 		'show' => "time,speakers,room,track,sponsors",
 		
+		'show_title' => true,
 		'show_time' => true,
 		'show_speakers' => true,
 		'show_room' => true,
 		'show_track' => true,
 		'show_sponsors' => true,
 
+		'title_prefix' => "",
 		'time_prefix' => "",
 		'speakers_prefix' => "Presented by ",
 		'room_prefix' => "Located in ",
 		'track_prefix' => "In track ",
 		'sponsors_prefix' => "Sponsored by ",
 
+		'title_suffix' => "",
 		'time_suffix' => "",
 		'speaker_suffix' => "",
 		'room_suffix' => "",
@@ -30,6 +33,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		'time_format' => 'g:ia',
 		'time_separator' => ' &ndash; ',
 		
+		'link_all' => true,
 		'link_titles' => true,
 		'link_speakers' => true,
 		'link_room' => true,
@@ -54,7 +58,8 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 
 	function content($options) {
 		$this->set_options($options);
-		if ($this->options['link_titles'] === false) {
+		if ($this->options['link_all'] === false) {
+			$this->options['link_titles'] = false;
 			$this->options['link_speakers'] = false;
 			$this->options['link_room'] = false;
 			$this->options['link_track'] = false;
@@ -70,6 +75,12 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 			$type = trim($type);
 			
 			switch ($type) {
+				case 'title':
+					$html = $post->post_title;
+					if ($link_title) $html = "<a href='".get_permalink($post->ID)."'>$html</a>";
+					$meta[] = $title_prefix.$html.$title_suffix;
+					break;
+				
 				case 'time':
 					if ($time_slot_id = get_post_meta($post->ID, 'conferencer_time_slot', true)) {
 						$starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
