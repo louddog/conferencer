@@ -1,5 +1,7 @@
 <?php
 
+// TODO: add details to session page, speaker, track, time, room, sponsor
+
 new Conferencer_Session();
 class Conferencer_Session extends Conferencer_CustomPostType {
 	var $slug = 'session';

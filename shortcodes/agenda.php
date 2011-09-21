@@ -2,6 +2,10 @@
 
 // TODO: Allow tabbed days
 // TODO: broken layout: single day, multi-time-slot, no sessions
+// TODO: show session auto-excerpt if no excerpt provided
+// TODO: empty rows and columns seem to not be showing up by default
+// TODO: add room to tooltip (to content if no tooltip)
+// TODO: maybe don't use <p> tags in session grid (still use in tooltip)
 
 /* ============================================================================
 
