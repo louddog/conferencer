@@ -53,7 +53,7 @@ class Conferencer {
 			$d = dir(CONFERENCER_PATH."/$dir");
 			while ($file = $d->read()) {
 				if (in_array($file, array('.', '..'))) continue;
-				if (preg_match("/^\.", $file)) continue;
+				if (preg_match("/^\./", $file)) continue;
 				include CONFERENCER_PATH."/$dir/$file";
 			}
 		}
