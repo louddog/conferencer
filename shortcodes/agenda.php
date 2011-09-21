@@ -2,7 +2,6 @@
 
 // TODO: Allow tabbed days
 // TODO: broken layout: single day, multi-time-slot, no sessions
-// TODO: show session auto-excerpt if no excerpt provided
 // TODO: empty rows and columns seem to not be showing up by default
 // TODO: add room to tooltip (to content if no tooltip)
 // TODO: maybe don't use <p> tags in session grid (still use in tooltip)
@@ -352,7 +351,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				<div class="session-tooltip">
 					<h3 class="title"><?php echo $session->post_title; ?></h3>
 					<p class="speakers"><?php echo comma_seperated($session->speakers, false); ?></p>
-					<p class="excerpt"><?php echo $session->post_excerpt; ?></p>
+					<p class="excerpt"><?php echo generate_excerpt($session); ?></p>
 					<div class="arrow"></div>
 					<div class="inner-arrow"></div>
 				</div>
