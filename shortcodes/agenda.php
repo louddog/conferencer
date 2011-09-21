@@ -344,13 +344,13 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 			</p>
 	
 			<p class="speakers">
-				<?php echo comma_seperated($session->speakers, $link_speakers); ?>
+				<?php echo comma_separated($session->speakers, $link_speakers); ?>
 			</p>
 
 			<?php if ($session_tooltips) { ?>
 				<div class="session-tooltip">
 					<h3 class="title"><?php echo $session->post_title; ?></h3>
-					<p class="speakers"><?php echo comma_seperated($session->speakers, false); ?></p>
+					<p class="speakers"><?php echo comma_separated($session->speakers, false); ?></p>
 					<p class="excerpt"><?php echo generate_excerpt($session); ?></p>
 					<div class="arrow"></div>
 					<div class="inner-arrow"></div>

@@ -58,9 +58,9 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 												foreach ($speakers as $id => $speaker) {
 													if ($id == $post->ID) unset($speakers[$id]);
 												}
-												if (count($speakers)) $html .= ", with ".comma_seperated($speakers, $link_speakers);
+												if (count($speakers)) $html .= ", with ".comma_separated($speakers, $link_speakers);
 											} else {
-												$html .= ", by ".comma_seperated($session->speakers, $link_speakers);
+												$html .= ", by ".comma_separated($session->speakers, $link_speakers);
 											}
 										}
 										echo $html;
