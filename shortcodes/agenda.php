@@ -1,6 +1,7 @@
 <?php
 
 // TODO: Allow tabbed days
+// TODO: broken layout: single day, multi-time-slot, no sessions
 
 /* ============================================================================
 
