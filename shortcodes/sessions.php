@@ -4,6 +4,7 @@ new Conferencer_Shortcode_Sesssions();
 class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	var $shortcode = 'sessions';
 	var $defaults = array(
+		'post_id' => false,
 		'title' => "Sessions",
 		'no_sessions_message' => "There aren't any sessions scheduled for this yet.",
 		'show_speakers' => true,
@@ -26,16 +27,16 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 	}
 
 	function content($options) {
-		if (!in_array(get_post_type(), self::$post_types_with_sessions)) return "Error: Shortcode: 'sessions' can only be used within Conferencer post types: speaker, room, time_slot, track, and sponsor.";
-
 		$this->set_options($options);
 		extract($this->options);
-	
-		global $post;
-	
+		
+		$post = $post_id ? get_post($post_id) : $GLOBALS['post'];
+		if (!in_array(get_post_type($post), self::$post_types_with_sessions))
+			return "[Shortcode error (sessions): If not used within a Conferencer page (of type speaker, room, time_slot, track, or sponsor), you must provide a post ID using 'post_id'.]";
+		
 		$sessions = Conferencer::get_sessions($post->ID);
 		Conferencer::attach_speakers($sessions);
-	
+		
 		ob_start(); ?>
 	
 			<?php if (!empty($sessions) || !empty($no_sessions_message)) { ?>

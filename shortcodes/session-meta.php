@@ -4,6 +4,8 @@ new Conferencer_Shortcode_Sesssion_Meta();
 class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	var $shortcode = 'session-meta';
 	var $defaults = array(
+		'post_id' => false,
+		
 		'show' => "time,speakers,room,track,sponsors",
 		
 		'show_time' => true,
@@ -13,10 +15,10 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		'show_sponsors' => true,
 
 		'time_prefix' => "",
-		'speaker_prefix' => "Presented by ",
+		'speakers_prefix' => "Presented by ",
 		'room_prefix' => "Located in ",
 		'track_prefix' => "In track ",
-		'sponsor_prefix' => "Sponsored by ",
+		'sponsors_prefix' => "Sponsored by ",
 
 		'time_suffix' => "",
 		'speaker_suffix' => "",
@@ -51,8 +53,6 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	}
 
 	function content($options) {
-		if (get_post_type() != 'session') return "Error: Shortcode: 'session-meta' can only be used within Conferencer Sessions.";
-
 		$this->set_options($options);
 		if ($this->options['link_titles'] === false) {
 			$this->options['link_speakers'] = false;
@@ -62,8 +62,9 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		}
 		extract($this->options);
 	
-		global $post;
-	
+		$post = $post_id ? get_post($post_id) : $GLOBALS['post'];
+		if (get_post_type($post) != 'session') return "[Shortcode error (session-meta): If not used within a session page, you must provide a session ID using 'post_id'.]";
+
 		$meta = array();
 		foreach (explode(',', $show) as $type) {
 			$type = trim($type);
@@ -80,7 +81,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		
 				case 'speakers':
 					if (count($speakers = Conferencer::get_speakers($post))) {
-						$meta[] = $speaker_prefix.comma_separated($speakers, $link_speakers).$speaker_suffix;
+						$meta[] = $speakers_prefix.comma_separated($speakers, $link_speakers).$speaker_suffix;
 					}
 					break;
 		
@@ -103,7 +104,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 
 				case 'sponsors':
 					if (count($sponsors = Conferencer::get_sponsors($post))) {
-						$meta[] = $sponsor_prefix.comma_separated($sponsors, $link_sponsors).$sponsors_suffix;
+						$meta[] = $sponsors_prefix.comma_separated($sponsors, $link_sponsors).$sponsors_suffix;
 					}
 					break;
 					
