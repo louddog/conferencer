@@ -291,41 +291,48 @@ class Conferencer {
 		return $list;
 	}
 	
-	function get_sessions($post_id) {
-		$post_type = get_post_type($post_id);
-		$sessions = array();
+	function get_sessions($post_ids) {
+		if (!is_array($post_ids)) $post_ids = array($post_ids);
 		
-		if (in_array($post_type, array('speaker', 'sponsor'))) {
-			$query = new WP_Query(array(
-				'post_type' => 'session',
-				'posts_per_page' => -1, // get all
-			));
+		$session_ids = array();
+		
+		static $all_sessions = false;
+		if (!$all_sessions) $all_sessions = self::get_list('session');
+		
+		foreach ($post_ids as $post_id) {
+			$post_type = get_post_type($post_id);
 			
-			foreach ($query->posts as $session) {
-				// if the pluralization ever doesn't work, this will need to be refactored
-				$post_ids = unserialize(get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true));
-				if (in_array($post_id, $post_ids)) $sessions[$session->ID] = $session;
+			if (in_array($post_type, array('speaker', 'sponsor'))) {
+				foreach ($all_sessions as $session) {
+					$related_post_ids = unserialize(get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true));
+					if (in_array($post_id, $related_post_ids)) $session_ids[] = $session->ID;
+				}
+			} else {
+				$query = new WP_Query(array(
+					'post_type' => 'session',
+					'posts_per_page' => -1,
+					'meta_query' => array(
+						array(
+							'key' => 'conferencer_'.$post_type,
+							'value' => $post_id,
+						)
+					),
+				));
+				
+				foreach ($query->posts as $session) {
+					$session_ids[] = $session->ID;
+				}
 			}
-		} else {
-			$query = new WP_Query(array(
-				'post_type' => 'session',
-				'posts_per_page' => -1, // get all
-				'meta_query' => array(
-					array(
-						'key' => 'conferencer_'.get_post_type($post_id),
-						'value' => $post_id,
-					)
-				),
-			));
+		}
 		
-			foreach ($query->posts as $session) {
-				$sessions[$session->ID] = $session;
-			}
+		$sessions = array();
+		foreach ($session_ids as $session_id) {
+			$sessions[$session_id] = $all_sessions[$session_id];
 		}
 		
 		uasort($sessions, array('Conferencer', 'order_sort'));
 		uasort($sessions, array('Conferencer', 'start_time_sort'));
-		
+
 		return $sessions;
 	}
 	
