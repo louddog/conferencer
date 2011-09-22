@@ -57,9 +57,13 @@ if (!function_exists('output_classes')) {
 }
 
 if (!function_exists('generate_excerpt')) {
-	function generate_excerpt($post) {
-		if (!isset($post->post_content)) return '';
+	function generate_excerpt($post_id = false) {
+		if ($post_id) $post = is_numeric($post_id) ? get_post($post_id) : $post_id;
+		else $post = $GLOBALS['post'];
+
+		if (!$post) return '';
 		if (isset($post->post_excerpt) && !empty($post->post_excerpt)) return $post->post_excerpt;
+		if (!isset($post->post_content)) return '';
 	
 		$content = $raw_content = $post->post_content;
 	
