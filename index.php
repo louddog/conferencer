@@ -26,7 +26,7 @@ new Conferencer();
 class Conferencer {
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
-		add_action('init', array(&$this, 'styles_and_scriptst'));
+		add_action('init', array(&$this, 'styles_and_scripts'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 		register_activation_hook(__FILE__, array(&$this, 'activate'));
 		register_deactivation_hook(__FILE__, array(&$this, 'deactivate'));
@@ -60,7 +60,7 @@ class Conferencer {
 		}
 	}
 	
-	function styles_and_scriptst() {
+	function styles_and_scripts() {
 		wp_register_style(
 			'jquery-ui',
 			CONFERENCER_URL.'css/jquery-ui-1.8.16.custom.css',
