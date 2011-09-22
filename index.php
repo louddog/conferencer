@@ -2,7 +2,7 @@
 /*
 Plugin Name: Conferencer
 Description: Creates a system of custom post types to create a conference schedule.
-Author: Matt DeClaire
+Author: Loud Dog
 Version: 1.0
 Author URI: http://conferencer.louddog.com/
 */
