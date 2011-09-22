@@ -27,7 +27,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		'time_separator' => ' &ndash; ',
 		
 		'link_all' => true,
-		'link_titles' => true,
+		'link_title' => true,
 		'link_speakers' => true,
 		'link_room' => true,
 		'link_track' => true,
@@ -52,7 +52,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	function content($options) {
 		$this->set_options($options);
 		if ($this->options['link_all'] === false) {
-			$this->options['link_titles'] = false;
+			$this->options['link_title'] = false;
 			$this->options['link_speakers'] = false;
 			$this->options['link_room'] = false;
 			$this->options['link_track'] = false;
@@ -71,7 +71,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 				case 'title':
 					$html = $post->post_title;
 					if ($link_title) $html = "<a href='".get_permalink($post->ID)."'>$html</a>";
-					$meta[] = $title_prefix.$html.$title_suffix;
+					$meta[] = "<span class='title'>".$title_prefix.$html.$title_suffix."</span>";
 					break;
 				
 				case 'time':
@@ -79,13 +79,14 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 						$starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
 						$ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
 						$html = date($date_format, $starts).", ".date($time_format, $starts).$time_separator.date($time_format, $ends);
-						$meta[] = $time_prefix.$html.$time_suffix;
+						$meta[] = "<span class='time'>".$time_prefix.$html.$time_suffix."</span>";
 					}
 					break;
 		
 				case 'speakers':
 					if (count($speakers = Conferencer::get_speakers($post))) {
-						$meta[] = $speakers_prefix.comma_separated($speakers, $link_speakers).$speaker_suffix;
+						$html = comma_separated($speakers, $link_speakers);
+						$meta[] = "<span class='speakers'>".$speakers_prefix.$html.$speaker_suffix;
 					}
 					break;
 		
@@ -94,7 +95,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 					if ($room_id = get_post_meta($post->ID, 'conferencer_room', true)) {
 						$html = get_the_title($room_id);
 						if ($link_room) $html = "<a href='".get_permalink($room_id)."'>$html</a>";
-						$meta[] = $room_prefix.$html.$room_suffix;
+						$meta[] = "<span class='room'>".$room_prefix.$html.$room_suffix."</span>";
 					}
 					break;
 
@@ -102,13 +103,14 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 					if ($track_id = get_post_meta($post->ID, 'conferencer_track', true)) {
 						$html = get_the_title($track_id);
 						if ($link_track) $html = "<a href='".get_permalink($track_id)."'>$html</a>";
-						$meta[] = $track_prefix.$html.$track_suffix;
+						$meta[] = "<span class='track'>".$track_prefix.$html.$track_suffix."</span>";
 					}
 					break;
 
 				case 'sponsors':
 					if (count($sponsors = Conferencer::get_sponsors($post))) {
-						$meta[] = $sponsors_prefix.comma_separated($sponsors, $link_sponsors).$sponsors_suffix;
+						$html = comma_separated($sponsors, $link_sponsors);
+						$meta[] = "<span class='sponsors'>".$sponsors_prefix.$html.$sponsors_suffix."</span>";
 					}
 					break;
 					
