@@ -348,7 +348,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 			<?php if ($session_tooltips) { ?>
 				<div class="session-tooltip">
 					<h3 class="title"><?php echo $session->post_title; ?></h3>
-					<?php echo do_shortcode($sc = "[session-meta post_id='$session->ID' show='speakers,room']"); ?>
+					<?php echo do_shortcode($sc = "[session-meta post_id='$session->ID' show='speakers,room' link_all=false]"); ?>
 					<p class="excerpt"><?php echo generate_excerpt($session); ?></p>
 					<div class="arrow"></div><div class="inner-arrow"></div>
 				</div>
