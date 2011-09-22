@@ -34,7 +34,7 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 		$post_ids = $post_ids ? explode(',', $post_ids) : array();
 		if ($post_id) $post_ids = array_merge($post_ids, explode(',', $post_id));
 		$post_ids = array_unique($post_ids);
-		if (empty($post_ids) && $GLOBAL['post']->ID) $post_id = $GLOBAL['post']->ID;
+		if (empty($post_ids) && $GLOBALS['post']->ID) $post_ids = array($GLOBALS['post']->ID);
 		if (empty($post_ids)) return "[Shortcode error (sessions): No session ID provided.]";
 		
 		$content = '';
