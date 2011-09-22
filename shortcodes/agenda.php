@@ -334,7 +334,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 		<div class="session">
 			<?php echo do_shortcode("
-				[session-meta
+				[session_meta
 					post_id='$session->ID'
 					show='title,speakers".($session_tooltips ? '' : ',room')."'
 					speakers_prefix='with '
@@ -348,7 +348,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 			<?php if ($session_tooltips) { ?>
 				<div class="session-tooltip">
 					<?php echo do_shortcode("
-						[session-meta
+						[session_meta
 							post_id='$session->ID'
 							show='title,speakers,room'
 							link_all=false

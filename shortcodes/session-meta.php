@@ -2,7 +2,7 @@
 
 new Conferencer_Shortcode_Sesssion_Meta();
 class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
-	var $shortcode = 'session-meta';
+	var $shortcode = 'session_meta';
 	var $defaults = array(
 		'post_id' => false,
 		
@@ -43,7 +43,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		if (get_post_type() == 'session') {
 			$meta = function_exists('conferencer_session_meta')
 					? conferencer_session_meta($post)
-					: do_shortcode('[session-meta]');
+					: do_shortcode('[session_meta]');
 			$content = $meta.$content;
 		}
 		return $content;
@@ -61,10 +61,10 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		extract($this->options);
 	
 		$post = $post_id ? get_post($post_id) : $GLOBALS['post'];
-		if (!$post) return "[Shortcode error (session-meta): If not used within a session page, you must provide a session ID using 'post_id'.]";
+		if (!$post) return "[Shortcode error (session_meta): If not used within a session page, you must provide a session ID using 'post_id'.]";
 		if (get_post_type($post) != 'session') {
-			if ($post_id) return "[Shortcode error (session-meta): <a href='".get_permalink($post_id)."'>".get_the_title($post_id)."</a> (ID: $post_id, type: ".get_post_type($post_id).") is not a session.]";
-			else return "[Shortcode error (session-meta): This post is not a session.  Maybe you meant to supply a session using post_id.]";
+			if ($post_id) return "[Shortcode error (session_meta): <a href='".get_permalink($post_id)."'>".get_the_title($post_id)."</a> (ID: $post_id, type: ".get_post_type($post_id).") is not a session.]";
+			else return "[Shortcode error (session_meta): This post is not a session.  Maybe you meant to supply a session using post_id.]";
 		}
 
 		$meta = array();
@@ -123,6 +123,6 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 			}
 		}
 
-		return count($meta) ? "<p class='session-meta'>".implode("<br />", $meta)."</p>" : '';
+		return count($meta) ? "<p class='session_meta'>".implode("<br />", $meta)."</p>" : '';
 	}
 }
