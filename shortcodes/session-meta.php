@@ -85,7 +85,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		
 				case 'speakers':
 					if (count($speakers = Conferencer::get_speakers($post))) {
-						$html = comma_separated($speakers, $link_speakers);
+						$html = comma_separated_post_titles($speakers, $link_speakers);
 						$meta[] = "<span class='speakers'>".$speakers_prefix.$html.$speaker_suffix;
 					}
 					break;
@@ -109,7 +109,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 
 				case 'sponsors':
 					if (count($sponsors = Conferencer::get_sponsors($post))) {
-						$html = comma_separated($sponsors, $link_sponsors);
+						$html = comma_separated_post_titles($sponsors, $link_sponsors);
 						$meta[] = "<span class='sponsors'>".$sponsors_prefix.$html.$sponsors_suffix."</span>";
 					}
 					break;

@@ -1,7 +1,17 @@
 <?php
 
-if (!function_exists('comma_separated')) {
-	function comma_separated($posts, $link = true, $serial_and = true) {
+if (!function_exists('implode_with_serial_and')) {
+	function implode_with_serial_and($args) {
+		if (!is_array($args)) return '';
+		if (count($args) == 1) return $args[0];
+		
+		$last = array_pop($args);
+		return implode(', ', $args).', and '.$last;
+	}
+}
+
+if (!function_exists('comma_separated_post_titles')) {
+	function comma_separated_post_titles($posts, $link = true, $serial_and = true) {
 		if (!is_array($posts)) return '';
 		
 		$items = array();
