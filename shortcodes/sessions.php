@@ -7,7 +7,7 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 		'post_id' => false,
 		'post_ids' => false,
 		'title' => false,
-		'no_sessions_message' => "There aren't any sessions scheduled for this yet.",
+		'no_sessions_message' => "There aren't any sessions for this yet.",
 		'link_post' => true,
 		'link_sessions' => true,
 		'title_tag' => 'h3',
