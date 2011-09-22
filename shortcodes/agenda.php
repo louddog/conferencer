@@ -70,7 +70,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'session_tooltips' => true,
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
-		'show_empty_cells' => true,
+		'show_empty_cells' => null,
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
@@ -86,7 +86,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	function content($options) {
 		// Set Options
 		if (!in_array($options['column_type'], array('track', 'room', false))) $options['column_type'] = false;
-		if (!$options['show_empty_cells']) $options['show_empty_rows'] = $options['show_empty_columns'] = false;
+		if ($options['show_empty_cells'] != null) $options['show_empty_rows'] = $options['show_empty_columns'] = $options['show_empty_cells'];
 		$this->set_options($options);
 		extract($this->options);
 
