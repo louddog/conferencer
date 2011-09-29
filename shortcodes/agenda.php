@@ -11,55 +11,6 @@
 	In your own functions.php, define:
 		conferencer_agenda_display_session($session, $options)
 	
-	Short Code Options --------------------------------------------------------
-	
-	column_type: [track, room, false]
-		set which post type to use for columns
-		use false to display sessions all in one column
-	
-	session_tooltips: [true, false]
-		whether to add content that displays a tooltip on hover
-	
-	show_empty_rows: [true, false]
-		whether to show table rows that don't have sessions
-	
-	show_empty_columns: [true, false]
-		whether to show table columns that don't have sessions
-		
-	show_empty_cells: [true, false]
-		if false, overrides show_empty_rows and show_empty_columns with false
-
-	row_day_format: PHP date() format string or false
-		formats the date used on day row separators
-		if false, day row separators are not displayed
-		
-	row_time_format: PHP date() format string
-		formats the date used for time slots
-		
-	show_row_ends: [true, false]
-		if true, displays an ending time for time slots
-		uses the row_time_format
-		
-	link_sessions: [true, false]
-		whether to link session to their pages'
-		
-	link_speakers: [true, false]
-		whether to link speakers to their pages'
-		
-	link_time_slots: [true, false]
-		whether to link time slots to their pages'
-		
-	link_columns: [true, false]
-		whether to link columns headers to their pages'
-		
-	unassigned_column_header_text: (string)
-		text used in the column header for unassigned sessions
-		
-	unscheduled_row_text: (string)
-		text used for the row of unscheduled sessions
-		displayed in the day row separator, if used
-		otherwise, displayed in the row's first cell (where time slots are displayed)
-	
 ============================================================================ */
 
 new Conferencer_Shortcode_Agenda();
