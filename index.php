@@ -35,9 +35,8 @@ class Conferencer {
 	}
 	
 	function include_files() {
-		$includes = array(
-			'/custom_post_type.php',
-			'/shortcode.php',
+		foreach (array(
+			'/models/custom_post_type.php',
 			'/models/session.php',
 			'/models/speaker.php',
 			'/models/company.php',
@@ -46,18 +45,17 @@ class Conferencer {
 			'/models/track.php',
 			'/models/sponsor.php',
 			'/models/sponsor_level.php',
-		);
-		
-		foreach ($includes as $include) include CONFERENCER_PATH.$include;
-		
-		foreach (array('settings', 'widgets', 'shortcodes') as $dir) {
-			$d = dir(CONFERENCER_PATH."/$dir");
-			while ($file = $d->read()) {
-				if (in_array($file, array('.', '..'))) continue;
-				if (preg_match("/^\./", $file)) continue;
-				include CONFERENCER_PATH."/$dir/$file";
-			}
-		}
+			
+			'/shortcodes/shortcode.php',
+			'/shortcodes/agenda.php',
+			'/shortcodes/session-meta.php',
+			'/shortcodes/sessions.php',
+			
+			'/widgets/sponsors.php',
+			
+			'/settings/order.php',
+			'/settings/regenerate-logos.php',
+		) as $include) include CONFERENCER_PATH.$include;
 	}
 	
 	function styles_and_scripts() {
