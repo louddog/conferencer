@@ -15,8 +15,10 @@ abstract class Conferencer_Shortcode {
 		if (is_array($options)) {
 			$new_options = array();
 			foreach ($options as $key => $value) {
-				if (is_string($value) && $value == 'true') $value = true;
-				if (is_string($value) && $value == 'false') $value = false;
+				if (is_string($value)) {
+					if ($value == 'true') $value = true;
+					if ($value == 'false') $value = false;
+				}
 				$new_options[$key] = $value;
 			}
 			$options = $new_options;
