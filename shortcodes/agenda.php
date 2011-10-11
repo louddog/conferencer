@@ -1,7 +1,6 @@
 <?php
 
 // TODO: Allow tabbed days
-// TODO: broken layout: single day, multi-time-slot, no sessions
 // TODO: empty rows and columns seem to not be showing up by default
 // TODO: maybe don't use <p> tags in session grid (still use in tooltip)
 
