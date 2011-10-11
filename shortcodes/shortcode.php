@@ -68,12 +68,14 @@ abstract class Conferencer_Shortcode {
 	
 	function get_cache($options) {
 		global $wpdb;
-		$content = $wpdb->get_var($sql = $wpdb->prepare("
-			SELECT content
+		$content = $wpdb->get_var($sql = $wpdb->prepare(
+			"SELECT content
 			from $wpdb->conferencer_shortcode_cache
-			where shortcode = '$this->shortcode'
-			and options = \"".$wpdb->escape(serialize($options))."\"
-		"));
+			where shortcode = %s
+			and options = %s",
+			$this->shortcode,
+			serialize($options)
+		));
 		
 		return $content;
 	}
