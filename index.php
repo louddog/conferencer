@@ -73,7 +73,7 @@ class Conferencer {
 			'conferencer',
 			CONFERENCER_URL.'css/screen.css',
 			false,
-			'1.0'
+			'1.0.1'
 		);
 
 		wp_register_script(
@@ -104,7 +104,7 @@ class Conferencer {
 			'conferencer',
 			CONFERENCER_URL.'js/site.js',
 			array('fadeshow'),
-			'1.0',
+			'1.0.1',
 			true
 		);
 	
