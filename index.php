@@ -19,6 +19,7 @@ session_start();
 
 define('CONFERENCER_PATH', dirname(__FILE__));
 define('CONFERENCER_URL', plugin_dir_url(__FILE__));
+define('CONFERENCER_REGISTER_FILE', __FILE__);
 
 include CONFERENCER_PATH.'/functions.php';
 
@@ -28,8 +29,8 @@ class Conferencer {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scripts'));
 		add_action('admin_notices', array(&$this, 'admin_notices'));
-		register_activation_hook(__FILE__, array(&$this, 'activate'));
-		register_deactivation_hook(__FILE__, array(&$this, 'deactivate'));
+		register_activation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'activate'));
+		register_deactivation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'deactivate'));
 		add_theme_support('post-thumbnails');
 		$this->include_files();
 	}
