@@ -8,6 +8,7 @@ abstract class Conferencer_Shortcode {
 	function __construct() {
 		add_shortcode($this->shortcode, array(&$this, 'pre_content'));
 		add_action('save_post', array(&$this, 'save_post'));
+		add_action('trash_post', array(&$this, 'trash_post'));
 		
 		register_activation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'activate'));
 		register_deactivation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'deactivate'));
@@ -48,8 +49,15 @@ abstract class Conferencer_Shortcode {
 	function save_post($post_id) {
 		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-		if (!current_user_can('edit_post')) return;
+		$this->clear_cache();
+	}
 		
+	function trash_post($post_id) {
+		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
+		$this->clear_cache();
+	}
+		
+	function clear_cache() {
 		global $wpdb;
 		$wpdb->query("TRUNCATE $wpdb->conferencer_shortcode_cache");
 	}
