@@ -17,6 +17,8 @@ class Conferencer_CustomPostType {
 		add_action('manage_edit-'.$this->slug.'_columns', array(&$this, 'columns'));
 		add_action('manage_posts_custom_column', array(&$this, 'column'));
 		
+		Conferencer::$post_types[] = $this->slug;
+
 		$this->options['order'] = array(
 			'type' => 'internal',
 			'label' => "Order",

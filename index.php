@@ -25,6 +25,8 @@ include CONFERENCER_PATH.'/functions.php';
 
 new Conferencer();
 class Conferencer {
+	static $post_types = array(); // constructed in custom post type constuctor
+	
 	function __construct() {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scripts'));
