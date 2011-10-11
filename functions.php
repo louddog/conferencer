@@ -93,3 +93,10 @@ if (!function_exists('debug')) {
 		echo "</pre>";
 	}
 }
+
+if (!function_exists('get_day')) {
+	function get_day($timestamp) {
+		$getdate = getdate($timestamp);
+		return mktime(0, 0, 0, $getdate['mon'], $getdate['mday'], $getdate['year']);
+	}
+}

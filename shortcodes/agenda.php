@@ -19,6 +19,8 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
 		'show_empty_cells' => null,
+		'tabs' => 'days',
+		'tab_day_format' => 'M. j, Y',
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
@@ -85,6 +87,10 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				$agenda[$time_slot_id][$session->ID] = $session;
 			}
 		}
+		
+		// Remove empty unscheduled rows
+		
+		if (deep_empty($agenda[0])) unset($agenda[0]);
 	
 		// Conditionally remove empty rows and columns
 	
@@ -107,7 +113,28 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				}
 			}
 		}
+
+		// Set up tabs
 	
+		if ($tabs) {
+			$tab_headers = array();
+		
+			foreach ($agenda as $time_slot_id => $cells) {
+				if ($tabs == 'days') {
+					if ($starts = get_post_meta($time_slot_id, 'conferencer_starts', true)) {
+						$tab_headers[] = get_day($starts);
+					} else {
+						$tab_headers[] = 0;
+						echo "<p>non-dated time slot: $time_slot_id</p>";
+					}
+				}
+			}
+		
+			$tab_headers = array_unique($tab_headers);
+			
+			if (count($tab_headers) < 2) $tabs = false;
+		}
+		
 		// Set up column headers
 	
 		if ($column_type) {
@@ -149,33 +176,27 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		?>
 	
 		<div class="conferencer_agenda">
-			<table class="grid">
 			
-				<?php // Table head ============================================ ?>
-
-				<?php if ($column_type) { ?>
-					<thead>
-						<tr>
-							<th class="column_time_slot"></th>
-							<?php foreach ($column_headers as $column_header) { ?>
-							
-								<th class="<?php echo $column_header['class']; ?>">
-									<?php
-										$html = $column_header['title'];
-										if ($column_header['link']) $html = "<a href='".$column_header['link']."'>$html</a>";
-										echo $html;
-									?>
-								</th>
-							
+			<?php if ($tabs) { ?>
+				<div class="conferencer_tabs">
+				<ul class="tabs">
+					<?php foreach ($tab_headers as $tab_header) { ?>
+						<li>
+							<?php if ($tabs == 'days') { ?>
+								<a href="#conferencer_agenda_tab_<?php echo $tab_header; ?>">
+									<?php echo $tab_header ? date($tab_day_format, $tab_header) : $unscheduled_row_text; ?>
+								</a>
 							<?php } ?>
-						</tr>
-					</thead>
-				<?php } ?>
+						</li>
+					<?php } ?>
+				</ul>
+			<?php } else { ?>
+				<table class="grid">
+					<?php if ($column_type) $this->display_headers($column_headers); ?>
+					<tbody>
+			<?php } ?>
 			
-				<?php // Table body ============================================ ?>
-			
-				<tbody>
-					<?php $row_starts = $last_row_starts = false; ?>
+					<?php $row_starts = $last_row_starts = $second_table = false; ?>
 					<?php foreach ($agenda as $time_slot_id => $cells) { ?>
 				
 						<?php
@@ -187,17 +208,32 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
 							$no_sessions = deep_empty($cells);
 						
-							// Show row seperators for days
-							$show_day_row = $row_day_format !== false && date('w', $row_starts) != date('w', $last_row_starts);
+							// Show day seperators
+							$show_next_day = $row_day_format !== false && date('w', $row_starts) != date('w', $last_row_starts);
 						
-							if ($show_day_row) { ?>
-								<tr class="day">
-									<td colspan="<?php echo $column_type ? count($column_headers) + 1 : 2; ?>">
-										<?php echo $row_starts ? date($row_day_format, $row_starts) : $unscheduled_row_text; ?>
-									</td>
-								</tr>
+							if ($show_next_day) { ?>
+								
+								<?php if ($tabs) { ?>
+
+									<?php if ($second_table) { ?>
+											</tbody>
+										</table>
+										 <!-- #conferencer_agenda_tab_xxx --> </div>
+									<?php } else $second_table = true; ?>
+
+									<div id="conferencer_agenda_tab_<?php echo get_day($row_starts); ?>">
+									<table class="grid">
+										<?php if ($column_type) $this->display_headers($column_headers); ?>
+										<tbody>
+								<?php } else { ?>
+									<tr class="day">
+										<td colspan="<?php echo $column_type ? count($column_headers) + 1 : 2; ?>">
+											<?php echo $row_starts ? date($row_day_format, $row_starts) : $unscheduled_row_text; ?>
+										</td>
+									</tr>
+								<?php } ?>
+								
 							<?php }
-						
 							// Set row classes
 
 							$classes = array();
@@ -216,7 +252,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 										if ($show_row_ends) $html .= " &ndash; ".date($row_time_format, $row_ends);
 										if ($link_time_slots) $html = "<a href='".get_permalink($time_slot_id)."'>$html</a>";
 										echo $html;
-									} else if (!$show_day_row) echo $unscheduled_row_text;
+									}
 								?>
 							</td>
 						
@@ -261,6 +297,11 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 					<?php } ?>
 				</tbody>
 			</table>
+			
+			<?php if ($tabs) { ?>
+				 <!-- #conferencer_agenda_tab_xxx --> </div>
+				</div> <!-- .conferencer_agenda_tabs -->
+			<?php } ?>
 	
 		</div> <!-- .conferencer_agenda -->
 	
@@ -270,6 +311,23 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	
 		return ob_get_clean();
 	}
+	
+	function display_headers($column_headers) { ?>
+		<thead>
+			<tr>
+				<th class="column_time_slot"></th>
+				<?php foreach ($column_headers as $column_header) { ?>
+					<th class="<?php echo $column_header['class']; ?>">
+						<?php
+							$html = $column_header['title'];
+							if ($column_header['link']) $html = "<a href='".$column_header['link']."'>$html</a>";
+							echo $html;
+						?>
+					</th>
+				<?php } ?>
+			</tr>
+		</thead>
+	<?php }
 	
 	function display_session($session) {
 		if (function_exists('conferencer_agenda_display_session')) {

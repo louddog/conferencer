@@ -1,3 +1,31 @@
+/* Tabs ==================================================================== */
+
+.conferencer_tabs .tabs {
+	margin: 0;
+	overflow: auto;
+}
+
+.conferencer_tabs .tabs li {
+	float: left;
+	list-style-type: none;
+}
+
+.conferencer_tabs .tabs a {
+	display: block;
+	margin-right: 5px;
+	padding: 5px 15px;
+	border: 1px solid #EEE;
+	border-bottom: 0;
+	background-color: #EEE;
+	text-decoration: none;
+}
+
+.conferencer_tabs .tabs .current a {
+	background-color: #FFF;
+}
+
+/* Sponsors widget ========================================================= */
+
 .widget_conferencer_sponsors_widget .sponsors {
 	position: relative;
 }
@@ -11,7 +39,7 @@
 	text-align: center;
 }
 
-/* Agenda */
+/* Agenda  ================================================================= */
 
 .conferencer_agenda .grid {
 	table-layout: fixed;

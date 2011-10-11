@@ -72,7 +72,7 @@ class Conferencer {
 		wp_register_style(
 			'conferencer',
 			CONFERENCER_URL.'css/screen.css',
-			array('jquery-ui'),
+			false,
 			'1.0'
 		);
 
