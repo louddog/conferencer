@@ -7,14 +7,6 @@ Version: 0.1
 Author URI: http://conferencer.louddog.com/
 */
 
-if (!function_exists('debug')) {
-	function debug($var) {
-		echo "<pre style='background-color: #EEE; padding: 5px;'>";
-		print_r($var);
-		echo "</pre>";
-	}
-}
-
 session_start();
 
 define('CONFERENCER_PATH', dirname(__FILE__));

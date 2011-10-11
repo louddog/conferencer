@@ -85,3 +85,11 @@ if (!function_exists('generate_excerpt')) {
 		return apply_filters('wp_trim_excerpt', $content, $raw_content);
 	}
 }
+
+if (!function_exists('debug')) {
+	function debug($var) {
+		echo "<pre style='background-color: #EEE; padding: 5px;'>";
+		print_r($var);
+		echo "</pre>";
+	}
+}
