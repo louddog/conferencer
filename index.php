@@ -49,6 +49,7 @@ class Conferencer {
 			'/widgets/sponsors.php',
 			
 			'/settings/order.php',
+			'/settings/cache.php',
 			'/settings/regenerate-logos.php',
 		) as $include) include CONFERENCER_PATH.$include;
 	}
