@@ -1,7 +1,6 @@
 <?php
 
 // TODO: Allow tabbed days
-// TODO: maybe don't use <p> tags in session grid (still use in tooltip)
 
 /* ============================================================================
 
