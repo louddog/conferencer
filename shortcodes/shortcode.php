@@ -6,7 +6,7 @@ abstract class Conferencer_Shortcode {
 	var $options = array();
 	
 	function __construct() {
-		add_shortcode($this->shortcode, array(&$this, 'pre_content'));
+		add_shortcode($this->shortcode, array(&$this, 'prepare'));
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
 		
@@ -17,8 +17,17 @@ abstract class Conferencer_Shortcode {
 		$wpdb->conferencer_shortcode_cache = $wpdb->prefix.'conferencer_shortcode_cache';
 	}
 	
-	function pre_content($options) {
-		$this->set_options($options);
+	function prepare($options) {
+		if (is_array($options)) {
+			foreach ($options as $key => $value) {
+				if (is_string($value)) {
+					if ($value == 'true') $options[$key] = true;
+					if ($value == 'false') $options[$key] = false;
+				}
+			}
+		}
+
+		$this->options = shortcode_atts($this->defaults, $options);
 
 		$content = $this->get_cache($options);
 		
@@ -32,21 +41,7 @@ abstract class Conferencer_Shortcode {
 	
 	abstract function content();
 	
-	function set_options($options) {
-		if (is_array($options)) {
-			$new_options = array();
-			foreach ($options as $key => $value) {
-				if (is_string($value)) {
-					if ($value == 'true') $value = true;
-					if ($value == 'false') $value = false;
-				}
-				$new_options[$key] = $value;
-			}
-			$options = $new_options;
-		}
-
-		$this->options = shortcode_atts($this->defaults, $options);
-	}
+	// Caching ----------------------------------------------------------------
 	
 	function save_post($post_id) {
 		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
