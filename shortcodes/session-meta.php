@@ -52,6 +52,10 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	function prep_options() {
 		parent::prep_options();
 		
+		if (!$this->options['post_id'] && isset($GLOBALS['post'])) {
+			$this->options['post_id'] = $GLOBALS['post']->ID;
+		}
+		
 		if ($this->options['link_all'] === false) {
 			$this->options['link_title'] = false;
 			$this->options['link_speakers'] = false;
@@ -64,10 +68,10 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 	function content() {
 		extract($this->options);
 	
-		$post = $post_id ? get_post($post_id) : $GLOBALS['post'];
-		if (!$post) return "[Shortcode error (session_meta): If not used within a session page, you must provide a session ID using 'post_id'.]";
-		if (get_post_type($post) != 'session') {
-			if ($post_id) return "[Shortcode error (session_meta): <a href='".get_permalink($post_id)."'>".get_the_title($post_id)."</a> (ID: $post_id, type: ".get_post_type($post_id).") is not a session.]";
+		$post = get_post($post_id);
+		if ($post) return "[Shortcode error (session_meta): Invalid post_id.  If not used within a session page, you must provide a session ID using 'post_id'.]";
+		if ($post_type != 'session') {
+			if ($post_id) return "[Shortcode error (session_meta): <a href='".get_permalink($post_id)."'>$post->post_title</a> (ID: $post_id, type: $post->post_type) is not a session.]";
 			else return "[Shortcode error (session_meta): This post is not a session.  Maybe you meant to supply a session using post_id.]";
 		}
 
