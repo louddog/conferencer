@@ -25,26 +25,48 @@ class Conferencer_Settings_Cache {
 	
 	function page() {
 		if (!current_user_can('edit_posts')) wp_die("You do not have sufficient permissions to access this page.");
+		
+		$caching = get_option('conferencer_caching');
+		$cache = Conferencer_Shortcode::get_all_cache();
+		
 		?>
 		
 		<div id="conferencer_cache" class="wrap">
+			<h2>Conferencer Caching</h2>
+			<p>Conferencer caches the content of any of it's shortcodes you use in your site.</p>
+
 			<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
 				<?php wp_nonce_field('nonce_conferencer_cache'); ?>
-				
-				<h2>Conferencer Caching</h2>
-				<p>Conferencer caches the content of any of it's shortcodes you use in your site.</p>
-
 				<p>
-					<?php if (get_option('conferencer_caching')) { ?>
+					<?php if ($caching) { ?>
 						<input type="submit" name="conferencer_disable_cache" value="Disable Caching" />
 					<?php } else { ?>
 						<input type="submit" name="conferencer_enable_cache" value="Enable Caching" />
 					<?php } ?>
 					<input type="submit" name="conferencer_clear_cache" value="Clear Cache" />
 				</p>
-
 				<input type="hidden" name="conferencer_cache_settings" value="save" />
 			</form>
+			
+			<?php if ($caching) { ?>
+				<h3>Cached Shortcodes</h3>
+				<?php if (empty($cache)) { ?>
+					<p>No cached shortcodes.</p>
+				<?php } else { ?>
+					<table>
+						<tr>
+							<th>count</th>
+							<th>shortcode</th>
+						</tr>
+						<?php foreach ($cache as $shortcode) { ?>
+							<tr>
+								<td><?php echo $shortcode->count; ?></td>
+								<td><?php echo $shortcode->shortcode; ?></td>
+							</tr>
+						<?php } ?>
+					</table>
+				<?php } ?>
+			<?php } ?>
 		</div>
 		
 		<?php

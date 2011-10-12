@@ -88,6 +88,11 @@ abstract class Conferencer_Shortcode {
 			'content' => $content,
 		));
 	}
+	
+	static function get_all_cache() {
+		global $wpdb;
+		return $wpdb->get_results("SELECT shortcode, count(id) AS count FROM $wpdb->conferencer_shortcode_cache GROUP BY shortcode", OBJECT);
+	}
 
 	static function clear_cache() {
 		global $wpdb;
