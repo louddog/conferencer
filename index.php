@@ -7,6 +7,8 @@ Version: 0.1
 Author URI: http://conferencer.louddog.com/
 */
 
+// TODO: Look into refactoring with get_post_custom()
+
 session_start();
 
 define('CONFERENCER_PATH', dirname(__FILE__));
