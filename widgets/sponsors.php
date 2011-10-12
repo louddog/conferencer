@@ -58,7 +58,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 							<div class="sponsor">
 								<?php $url = get_post_meta($sponsor->ID, 'conferencer_url', true); ?>
 								<?php if (!empty($url)) { ?>
-									<a class="sponsor" href="<?php echo $url; ?>" target="_blank">
+									<a href="<?php echo $url; ?>" target="_blank">
 								<?php } ?>
 									<?php
 										if (has_post_thumbnail($sponsor->ID)) {
