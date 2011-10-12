@@ -11,6 +11,7 @@ class Conferencer_CustomPostType {
 	function __construct() {
 		add_action('init', array(&$this, 'register_post_type'));
 		add_action('init', array(&$this, 'set_options'));
+		add_action('admin_enqueue_scripts', array(&$this, 'includes'));
 		add_action('trash_post', array(&$this, 'detail_trash'));
 		add_action('admin_init', array(&$this, 'meta_boxes'));
 		add_action('save_post', array(&$this, 'save_post'));
@@ -50,6 +51,12 @@ class Conferencer_CustomPostType {
 				'with_front' => false,
 			),
 		));
+	}
+	
+	function includes() {
+		if (in_array($GLOBALS['post_type'], Conferencer::$post_types)) {
+			wp_enqueue_script('conferencer-cpt');
+		}
 	}
 	
 	function set_options() {

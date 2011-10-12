@@ -17,7 +17,7 @@ class Conferencer_Settings_Order {
 	}
 	
 	function admin_menu() {
-		add_submenu_page(
+		$page = add_submenu_page(
 			'conferencer',
 			"Re-ordering",
 			"Re-ordering",
@@ -25,6 +25,12 @@ class Conferencer_Settings_Order {
 			'conferencer_reordering',
 			array(&$this, 'page')
 		);
+		
+		add_action("admin_print_styles-$page", array(&$this, 'includes'));
+	}
+	
+	function includes() {
+		wp_enqueue_script('conferencer-reorder');
 	}
 	
 	function page() {

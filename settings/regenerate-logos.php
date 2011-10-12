@@ -11,7 +11,7 @@ class Conferencer_Rengerate_Logos {
 	}
 	
 	function admin_menu() {
-		add_submenu_page(
+		$page = add_submenu_page(
 			'conferencer',
 			"Regenerate Logos",
 			"Regenerate Logos",
@@ -19,6 +19,12 @@ class Conferencer_Rengerate_Logos {
 			'conferencer_regenerate-logos',
 			array(&$this, 'page')
 		);
+		
+		add_action("admin_print_styles-$page", array(&$this, 'includes'));
+	}
+	
+	function includes() {
+		wp_enqueue_script('conferencer-regenerate-logos');
 	}
 	
 	function admin_notice() { ?>

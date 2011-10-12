@@ -55,59 +55,19 @@ class Conferencer {
 	}
 	
 	function styles_and_scripts() {
-		wp_register_style(
-			'jquery-ui',
-			CONFERENCER_URL.'css/jquery-ui-1.8.16.custom.css',
-			false,
-			'1.8.16'
-		);
+		wp_register_style('conferencer-jquery-ui', CONFERENCER_URL.'css/jquery-ui-1.8.16.custom.css', false, '1.8.16');
+		wp_register_script('conferencer-jquery-ui', CONFERENCER_URL.'js/jquery-ui-1.8.16.custom.min.js', array('jquery'), '1.8.16', true);
 
-		wp_register_style(
-			'conferencer-admin',
-			CONFERENCER_URL.'css/admin.css',
-			array('jquery-ui'),
-			'1.0'
-		);
+		wp_register_style('conferencer-admin', CONFERENCER_URL.'css/admin.css', array('conferencer-jquery-ui'), '1.0');
+		wp_register_script('conferencer-admin', CONFERENCER_URL.'js/admin.js', array('jquery'), '1.0', true);
+		wp_register_script('conferencer-cpt', CONFERENCER_URL.'js/cpt.js', array('conferencer-jquery-ui'), '1.0', true);
+		wp_register_script('conferencer-reorder', CONFERENCER_URL.'js/reorder.js', array('conferencer-jquery-ui'), '1.0', true);
+		wp_register_script('conferencer-regenerate-logos', CONFERENCER_URL.'js/regenerate-logos.js', array('conferencer-jquery-ui'), '1.0', true);
 
-		wp_register_style(
-			'conferencer',
-			CONFERENCER_URL.'css/screen.css',
-			false,
-			'1.0.1'
-		);
-
-		wp_register_script(
-			'jquery-ui',
-			CONFERENCER_URL.'js/jquery-ui-1.8.16.custom.min.js',
-			array('jquery'),
-			'1.8.16',
-			true
-		);
-
-		wp_register_script(
-			'fadeshow',
-			CONFERENCER_URL.'js/jquery.fadeshow.js',
-			array('jquery'),
-			'1.0',
-			true
-		);
-
-		wp_register_script(
-			'conferencer-admin',
-			CONFERENCER_URL.'js/admin.js',
-			array('jquery-ui'),
-			'1.0',
-			true
-		);
-
-		wp_register_script(
-			'conferencer',
-			CONFERENCER_URL.'js/site.js',
-			array('fadeshow'),
-			'1.0.1',
-			true
-		);
-	
+		wp_register_script('conferencer-fadeshow', CONFERENCER_URL.'js/jquery.fadeshow.js', array('jquery'), '1.0', true);
+		wp_register_style('conferencer', CONFERENCER_URL.'css/screen.css', false, '1.0.1');
+		wp_register_script('conferencer', CONFERENCER_URL.'js/site.js', array('fadeshow'), '1.0.1', true);
+		
 		if (is_admin()) {
 			wp_enqueue_style('conferencer-admin');
 			wp_enqueue_script('conferencer-admin');
