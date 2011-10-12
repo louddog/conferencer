@@ -6,7 +6,7 @@ abstract class Conferencer_Shortcode {
 	var $options = array();
 	
 	function __construct() {
-		add_shortcode($this->shortcode, array(&$this, 'prepare'));
+		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
 		
@@ -16,14 +16,14 @@ abstract class Conferencer_Shortcode {
 		global $wpdb;
 		$wpdb->conferencer_shortcode_cache = $wpdb->prefix.'conferencer_shortcode_cache';
 	}
-	
-	function prepare($options) {
+		
+	function shortcode($options) {
 		$this->options = shortcode_atts($this->defaults, $options);	
 		$this->prep_options();
 		
-		if (!$content = $this->get_cache($this->options)) {
-			$content = $this->content($options);
-			$this->cache($options, $content);
+		if (!$content = $this->get_cache()) {
+			$content = $this->content();
+			$this->cache($content);
 		}
 		
 		return $content;
@@ -42,22 +42,6 @@ abstract class Conferencer_Shortcode {
 	
 	// Caching ----------------------------------------------------------------
 	
-	function save_post($post_id) {
-		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
-		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-		self::clear_cache();
-	}
-		
-	function trash_post($post_id) {
-		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
-		self::clear_cache();
-	}
-		
-	static function clear_cache() {
-		global $wpdb;
-		$wpdb->query("TRUNCATE $wpdb->conferencer_shortcode_cache");
-	}
-	
 	function activate() {
 		require_once(ABSPATH.'wp-admin/includes/upgrade.php');
 		dbDelta("CREATE TABLE $wpdb->conferencer_shortcode_cache (
@@ -70,7 +54,18 @@ abstract class Conferencer_Shortcode {
 		);");
 	}
 	
-	function get_cache($options) {
+	function save_post($post_id) {
+		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+		self::clear_cache();
+	}
+		
+	function trash_post($post_id) {
+		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
+		self::clear_cache();
+	}
+		
+	function get_cache() {
 		if (!get_option('conferencer_caching')) return false;
 		
 		global $wpdb;
@@ -80,17 +75,22 @@ abstract class Conferencer_Shortcode {
 			where shortcode = %s
 			and options = %s",
 			$this->shortcode,
-			serialize($options)
+			serialize($this->options)
 		));
 	}
 	
-	function cache($options, $content) {
+	function cache($content) {
 		global $wpdb;
 		$wpdb->insert($wpdb->conferencer_shortcode_cache, array(
 			'created' => current_time('mysql'),
 			'shortcode' => $this->shortcode,
-			'options' => serialize($options),
+			'options' => serialize($this->options),
 			'content' => $content,
 		));
+	}
+
+	static function clear_cache() {
+		global $wpdb;
+		$wpdb->query("TRUNCATE $wpdb->conferencer_shortcode_cache");
 	}
 }
