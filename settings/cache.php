@@ -15,8 +15,8 @@ class Conferencer_Settings_Cache {
 	function admin_menu() {
 		add_submenu_page(
 			'conferencer',
-			"Cache",
-			"Cache",
+			"Caching",
+			"Caching",
 			'edit_posts',
 			'conferencer_cache',
 			array(&$this, 'page')
