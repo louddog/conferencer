@@ -26,19 +26,30 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 		}
 		return $content;
 	}
+	
+	function prep_options() {
+		// Turn csv into array
+		if (!is_array($this->options['post_ids'])) $this->options['post_ids'] = array();
+		if (!empty($this->options['post_ids'])) $this->options['post_ids'] = explode(',', $this->options['post_ids']);
+
+		// add post_id to post_ids and get rid of it
+		if ($this->options['post_id']) $this->options['post_ids'] = array_merge($this->options['post_ids'], explode(',', $this->options['post_id']));
+		unset($this->options['post_id']);
+		
+		// fallback to current post if nothing specified
+		if (empty($this->options['post_ids']) && $GLOBALS['post']->ID) $this->options['post_ids'] = array($GLOBALS['post']->ID);
+		
+		// unique list
+		$this->options['post_ids'] = array_unique($this->options['post_ids']);
+	}
 
 	function content() {
 		extract($this->options);
 		
-		$post_ids = $post_ids ? explode(',', $post_ids) : array();
-		if ($post_id) $post_ids = array_merge($post_ids, explode(',', $post_id));
-		$post_ids = array_unique($post_ids);
-		if (empty($post_ids) && $GLOBALS['post']->ID) $post_ids = array($GLOBALS['post']->ID);
-		if (empty($post_ids)) return "[Shortcode error (sessions): No session ID provided.]";
-		
-		$content = '';
-		
 		$errors = array();
+		
+		if (empty($post_ids)) $errors[] = "No posts ID provided";
+		
 		foreach ($post_ids as $post_id) {
 			$post = get_post($post_id);
 			
@@ -48,6 +59,7 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 				$errors[] = "<a href='".get_permalink($post->ID)."'>$post->post_title</a> is not the correct type of post";
 			}
 		}
+		
 		if (count($errors)) return "[Shortcode errors (sessions): ".implode(', ', $errors)."]";
 		
 		$sessions = Conferencer::get_sessions($post_ids);
