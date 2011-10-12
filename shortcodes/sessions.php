@@ -27,8 +27,7 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 		return $content;
 	}
 
-	function content($options) {
-		$this->set_options($options);
+	function content() {
 		extract($this->options);
 		
 		$post_ids = $post_ids ? explode(',', $post_ids) : array();

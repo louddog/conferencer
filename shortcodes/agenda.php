@@ -33,11 +33,9 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'unscheduled_row_text' => 'Unscheduled',
 	);
 
-	function content($options) {
-		// Set Options
-		if (!in_array($options['column_type'], array('track', 'room', false))) $options['column_type'] = false;
-		if ($options['show_empty_cells'] != null) $options['show_empty_rows'] = $options['show_empty_columns'] = $options['show_empty_cells'];
-		$this->set_options($options);
+	function content() {
+		if (!in_array($this->options['column_type'], array('track', 'room', false))) $this->options['column_type'] = false;
+		if ($this->options['show_empty_cells'] != null) $this->options['show_empty_rows'] = $this->options['show_empty_columns'] = $this->options['show_empty_cells'];
 		extract($this->options);
 
 		// Define main agenda variable

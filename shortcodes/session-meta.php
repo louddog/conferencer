@@ -49,8 +49,7 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		return $content;
 	}
 
-	function content($options) {
-		$this->set_options($options);
+	function content() {
 		if ($this->options['link_all'] === false) {
 			$this->options['link_title'] = false;
 			$this->options['link_speakers'] = false;

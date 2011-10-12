@@ -18,6 +18,8 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	function pre_content($options) {
+		$this->set_options($options);
+
 		$content = $this->get_cache($options);
 		
 		if (!$content) {
@@ -28,7 +30,7 @@ abstract class Conferencer_Shortcode {
 		return $content;
 	}
 	
-	abstract function content($options);
+	abstract function content();
 	
 	function set_options($options) {
 		if (is_array($options)) {
