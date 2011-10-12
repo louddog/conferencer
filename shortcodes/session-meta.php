@@ -69,8 +69,8 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		extract($this->options);
 	
 		$post = get_post($post_id);
-		if ($post) return "[Shortcode error (session_meta): Invalid post_id.  If not used within a session page, you must provide a session ID using 'post_id'.]";
-		if ($post_type != 'session') {
+		if (!$post) return "[Shortcode error (session_meta): Invalid post_id.  If not used within a session page, you must provide a session ID using 'post_id'.]";
+		if ($post->post_type != 'session') {
 			if ($post_id) return "[Shortcode error (session_meta): <a href='".get_permalink($post_id)."'>$post->post_title</a> (ID: $post_id, type: $post->post_type) is not a session.]";
 			else return "[Shortcode error (session_meta): This post is not a session.  Maybe you meant to supply a session using post_id.]";
 		}

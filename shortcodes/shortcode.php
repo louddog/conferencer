@@ -18,20 +18,10 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	function prepare($options) {
-		if (is_array($options)) {
-			foreach ($options as $key => $value) {
-				if (is_string($value)) {
-					if ($value == 'true') $options[$key] = true;
-					if ($value == 'false') $options[$key] = false;
-				}
-			}
-		}
-		
+		$this->options = shortcode_atts($this->defaults, $options);	
 		$this->prep_options();
-		$this->options = shortcode_atts($this->defaults, $options);
-		$content = $this->get_cache($options);
 		
-		if (!$content) {
+		if (!$content = $this->get_cache($this->options)) {
 			$content = $this->content($options);
 			$this->cache($options, $content);
 		}
@@ -40,7 +30,12 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	function prep_options() {
-		// no-op
+		foreach ($this->options as $key => $value) {
+			if (is_string($value)) {
+				if ($value == 'true') $this->options[$key] = true;
+				if ($value == 'false') $this->options[$key] = false;
+			}
+		}
 	}
 	
 	abstract function content();
