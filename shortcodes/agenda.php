@@ -123,10 +123,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				if ($tabs == 'days') {
 					if ($starts = get_post_meta($time_slot_id, 'conferencer_starts', true)) {
 						$tab_headers[] = get_day($starts);
-					} else {
-						$tab_headers[] = 0;
-						echo "<p>non-dated time slot: $time_slot_id</p>";
-					}
+					} else $tab_headers[] = 0;
 				}
 			}
 		
