@@ -66,7 +66,7 @@ class Conferencer {
 
 		wp_register_script('conferencer-fadeshow', CONFERENCER_URL.'js/jquery.fadeshow.js', array('jquery'), '1.0', true);
 		wp_register_style('conferencer', CONFERENCER_URL.'css/screen.css', false, '1.0.1');
-		wp_register_script('conferencer', CONFERENCER_URL.'js/site.js', array('fadeshow'), '1.0.1', true);
+		wp_register_script('conferencer', CONFERENCER_URL.'js/site.js', array('conferencer-fadeshow'), '1.0.1', true);
 		
 		if (is_admin()) {
 			wp_enqueue_style('conferencer-admin');
