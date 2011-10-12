@@ -26,9 +26,9 @@ abstract class Conferencer_Shortcode {
 				}
 			}
 		}
-
+		
+		$this->prep_options();
 		$this->options = shortcode_atts($this->defaults, $options);
-
 		$content = $this->get_cache($options);
 		
 		if (!$content) {
@@ -37,6 +37,10 @@ abstract class Conferencer_Shortcode {
 		}
 		
 		return $content;
+	}
+	
+	function prep_options() {
+		// no-op
 	}
 	
 	abstract function content();

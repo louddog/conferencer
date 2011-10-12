@@ -49,7 +49,9 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		return $content;
 	}
 
-	function content() {
+	function prep_options() {
+		parent::prep_options();
+		
 		if ($this->options['link_all'] === false) {
 			$this->options['link_title'] = false;
 			$this->options['link_speakers'] = false;
@@ -57,6 +59,9 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 			$this->options['link_track'] = false;
 			$this->options['link_sponsors'] = false;
 		}
+	}
+	
+	function content() {
 		extract($this->options);
 	
 		$post = $post_id ? get_post($post_id) : $GLOBALS['post'];
