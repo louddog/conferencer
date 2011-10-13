@@ -15,11 +15,6 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 
 	static $post_types_with_sessions = array('speaker', 'room', 'time_slot', 'track', 'sponsor');
 	
-	function __construct() {
-		parent::__construct();
-		add_filter('the_content', array(&$this, 'add_to_page'));
-	}
-	
 	function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_sessions)) {
 			$content .= do_shortcode('[sessions]');

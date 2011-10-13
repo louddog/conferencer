@@ -50,6 +50,7 @@ class Conferencer {
 			
 			'/widgets/sponsors.php',
 			
+			'/settings/options.php',
 			'/settings/order.php',
 			'/settings/cache.php',
 			'/settings/regenerate-logos.php',

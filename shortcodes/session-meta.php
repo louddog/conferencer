@@ -34,11 +34,6 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		'link_sponsors' => true,
 	);
 
-	function __construct() {
-		parent::__construct();
-		add_filter('the_content', array(&$this, 'add_to_page'));
-	}
-	
 	function add_to_page($content) {
 		if (get_post_type() == 'session') {
 			$meta = function_exists('conferencer_session_meta')

@@ -7,6 +7,8 @@ abstract class Conferencer_Shortcode {
 	
 	function __construct() {
 		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
+		add_filter('the_content', array(&$this, 'pre_add_to_page'));
+
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
 		
@@ -26,6 +28,15 @@ abstract class Conferencer_Shortcode {
 			$this->cache($content);
 		}
 		
+		return $content;
+	}
+	
+	function pre_add_to_page($content) {
+		$options = get_option('conferencer_options');
+		return $options['add_to_page'] ? $this->add_to_page($content) : $content;
+	}
+	
+	function add_to_page($content) {
 		return $content;
 	}
 	
