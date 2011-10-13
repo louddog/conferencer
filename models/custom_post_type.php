@@ -127,26 +127,13 @@ class Conferencer_CustomPostType {
 	
 	function column($column) {
 		global $post;
+		
+		Conferencer::add_meta($post);
 				
 		switch (str_replace('conferencer_'.$this->slug.'_', '', $column)) {
 			case 'session_count':
-				$session_query = new WP_Query(array(
-					'post_type' => 'session',
-					'posts_per_page' => -1,
-					'meta_query' => array(
-						array(
-							'key' => 'conferencer_'.$this->slug,
-							'value' => $post->ID,
-						)
-					),
-				));
-
-				echo get_post_meta($post->ID, 'conferencer_non_session', true)
-					? "not allowed"
-					: $session_query->post_count;
-
+				echo $post->non_session	? "not allowed"	: count(Conferencer::get_sessions($post->ID));
 				break;
-			
 		}
 	}
 }

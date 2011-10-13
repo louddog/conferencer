@@ -56,35 +56,15 @@ class Conferencer_Speaker extends Conferencer_CustomPostType {
 				echo get_post_meta($post->ID, 'conferencer_title', true);
 				break;
 			case 'company':
-				if ($company_id = get_post_meta($post->ID, 'conferencer_company', true)) {
-					echo "<a href='post.php?action=edit&post=$company_id'>".get_the_title($company_id)."</a>";
-				}
+				if ($post->company) echo "<a href='post.php?action=edit&post=$post->company'>".get_the_title($post->company)."</a>";
 				break;
 			case 'sessions':
-				if (!$this->speaker_cache) {
-					$session_query = new WP_Query(array(
-						'post_type' => 'session',
-						'posts_per_page' => -1, // get all
-					));
-
-					$this->speaker_cache = array();
-					foreach ($session_query->posts as $session) {
-						$speakers = get_post_meta($session->ID, 'conferencer_speakers', true);
-						if (!$speakers) $speakers = array();
-						foreach ($speakers as $speaker_id) {
-							$this->speaker_cache[$speaker_id][] = $session->ID;
-						}
-					}
-				}
-
-				if (array_key_exists($post->ID, $this->speaker_cache)) {
-					$sessions = array();
-					foreach ($this->speaker_cache[$post->ID] as $session_id) {
-						$sessions[] = "<a href='post.php?action=edit&post=$session_id'>".get_the_title($session_id)."</a>";
-					}
-					echo implode(', ', $sessions);
+				$links = array();
+				foreach (Conferencer::get_sessions($post->ID) as $session) {
+					$links[] = "<a href='post.php?action=edit&post=$session->ID'>".get_the_title($session->ID)."</a>";
 				}
 				
+				echo implode(', ', $links);
 				break;
 		}
 	}

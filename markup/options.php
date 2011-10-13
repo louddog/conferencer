@@ -1,12 +1,15 @@
 <fieldset id="conference_options">
 	<table>
-		<?php $user_option_count = 0; ?>
+		<?php
+			Conferencer::add_meta($post);
+			$user_option_count = 0;
+		?>
 		<?php foreach($this->options as $name => $option) { ?>
 			<?php
 				if ($option['type'] == 'internal') continue;
 				$user_option_count++;
+				$value = isset($$name) ? $$name : $post->$name;
 				$name = "conferencer_$name";
-				$value = isset($$name) ? $$name : get_post_meta($post->ID, $name, true);
 			?>
 			
 			<tr>
@@ -103,7 +106,7 @@
 							type="checkbox"
 							name="<?php echo $name; ?>"
 							id="<?php echo $name; ?>"
-							<?php if (get_post_meta($post->ID, $name, true)) echo 'checked'; ?>
+							<?php if ($value) echo 'checked'; ?>
 						/>
 					<?php } else echo 'unknown option type'; ?>
 				</td>

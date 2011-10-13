@@ -47,22 +47,10 @@ class Conferencer_Sponsor extends Conferencer_CustomPostType {
 		
 		switch (str_replace('conferencer_sponsor_', '', $column)) {
 			case 'level':
-				$sponsor_level_query = new WP_Query(array(
-					'post_type' => 'sponsor_level',
-					'posts_per_page' => -1, // get all
-				));
-
-				$sponsor_levels = array();
-
-				foreach ($sponsor_level_query->posts as $sponsor_level) {
-					$sponsor_levels[$sponsor_level->ID] = $sponsor_level;
-				}
-				
-				echo $sponsor_levels[get_post_meta($post->ID, 'conferencer_level', true)]->post_title;
+				if ($post->level) echo "<a href='post.php?action=edit&post=$post->level'>".get_the_title($post->level)."</a>";
 				break;
 			case 'url':
-				$url = get_post_meta($post->ID, 'conferencer_url', true);
-				echo "<a href='$url' target='_blank'>$url</a>";
+				if ($post->url) echo "<a href='$post->url' target='_blank'>$post->url</a>";
 				break;
 		}
 	}

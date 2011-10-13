@@ -148,67 +148,42 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 		
 		switch (str_replace('conferencer_session_', '', $column)) {
 			case 'keynote':
-				echo get_post_meta($post->ID, 'conferencer_keynote', true) ? "keynote" : "";
+				echo $post->keynote ? "keynote" : "";
 				break;
 			case 'speakers':
-				$speaker_ids = get_post_meta($post->ID, 'conferencer_speakers', true);
-				if (!$speaker_ids) $speaker_ids = array();
-			
-				$speaker_query = new WP_Query(array(
-					'post_type' => 'speaker',
-					'post_per_page' => -1, // get all
-				));
-				
-				$speakerLinks = array();
-				foreach ($speaker_query->posts as $speaker) {
-					if (!in_array($speaker->ID, $speaker_ids)) continue;
-					$speakerLinks[] =
+				$links = array();
+				foreach (Conferencer::get_posts('speaker', $post->speakers) as $speaker) {
+					$links[] =
 						"<a href='post.php?action=edit&post=$speaker->ID'>".
 						str_replace(' ', '&nbsp;', $speaker->post_title).
 						"</a>";
 				}
 				
-				echo implode(', ', $speakerLinks);
+				echo implode(', ', $links);
 				break;
 			case 'sponsors':
-				$sponsor_ids = get_post_meta($post->ID, 'conferencer_sponsors', true);
-				if (!$sponsor_ids) $sponsor_ids = array();
-			
-				$sponsor_query = new WP_Query(array(
-					'post_type' => 'sponsor',
-					'post_per_page' => -1, // get all
-				));
-				
-				$sponsorLinks = array();
-				foreach ($sponsor_query->posts as $sponsor) {
-					if (!in_array($sponsor->ID, $sponsor_ids)) continue;
-					$sponsorLinks[] =
+				$links = array();
+				foreach (Conferencer::get_posts('sponsor', $post->sponsors) as $sponsor) {
+					$links[] =
 						"<a href='post.php?action=edit&post=$sponsor->ID'>".
 						str_replace(' ', '&nbsp;', $sponsor->post_title).
 						"</a>";
 				}
 				
-				echo implode(', ', $sponsorLinks);
+				echo implode(', ', $links);
 				break;
 			case 'track':
-				if ($id = intVal(get_post_meta($post->ID, 'conferencer_track', true))) {
-					$related_post = get_post($id);
-					echo "<a href='post.php?action=edit&post=$id'>$related_post->post_title</a>";
-				}
+				if ($post->track) echo "<a href='post.php?action=edit&post=$post->track'>".get_the_title($post->track)."</a>";
 				break;
 			case 'room':
-				if ($id = intVal(get_post_meta($post->ID, 'conferencer_room', true))) {
-					$related_post = get_post($id);
-					echo "<a href='post.php?action=edit&post=$id'>$related_post->post_title</a>";
-				}
+				if ($post->room) echo "<a href='post.php?action=edit&post=$post->room'>".get_the_title($post->room)."</a>";
 				break;
 			case 'time_slot':
-				if ($id = intVal(get_post_meta($post->ID, 'conferencer_time_slot', true))) {
-					$related_post = get_post($id);
-					$starts = floatVal(get_post_meta($related_post->ID, 'conferencer_starts', true));
-					$ends = floatVal(get_post_meta($related_post->ID, 'conferencer_ends', true));
+				if ($post->time_slot) {
+					$starts = floatVal(get_post_meta($post->time_slot, 'conferencer_starts', true));
+					$ends = floatVal(get_post_meta($post->time_slot, 'conferencer_ends', true));
 					
-					echo "<a href='post.php?action=edit&post=$id'>";
+					echo "<a href='post.php?action=edit&post=$post->time_slot'>";
 					echo date('n/j/y', $starts);
 					echo '<br />';
 					echo date('g:ia', $starts);

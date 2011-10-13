@@ -57,16 +57,13 @@ class Conferencer_TimeSlot extends Conferencer_CustomPostType {
 
 		global $post;
 		
-		$starts = floatVal(get_post_meta($post->ID, 'conferencer_starts', true));
-		$ends = floatVal(get_post_meta($post->ID, 'conferencer_ends', true));
-				
 		switch (str_replace('conferencer_time_slot_', '', $column)) {
 			case 'day':
-				if ($starts) echo date('n/j/y', $starts).' &ndash; '.date('D.', $starts);
+				if ($post->starts) echo date('n/j/y', $post->starts).' &ndash; '.date('D.', $post->starts);
 				break;
 			case 'time':
-				if ($starts) echo date('g:ia', $starts);
-				if ($ends) echo ' &ndash; '.date('g:ia', $ends);
+				if ($post->starts) echo date('g:ia', $post->starts);
+				if ($post->ends) echo ' &ndash; '.date('g:ia', $post->ends);
 				break;
 		}
 	}
