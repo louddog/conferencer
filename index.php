@@ -134,7 +134,7 @@ class Conferencer {
 		if (!$all_sponsors) $all_sponsors = self::get_list('sponsor');
 		
 		$sponsors = array();
-		$ids = unserialize(get_post_meta($session->ID, 'conferencer_sponsors', true));
+		$ids = get_post_meta($session->ID, 'conferencer_sponsors', true);
 		if (!$ids) $ids = array();
 		foreach ($ids as $id) {
 			$sponsors[$id] = $all_sponsors[$id];
@@ -150,7 +150,7 @@ class Conferencer {
 		if (!$all_speakers) $all_speakers = self::get_list('speaker');
 		
 		$speakers = array();
-		$ids = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
+		$ids = get_post_meta($session->ID, 'conferencer_speakers', true);
 		if (!$ids) $ids = array();
 		foreach ($ids as $id) {
 			$speakers[$id] = $all_speakers[$id];
@@ -205,7 +205,7 @@ class Conferencer {
 			
 			if (in_array($post_type, array('speaker', 'sponsor'))) {
 				foreach ($all_sessions as $session) {
-					$related_post_ids = unserialize(get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true));
+					$related_post_ids = get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true);
 					if (in_array($post_id, $related_post_ids)) $session_ids[] = $session->ID;
 				}
 			} else {

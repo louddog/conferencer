@@ -94,12 +94,12 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 			
 			foreach ($query->posts as $session) {
 				foreach ($types as $type => $option) {				
-					$oldIDs = unserialize(get_post_meta($session->ID, $option, true));
+					$oldIDs = get_post_meta($session->ID, $option, true);
 					$newIDs = array();
 				
 					if (is_array($oldIDs)) {
 						foreach ($oldIDs as $oldID) if ($oldID != $post_id) $newIDs[] = $oldID;
-						update_post_meta($session->ID, $option, serialize($newIDs));
+						update_post_meta($session->ID, $option, $newIDs);
 						if (count($oldIDs) != count($newIDs)) $messages[] = "Removed this $type from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.";
 					}
 				}
@@ -151,7 +151,7 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				echo get_post_meta($post->ID, 'conferencer_keynote', true) ? "keynote" : "";
 				break;
 			case 'speakers':
-				$speaker_ids = unserialize(get_post_meta($post->ID, 'conferencer_speakers', true));
+				$speaker_ids = get_post_meta($post->ID, 'conferencer_speakers', true);
 				if (!$speaker_ids) $speaker_ids = array();
 			
 				$speaker_query = new WP_Query(array(
@@ -171,7 +171,7 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				echo implode(', ', $speakerLinks);
 				break;
 			case 'sponsors':
-				$sponsor_ids = unserialize(get_post_meta($post->ID, 'conferencer_sponsors', true));
+				$sponsor_ids = get_post_meta($post->ID, 'conferencer_sponsors', true);
 				if (!$sponsor_ids) $sponsor_ids = array();
 			
 				$sponsor_query = new WP_Query(array(

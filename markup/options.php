@@ -77,7 +77,7 @@
 						</select>
 					<?php } else if ($option['type'] == 'multi-select') { ?>
 						<?php
-							$multivalues = unserialize($value);
+							$multivalues = $value;
 							if (!$multivalues || !is_array($multivalues)) $multivalues = array(null);
 						?>
 						<ul>

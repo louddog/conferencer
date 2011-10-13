@@ -101,7 +101,7 @@ class Conferencer_CustomPostType {
 				foreach ($_POST['conferencer_'.$key] as $value) {
 					if (!empty($value)) $values[] = $value;
 				}
-				$value = serialize($values);
+				$value = $values;
 			}
 			if ($option['type'] == 'date-time') {
 				$date = getdate(strtotime($_POST['conferencer_'.$key]['date']));

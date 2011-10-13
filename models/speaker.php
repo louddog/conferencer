@@ -69,7 +69,7 @@ class Conferencer_Speaker extends Conferencer_CustomPostType {
 
 					$this->speaker_cache = array();
 					foreach ($session_query->posts as $session) {
-						$speakers = unserialize(get_post_meta($session->ID, 'conferencer_speakers', true));
+						$speakers = get_post_meta($session->ID, 'conferencer_speakers', true);
 						if (!$speakers) $speakers = array();
 						foreach ($speakers as $speaker_id) {
 							$this->speaker_cache[$speaker_id][] = $session->ID;
