@@ -1,7 +1,5 @@
 <?php
 
-// TODO: Allow tabbed days
-
 /* ============================================================================
 
 	You can override the session display function in your own template.
