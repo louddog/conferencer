@@ -63,55 +63,26 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 	function detail_trash($post_id) {
 		parent::detail_trash($post_id);
 		
-		$post = get_post($post_id);
-		$types = array(
-			'speaker' => 'conferencer_speakers',
-			'sponsor' => 'conferencer_sponsors',
-		);
-		
-		$messages = get_option('conferencer_messages', array());
-		
-		if (array_key_exists($post->post_type, $types)) {
-			$query = new WP_Query(array(
-				'post_type' => 'session',
-				'posts_per_page' => -1, // get all
-			));
-			
-			foreach ($query->posts as $session) {
-				foreach ($types as $type => $option) {				
-					$oldIDs = get_post_meta($session->ID, $option, true);
-					$newIDs = array();
-				
-					if (is_array($oldIDs)) {
-						foreach ($oldIDs as $oldID) if ($oldID != $post_id) $newIDs[] = $oldID;
-						update_post_meta($session->ID, $option, $newIDs);
-						if (count($oldIDs) != count($newIDs)) $messages[] = "Removed this $type from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.";
-					}
-				}
-			}
-		}
+		$post_type = get_post_type($post_id);
+		$detached = array();
 
-		if (in_array($post->post_type, array_keys($this->options))) {
-			$meta_key = 'conferencer_'.$post->post_type;
-			
-			$query = new WP_Query(array(
-				'post_type' => 'session',
-				'posts_per_page' => -1, // get all
-				'meta_query' => array(
-					array(
-						'key' => $meta_key,
-						'value' => $post->ID,
-					),
-				),
-			));
-			
-			foreach ($query->posts as $session) {
-				update_post_meta($session->ID, $meta_key, false);
-				$messages[] = "Removed this ".$this->options[$post->post_type]['label']." from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.";
+		foreach (Conferencer::get_sessions($post_id) as $session) {
+			Conferencer::add_meta($session);
+			if (in_array($post_type, array('speaker', 'sponsor'))) {
+				$type = $post_type.'s';
+				if (in_array($post_id, $session->$type)) {
+					update_post_meta($session->ID, "conferencer_$type", array_diff($session->$type, array($post_id)));
+					$detached[] = $session;
+				}
+			} else if ($session->$post_type == $post_id) {
+				update_post_meta($session->ID, "conferencer_$post_type", false);
+				$detached[] = $session;
 			}
 		}
 		
-		update_option('conferencer_messages', $messages);
+		foreach ($detached as $session) {
+			Conferencer::add_admin_notice("Removed ".get_the_title($post_id)." from <a href='post.php?post=$session->ID&action=edit' target='_blank'>$session->post_title</a>.");			
+		}
 	}
 	
 	function columns($columns) {
