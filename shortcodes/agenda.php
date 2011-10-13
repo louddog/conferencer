@@ -76,17 +76,17 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		// Get all session information
 	
 		$sessions = Conferencer::get_posts('session', false, 'title_sort');
+		foreach (array_keys($sessions) as $id) {
+			Conferencer::add_meta($sessions[$id]);
+		}
 	
 		// Put sessions into agenda variable
 	
 		foreach ($sessions as $session) {
-			$time_slot_id = get_post_meta($session->ID, 'conferencer_time_slot', true);
-			if (!$time_slot_id) $time_slot_id = 0;
+			$time_slot_id = $session->time_slot ? $session->time_slot : 0;
 
 			if ($column_type) {
-				$column_id = get_post_meta($session->ID, 'conferencer_'.$column_type, true);
-				if (!$column_id) $column_id = 0;
-			
+				$column_id = $session->$column_type ? $session->$column_type : 0;
 				$agenda[$time_slot_id][$column_id][$session->ID] = $session;
 				$column_post_counts[$column_id]++;
 			} else {

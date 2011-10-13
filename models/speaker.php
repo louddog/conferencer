@@ -53,7 +53,7 @@ class Conferencer_Speaker extends Conferencer_CustomPostType {
 		
 		switch (str_replace('conferencer_speaker_', '', $column)) {
 			case 'title':
-				echo get_post_meta($post->ID, 'conferencer_title', true);
+				echo $post->title;
 				break;
 			case 'company':
 				if ($post->company) echo "<a href='post.php?action=edit&post=$post->company'>".get_the_title($post->company)."</a>";

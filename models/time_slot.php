@@ -31,15 +31,10 @@ class Conferencer_TimeSlot extends Conferencer_CustomPostType {
 	}
 	
 	function options($post, $modified = array()) {
-		$query = new WP_Query(array(
-			'post_type' => 'time_slot',
-			'posts_per_page' => 1,
-			'meta_key' => 'conferencer_starts',
-			'order' => 'ASC',
-			'orderby' => 'meta_value_num',
-		));
-		
-		$this->earliest_time_slot_date = $query->post_count ? get_post_meta($query->posts[0]->ID, 'conferencer_starts', true) : false;
+		$time_slots = Conferencer::get_posts('time_slot', false, 'time_sort');
+		$this->earliest_time_slot_date = count($time_slots)
+			? get_post_meta(reset($time_slots)->ID, 'conferencer_starts', true)
+			: false;
 		
 		parent::options($post, $modified);
 	}

@@ -33,8 +33,8 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 		}
 		
 		foreach (Conferencer::get_posts('sponsor') as $sponsor) {
-			$level_id = get_post_meta($sponsor->ID, 'conferencer_level', true);
-			$levels[$level_id]->sponsors[$sponsor->ID] = $sponsor;
+			Conferencer::add_meta($sponsor);
+			$levels[$sponsor->level]->sponsors[$sponsor->ID] = $sponsor;
 		}
 
 		foreach ($levels as $id => $level) {
@@ -56,25 +56,24 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 					<div class="sponsors">
 						<?php foreach ($level->sponsors as $sponsor) { ?>
 							<div class="sponsor">
-								<?php $url = get_post_meta($sponsor->ID, 'conferencer_url', true); ?>
-								<?php if (!empty($url)) { ?>
-									<a href="<?php echo $url; ?>" target="_blank">
-								<?php } ?>
-									<?php
-										if (has_post_thumbnail($sponsor->ID)) {
-											echo get_the_post_thumbnail(
-												$sponsor->ID,
-												'sponsors_widget_'.get_post_meta($sponsor->ID, 'conferencer_level', true),
-												array(
-													'alt' => $sponsor->post_title,
-													'title' => $sponsor->post_title,
-												)
-											);
-										} else echo $sponsor->post_title;
-									?>
-								<?php if (!empty($url)) { ?>
-									</a>
-								<?php } ?>
+								<?php
+									$html = $sponsor->post_title;
+									
+									if (has_post_thumbnail($sponsor->ID)) {
+										$html = get_the_post_thumbnail(
+											$sponsor->ID,
+											"sponsor_widget_$sponsor->level",
+											array(
+												'alt' => $sponsor->post_title,
+												'title' => $sponsor->post_title,
+											)
+										);
+									}
+									
+									if (!empty($sponsor->url)) $html = "<a href='$sponsor->url'>$html</a>";
+									
+									echo $html;
+								?>
 							</div>
 						<?php } ?>
 					</div>
