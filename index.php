@@ -127,62 +127,6 @@ class Conferencer {
 		delete_option('conferencer_sponsors_widget_image_sizes');
 	}
 	
-	static $regenerate_logo_error = false;
-	
-	function get_regenerate_logo_error() {
-		return self::$regenerate_logo_error;
-	}
-	
-	function regenerate_logo($sponsor = false) {
-		self::$regenerate_logo_error = false;
-		
-		if (!current_user_can('manage_options')) {
-			self::$regenerate_logo_error = "incorrect permissions";
-			return false;
-		}
-
-		if (!$sponsor) $sponsor = get_post($GLOBALS['post']);
-		if (is_numeric($sponsor)) $sponsor = get_post($sponsor);
-		
-		if (!$sponsor || 'sponsor' != $sponsor->post_type) {
-			self::$regenerate_logo_error = "invalid sponsor";
-			return false;
-		}
-		
-		$thumbID = get_post_thumbnail_id($sponsor->ID);
-		
-		if (!$thumbID) {
-			self::$regenerate_logo_error = "no thumbnail";
-			return false;
-		}
-
-		$path = get_attached_file($thumbID);
-		if (false === $path || !file_exists($path)) {
-			self::$regenerate_logo_error = "original cannot be found.";
-			return false;
-		}
-
-		$metadata = wp_generate_attachment_metadata($thumbID, $path);
-		
-		if (is_wp_error($metadata)) {
-			self::$regenerate_logo_error = $metadata->get_error_message();
-			return false;
-		}
-		
-		if (empty($metadata)) {
-			self::$regenerate_logo_error = "unknown error";
-			return false;
-		}
-
-		// If this fails, then it just means that nothing was changed (old value == new value)
-		if (!wp_update_attachment_metadata($thumbID, $metadata)) {
-			self::$regenerate_logo_error = "no change";
-			return false;
-		}
-
-		return true;
-	}
-	
 	// static user functions =========================================================
 	
 	function get_sponsors($session) {
