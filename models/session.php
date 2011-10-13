@@ -43,34 +43,19 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 		));
 
 		foreach ($this->options as $key => $option) {
-			$post_type = $key;
-			if ($post_type == 'speakers') $post_type = 'speaker';
-			if ($post_type == 'sponsors') $post_type = 'sponsor';
-			
-			$query = new WP_Query(array(
-				'post_type' => $post_type,
-				'posts_per_page' => -1, // show all
-				'orderby' => 'title',
-				'order' => 'ASC',
-			));
-
-			foreach ($query->posts as $item) {
-				$text = '';
+			foreach (Conferencer::get_posts($key, false, 'title_sort') as $post) {
+				$text = $post->post_title;
 				
 				if ($key == 'time_slot') {
-					if (get_post_meta($item->ID, 'conferencer_non_session', true)) continue;
-					
-					$starts = floatVal(get_post_meta($item->ID, 'conferencer_starts', true));
-					$ends = floatVal(get_post_meta($item->ID, 'conferencer_ends', true));
-					
-					if ($starts) {
-						$text = date('n/j/y, g:iA', $starts);
-						if ($ends) $text .= ' &ndash; '.date('g:iA', $ends);
+					Conferencer::add_meta($post);
+					if ($post->non_session) continue;
+					if ($post->starts) {
+						$text = date('n/j/y, g:iA', $post->starts);
+						if ($post->ends) $text .= ' &ndash; '.date('g:iA', $post->ends);
 					} else $text = 'unscheduled';
-					$text .= ' ('.get_the_title($item->ID).')';
-				} else $text = get_the_title($item->ID);
+				}
 				
-				$this->options[$key]['options'][$item->ID] = $text;
+				$this->options[$key]['options'][$post->ID] = $text;
 			}
 		}
 	}

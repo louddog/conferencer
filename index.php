@@ -142,6 +142,9 @@ class Conferencer {
 	}
 	
 	function get_posts($post_type = 'post', $post_ids = false, $sort = 'order_sort') {
+		if ($post_type == 'speakers') $post_type = 'speaker';
+		if ($post_type == 'sponsors') $post_type = 'sponsor';
+		
 		$args = array(
 			'numberposts' => -1, // get all
 			'post_type' => $post_type,
