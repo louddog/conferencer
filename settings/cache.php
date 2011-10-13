@@ -4,12 +4,18 @@ new Conferencer_Settings_Cache();
 class Conferencer_Settings_Cache {
 	function __construct() {
 		register_activation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'activate'));
+		register_deactivation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'deactivate'));
+		
 		add_action('admin_init', array(&$this, 'save'));
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 	}
 	
 	function activate() {
-		update_option('conferencer_caching', true);
+		add_option('conferencer_caching', true);
+	}
+	
+	function deactivate() {
+		delete_option('conferencer_caching');
 	}
 	
 	function admin_menu() {

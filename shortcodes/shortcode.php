@@ -54,6 +54,11 @@ abstract class Conferencer_Shortcode {
 		);");
 	}
 	
+	function deactivate() {
+		global $wpdb;
+		$wpdb->query("drop table $wpdb->conferencer_shortcode_cache");
+	}
+	
 	function save_post($post_id) {
 		if (!in_array(get_post_type($post_id), Conferencer::$post_types)) return;
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
