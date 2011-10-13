@@ -128,114 +128,41 @@ class Conferencer {
 	}
 	
 	// static user functions =========================================================
-	
-	function get_sponsors($session) {
-		static $all_sponsors = false;
-		if (!$all_sponsors) $all_sponsors = self::get_list('sponsor');
-		
-		$sponsors = array();
-		$ids = get_post_meta($session->ID, 'conferencer_sponsors', true);
-		if (!$ids) $ids = array();
-		foreach ($ids as $id) {
-			$sponsors[$id] = $all_sponsors[$id];
-		}
-		
-		uasort($sponsors, array('Conferencer', 'order_sort'));
-		
-		return $sponsors;
-	}
-	
-	function get_speakers($session) {
-		static $all_speakers = false;
-		if (!$all_speakers) $all_speakers = self::get_list('speaker');
-		
-		$speakers = array();
-		$ids = get_post_meta($session->ID, 'conferencer_speakers', true);
-		if (!$ids) $ids = array();
-		foreach ($ids as $id) {
-			$speakers[$id] = $all_speakers[$id];
-		}
-		uasort($speakers, array('Conferencer', 'order_sort'));
-		
-		return $speakers;
-	}
-	
-	function attach_speakers(&$sessions) {
-		$single = false;
-		if (!is_array($sessions)) {
-			$single = true;
-			$sessions = array($sessions->ID => $sessions);
-		}
-		
-		$speakers = Conferencer::get_list('speaker');
-		
-		foreach ($sessions as $session_id => $session) {
-			$session->speakers = self::get_speakers($session);
-		}
-		
-		if ($single) $sessions = array_pop($sessions);
-	}
-	
-	function get_list($post_type, $sort = 'order_sort') {
-		$query = new WP_Query(array(
-			'post_type' => $post_type,
-			'posts_per_page' => -1, // get all
-		));
-		
-		$list = array();
-		foreach ($query->posts as $item) {
-			$list[$item->ID] = $item;
-		}
-		
-		if (method_exists('Conferencer', $sort)) uasort($list, array('Conferencer', $sort));
-		
-		return $list;
-	}
-	
-	function get_sessions($post_ids) {
-		if (!is_array($post_ids)) $post_ids = array($post_ids);
-		
-		$session_ids = array();
-		
-		static $all_sessions = false;
-		if (!$all_sessions) $all_sessions = self::get_list('session');
-		
-		foreach ($post_ids as $post_id) {
-			$post_type = get_post_type($post_id);
-			
-			if (in_array($post_type, array('speaker', 'sponsor'))) {
-				foreach ($all_sessions as $session) {
-					$related_post_ids = get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true);
-					if (in_array($post_id, $related_post_ids)) $session_ids[] = $session->ID;
-				}
-			} else {
-				$query = new WP_Query(array(
-					'post_type' => 'session',
-					'posts_per_page' => -1,
-					'meta_query' => array(
-						array(
-							'key' => 'conferencer_'.$post_type,
-							'value' => $post_id,
-						)
-					),
-				));
-				
-				foreach ($query->posts as $session) {
-					$session_ids[] = $session->ID;
-				}
-			}
-		}
-		
-		$sessions = array();
-		foreach ($session_ids as $session_id) {
-			$sessions[$session_id] = $all_sessions[$session_id];
-		}
-		
-		uasort($sessions, array('Conferencer', 'order_sort'));
-		uasort($sessions, array('Conferencer', 'start_time_sort'));
 
-		return $sessions;
+	function add_meta(&$post) {
+		if (!$post || !$post->post_type || !in_array($post->post_type, self::$post_types)) return;
+		
+		foreach (get_post_custom($post->ID) as $key => $value) {
+			if (strpos($key, 'conferencer_') !== 0) continue;
+			$key = substr($key, 12);
+			$tmp = unserialize($value[0]);
+			$value = $tmp ? $tmp : $value[0];
+			$post->$key = $value;
+		}
 	}
+	
+	function get_posts($post_type = 'post', $post_ids = false, $sort = 'order_sort') {
+		$args = array(
+			'numberposts' => -1, // get all
+			'post_type' => $post_type,
+		);
+		
+		if ($post_ids) {
+			if (!is_array($post_ids)) $post_ids = array($post_ids);
+			$args['include'] = $post_ids;
+		}
+		
+		$posts = array();
+		foreach (get_posts($args) as $post) {
+			$posts[$post->ID] = $post;
+		}
+		
+		if (method_exists('Conferencer', $sort)) uasort($posts, array(self, $sort));
+		
+		return $posts;
+	}
+	
+	// sorts ==================================================================
 	
 	function order_sort($a, $b) {
 		$aOrder = get_post_meta($a->ID, 'conferencer_order', true);

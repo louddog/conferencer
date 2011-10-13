@@ -53,7 +53,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	
 		// Fill agenda with empty time slot rows
 	
-		foreach (Conferencer::get_list('time_slot', 'start_time_sort') as $time_slot_id => $time_slot) {
+		foreach (Conferencer::get_posts('time_slot', false, 'start_time_sort') as $time_slot_id => $time_slot) {
 			$agenda[$time_slot_id] = array();
 		}
 		$agenda[0] = array(); // for unscheduled time slots
@@ -62,7 +62,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	
 		if ($column_type) {
 			$column_post_counts = array();
-			$column_posts = Conferencer::get_list($column_type);
+			$column_posts = Conferencer::get_posts($column_type);
 		
 			foreach ($agenda as $time_slot_id => $time_slot) {
 				foreach ($column_posts as $column_post_id => $column_post) {
@@ -75,8 +75,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	
 		// Get all session information
 	
-		$sessions = Conferencer::get_list('session', 'title_sort');
-		Conferencer::attach_speakers($sessions);
+		$sessions = Conferencer::get_posts('session', false, 'title_sort');
 	
 		// Put sessions into agenda variable
 	

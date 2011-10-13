@@ -27,12 +27,12 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 		
 		extract($args);
 		
-		$levels = Conferencer::get_list('sponsor_level');
+		$levels = Conferencer::get_posts('sponsor_level');
 		foreach ($levels as $id => $level) {
 			$levels[$id]->sponsors = array();
 		}
 		
-		foreach (Conferencer::get_list('sponsor') as $sponsor) {
+		foreach (Conferencer::get_posts('sponsor') as $sponsor) {
 			$level_id = get_post_meta($sponsor->ID, 'conferencer_level', true);
 			$levels[$level_id]->sponsors[$sponsor->ID] = $sponsor;
 		}

@@ -69,6 +69,8 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 			if ($post_id) return "[Shortcode error (session_meta): <a href='".get_permalink($post_id)."'>$post->post_title</a> (ID: $post_id, type: $post->post_type) is not a session.]";
 			else return "[Shortcode error (session_meta): This post is not a session.  Maybe you meant to supply a session using post_id.]";
 		}
+		
+		Conferencer::add_meta($post);
 
 		$meta = array();
 		foreach (explode(',', $show) as $type) {
@@ -82,16 +84,16 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 					break;
 				
 				case 'time':
-					if ($time_slot_id = get_post_meta($post->ID, 'conferencer_time_slot', true)) {
-						$starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
-						$ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
+					if ($post->time_slot) {
+						$starts = get_post_meta($post->time_slot, 'conferencer_starts', true);
+						$ends = get_post_meta($post->time_slot, 'conferencer_ends', true);
 						$html = date($date_format, $starts).", ".date($time_format, $starts).$time_separator.date($time_format, $ends);
 						$meta[] = "<span class='time'>".$time_prefix.$html.$time_suffix."</span>";
 					}
 					break;
 		
 				case 'speakers':
-					if (count($speakers = Conferencer::get_speakers($post))) {
+					if (count($speakers = Conferencer::get_posts('speaker', $post->speakers))) {
 						$html = comma_separated_post_titles($speakers, $link_speakers);
 						$meta[] = "<span class='speakers'>".$speakers_prefix.$html.$speaker_suffix;
 					}
@@ -99,23 +101,23 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		
 
 				case 'room':
-					if ($room_id = get_post_meta($post->ID, 'conferencer_room', true)) {
-						$html = get_the_title($room_id);
-						if ($link_room) $html = "<a href='".get_permalink($room_id)."'>$html</a>";
+					if ($post->room) {
+						$html = get_the_title($post->room);
+						if ($link_room) $html = "<a href='".get_permalink($post->room)."'>$html</a>";
 						$meta[] = "<span class='room'>".$room_prefix.$html.$room_suffix."</span>";
 					}
 					break;
 
 				case 'track':
-					if ($track_id = get_post_meta($post->ID, 'conferencer_track', true)) {
-						$html = get_the_title($track_id);
-						if ($link_track) $html = "<a href='".get_permalink($track_id)."'>$html</a>";
+					if ($post->track) {
+						$html = get_the_title($post->track);
+						if ($link_track) $html = "<a href='".get_permalink($post->track)."'>$html</a>";
 						$meta[] = "<span class='track'>".$track_prefix.$html.$track_suffix."</span>";
 					}
 					break;
 
 				case 'sponsors':
-					if (count($sponsors = Conferencer::get_sponsors($post))) {
+					if (count($sponsors = Conferencer::get_posts('sponsor', $post->sponsors))) {
 						$html = comma_separated_post_titles($sponsors, $link_sponsors);
 						$meta[] = "<span class='sponsors'>".$sponsors_prefix.$html.$sponsors_suffix."</span>";
 					}
