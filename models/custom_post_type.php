@@ -77,9 +77,8 @@ class Conferencer_CustomPostType {
 		);
 	}
 	
-	function options($post, $modified = array()) {
+	function options($post) {
 		wp_nonce_field(plugin_basename(__FILE__), 'conferencer_nonce');
-		extract($modified);
 		include CONFERENCER_PATH.'/markup/options.php';
 	}
 		
