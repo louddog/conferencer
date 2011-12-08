@@ -18,3 +18,34 @@ jQuery(function($) {
 		}
 	});
 });
+
+var conferencer = {
+	tinymce_button: function(opts) {
+		var options = {
+			slug: false,
+			title: '',
+			image: false,
+			onclick: false
+		};
+
+		if (opts) jQuery.extend(options, opts);
+		if (!options.slug) return false;
+
+		tinymce.create('tinymce.plugins.' + options.slug, {
+			init: function(editor, url) {
+				editor.addButton(options.slug, {
+					title: options.title,
+					image: url + '/' + options.image,
+					onclick: function() {
+						options.onclick(editor);
+					}
+				});
+			},
+			createControl: function(n, cm) {
+				return null;
+			}
+		});
+
+		tinymce.PluginManager.add(options.slug, tinymce.plugins[options.slug]);
+	}
+};
