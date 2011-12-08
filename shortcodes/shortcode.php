@@ -8,6 +8,8 @@ abstract class Conferencer_Shortcode {
 	var $options = array();
 	var $buttons = array();
 	
+	static $first_button = true;
+	
 	function __construct() {
 		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
@@ -72,7 +74,10 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	function mce_buttons($buttons) {
-		if (count($this->buttons)) $buttons[] = "|";
+		if (count($this->buttons) && Conferencer_Shortcode::$first_button) {
+			$buttons[] = "|";
+			Conferencer_Shortcode::$first_button = false;
+		}
 		
 		foreach ($this->buttons as $button) {
 			$buttons[] = 'conferencer_'.$button;
