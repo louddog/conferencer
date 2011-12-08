@@ -6,10 +6,13 @@ abstract class Conferencer_Shortcode {
 	var $shortcode = 'conferencer_shortcode';
 	var $defaults = array();
 	var $options = array();
+	var $buttons = array();
 	
 	function __construct() {
 		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
+
+		add_action('init', array(&$this, 'add_buttons'));
 
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
@@ -52,6 +55,31 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	abstract function content();
+	
+	function add_buttons() {
+		if (current_user_can('edit_posts') && current_user_can('edit_pages') && get_user_option('rich_editing')) {
+			add_filter('mce_external_plugins', array(&$this, 'mce_plugins'));
+			add_filter('mce_buttons', array(&$this, 'mce_buttons'));
+		}
+	}
+	
+	function mce_plugins($plugin) {
+		foreach ($this->buttons as $button) {
+			$plugin['conferencer_'.$button] = CONFERENCER_URL.'/js/buttons/'.$button.'.js';
+		}
+		
+		return $plugin;
+	}
+	
+	function mce_buttons($buttons) {
+		if (count($this->buttons)) $buttons[] = "|";
+		
+		foreach ($this->buttons as $button) {
+			$buttons[] = 'conferencer_'.$button;
+		}
+		
+		return $buttons;
+	}
 	
 	// Caching ----------------------------------------------------------------
 	
