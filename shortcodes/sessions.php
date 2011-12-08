@@ -13,6 +13,8 @@ class Conferencer_Shortcode_Sesssions extends Conferencer_Shortcode {
 		'title_tag' => 'h3',
 	);
 
+	var $buttons = array('sessions');
+
 	static $post_types_with_sessions = array('speaker', 'room', 'time_slot', 'track', 'sponsor');
 	
 	function add_to_page($content) {

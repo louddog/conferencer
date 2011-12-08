@@ -34,6 +34,8 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 		'link_sponsors' => true,
 	);
 
+	var $buttons = array('session_meta');
+
 	function add_to_page($content) {
 		if (get_post_type() == 'session') {
 			$meta = function_exists('conferencer_session_meta')
