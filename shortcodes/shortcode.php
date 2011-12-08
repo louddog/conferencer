@@ -67,7 +67,7 @@ abstract class Conferencer_Shortcode {
 	
 	function mce_plugins($plugin) {
 		foreach ($this->buttons as $button) {
-			$plugin['conferencer_'.$button] = CONFERENCER_URL.'/js/buttons/'.$button.'.js';
+			$plugin['conferencer_'.$button] = CONFERENCER_URL.'js/buttons/'.$button.'.js';
 		}
 		
 		return $plugin;
