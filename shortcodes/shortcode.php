@@ -1,5 +1,7 @@
 <?php
 
+// TODO: Maybe use get_transient for caching?
+
 abstract class Conferencer_Shortcode {
 	var $shortcode = 'conferencer_shortcode';
 	var $defaults = array();
