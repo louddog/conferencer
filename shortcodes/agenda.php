@@ -31,6 +31,29 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'unscheduled_row_text' => 'Unscheduled',
 	);
 	
+	function __construct() {
+		parent::__construct();
+		add_action('init', array(&$this, 'add_button'));
+	}
+	
+	function add_button() {
+		if (current_user_can('edit_posts') && current_user_can('edit_pages') && get_user_option('rich_editing')) {
+			add_filter('mce_external_plugins', array(&$this, 'add_plugin'));
+			add_filter('mce_buttons', array(&$this, 'register_button'));
+		}
+	}
+	
+	function add_plugin($plugin) {
+		$plugin['conferencer_agenda'] = CONFERENCER_URL.'/js/buttons/agenda.js';
+		return $plugin;
+	}
+	
+	function register_button($buttons) {
+		$buttons[] = "|";
+		$buttons[] = 'conferencer_agenda';
+		return $buttons;
+	}
+	
 	function prep_options() {
 		parent::prep_options();
 		
