@@ -1,5 +1,5 @@
 conferencer.tinymce_button({
-	slug: 'conferencer_agenda',
+	slug: 'agenda',
 	title: "Agenda",
 	image: 'agenda.png',
 	onclick: function(editor) {

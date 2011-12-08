@@ -30,6 +30,7 @@ var conferencer = {
 
 		if (opts) jQuery.extend(options, opts);
 		if (!options.slug) return false;
+		options.slug = 'conferencer_' + options.slug;
 
 		tinymce.create('tinymce.plugins.' + options.slug, {
 			init: function(editor, url) {
