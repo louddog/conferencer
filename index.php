@@ -136,8 +136,8 @@ class Conferencer {
 		if (!$post || !$post->post_type || !in_array($post->post_type, self::$post_types)) return;
 		
 		foreach (get_post_custom($post->ID) as $key => $value) {
-			if (strpos($key, 'conferencer_') !== 0) continue;
-			$key = substr($key, 12);
+			if (strpos($key, '_conferencer_') !== 0) continue;
+			$key = substr($key, 13);
 			$tmp = unserialize($value[0]);
 			$value = $tmp ? $tmp : $value[0];
 			$post->$key = $value;
@@ -182,7 +182,7 @@ class Conferencer {
 			
 			if (in_array($post_type, array('speaker', 'sponsor'))) {
 				foreach ($all_sessions as $session) {
-					$related_post_ids = get_post_meta($session->ID, 'conferencer_'.$post_type.'s', true);
+					$related_post_ids = get_post_meta($session->ID, '_conferencer_'.$post_type.'s', true);
 					if (in_array($post_id, $related_post_ids)) $session_ids[] = $session->ID;
 				}
 			} else {
@@ -191,7 +191,7 @@ class Conferencer {
 					'posts_per_page' => -1,
 					'meta_query' => array(
 						array(
-							'key' => 'conferencer_'.$post_type,
+							'key' => '_conferencer_'.$post_type,
 							'value' => $post_id,
 						)
 					),
@@ -217,8 +217,8 @@ class Conferencer {
 	// sorts ==================================================================
 	
 	function order_sort($a, $b) {
-		$aOrder = get_post_meta($a->ID, 'conferencer_order', true);
-		$bOrder = get_post_meta($b->ID, 'conferencer_order', true);
+		$aOrder = get_post_meta($a->ID, '_conferencer_order', true);
+		$bOrder = get_post_meta($b->ID, '_conferencer_order', true);
 		
 		if ($aOrder == $bOrder) return 0;
 		return $aOrder < $bOrder ? -1 : 1;
@@ -230,8 +230,8 @@ class Conferencer {
 	}
 	
 	function start_time_sort($a, $b) {
-		$aOrder = get_post_meta($a->ID, 'conferencer_starts', true);
-		$bOrder = get_post_meta($b->ID, 'conferencer_starts', true);
+		$aOrder = get_post_meta($a->ID, '_conferencer_starts', true);
+		$bOrder = get_post_meta($b->ID, '_conferencer_starts', true);
 		
 		if ($aOrder == $bOrder) return 0;
 		return $aOrder < $bOrder ? -1 : 1;

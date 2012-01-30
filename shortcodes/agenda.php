@@ -104,7 +104,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 	
 		if (!$show_empty_rows) {
 			foreach ($agenda as $time_slot_id => $cells) {
-				$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
+				$non_session = get_post_meta($time_slot_id, '_conferencer_non_session', true);
 				if (!$non_session && deep_empty($cells)) unset($agenda[$time_slot_id]);
 			}
 		}
@@ -129,7 +129,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		
 			foreach ($agenda as $time_slot_id => $cells) {
 				if ($tabs == 'days') {
-					if ($starts = get_post_meta($time_slot_id, 'conferencer_starts', true)) {
+					if ($starts = get_post_meta($time_slot_id, '_conferencer_starts', true)) {
 						$tab_headers[] = get_day($starts);
 					} else $tab_headers[] = 0;
 				}
@@ -208,9 +208,9 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							// Set up row information
 					
 							$last_row_starts = $row_starts;
-							$row_starts = get_post_meta($time_slot_id, 'conferencer_starts', true);
-							$row_ends = get_post_meta($time_slot_id, 'conferencer_ends', true);
-							$non_session = get_post_meta($time_slot_id, 'conferencer_non_session', true);
+							$row_starts = get_post_meta($time_slot_id, '_conferencer_starts', true);
+							$row_ends = get_post_meta($time_slot_id, '_conferencer_ends', true);
+							$non_session = get_post_meta($time_slot_id, '_conferencer_non_session', true);
 							$no_sessions = deep_empty($cells);
 						
 							// Show day seperators

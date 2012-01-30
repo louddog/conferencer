@@ -115,7 +115,7 @@ class Conferencer_CustomPostType {
 				);
 			}
 			
-			update_post_meta($post_id, 'conferencer_'.$key, $value);
+			update_post_meta($post_id, '_conferencer_'.$key, $value);
 		}
 	}
 	

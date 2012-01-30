@@ -87,8 +87,8 @@ class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
 				
 				case 'time':
 					if ($post->time_slot) {
-						$starts = get_post_meta($post->time_slot, 'conferencer_starts', true);
-						$ends = get_post_meta($post->time_slot, 'conferencer_ends', true);
+						$starts = get_post_meta($post->time_slot, '_conferencer_starts', true);
+						$ends = get_post_meta($post->time_slot, '_conferencer_ends', true);
 						$html = date($date_format, $starts).", ".date($time_format, $starts).$time_separator.date($time_format, $ends);
 						$meta[] = "<span class='time'>".$time_prefix.$html.$time_suffix."</span>";
 					}

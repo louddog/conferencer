@@ -86,7 +86,7 @@ class Conferencer_Settings_Order {
 			foreach (self::$priority_post_types as $slug => $heading) {
 				if (isset($_POST['conferencer_'.$slug.'_id'])) {
 					foreach ($_POST['conferencer_'.$slug.'_id'] as $order => $id) {
-						update_post_meta(intVal($id), 'conferencer_order', $order);
+						update_post_meta(intVal($id), '_conferencer_order', $order);
 					}
 				}
 			}

@@ -71,11 +71,11 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 			if (in_array($post_type, array('speaker', 'sponsor'))) {
 				$type = $post_type.'s';
 				if (in_array($post_id, $session->$type)) {
-					update_post_meta($session->ID, "conferencer_$type", array_diff($session->$type, array($post_id)));
+					update_post_meta($session->ID, "_conferencer_$type", array_diff($session->$type, array($post_id)));
 					$detached[] = $session;
 				}
 			} else if ($session->$post_type == $post_id) {
-				update_post_meta($session->ID, "conferencer_$post_type", false);
+				update_post_meta($session->ID, "_conferencer_$post_type", false);
 				$detached[] = $session;
 			}
 		}
@@ -136,8 +136,8 @@ class Conferencer_Session extends Conferencer_CustomPostType {
 				break;
 			case 'time_slot':
 				if ($post->time_slot) {
-					$starts = floatVal(get_post_meta($post->time_slot, 'conferencer_starts', true));
-					$ends = floatVal(get_post_meta($post->time_slot, 'conferencer_ends', true));
+					$starts = floatVal(get_post_meta($post->time_slot, '_conferencer_starts', true));
+					$ends = floatVal(get_post_meta($post->time_slot, '_conferencer_ends', true));
 					
 					echo "<a href='post.php?action=edit&post=$post->time_slot'>";
 					echo date('n/j/y', $starts);
