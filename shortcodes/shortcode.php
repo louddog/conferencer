@@ -87,7 +87,8 @@ abstract class Conferencer_Shortcode {
 	}
 	
 	// Caching ----------------------------------------------------------------
-	
+
+	// TODO: doesn't $wpdb need to be globalized in this function?
 	function activate() {
 		require_once(ABSPATH.'wp-admin/includes/upgrade.php');
 		dbDelta("CREATE TABLE $wpdb->conferencer_shortcode_cache (

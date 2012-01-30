@@ -8,6 +8,9 @@ Author URI: http://conferencer.louddog.com/
 */
 
 // TODO: Look into refactoring with get_post_custom()
+// TODO: Use local jQuery UI
+// TODO: Add underscore prefix to meta keys
+// TODO: Instead of serializing arrays in one meta value, maybe use single values in multiple meta values
 
 session_start();
 
@@ -165,6 +168,7 @@ class Conferencer {
 		return $posts;
 	}
 	
+	// TODO: replace with custom SQL?
 	function get_sessions($post_ids) {
 		if (!is_array($post_ids)) $post_ids = array($post_ids);
 		
