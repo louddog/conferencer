@@ -17,6 +17,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
 		'show_empty_cells' => null,
+		'show_unassigned_column' => false,
 		'tabs' => 'days',
 		'tab_day_format' => 'M. j, Y',
 		'row_day_format' => 'l, F j, Y',
@@ -156,7 +157,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				);
 			}
 		
-			if (count($column_post_counts[0])) {
+			if ($show_unassigned_column && count($column_post_counts[0])) {
 				// extra column header for sessions not assigned to a column
 				$column_headers[] = array(
 					'title' => $unassigned_column_header_text,
