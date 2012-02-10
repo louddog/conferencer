@@ -62,7 +62,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 									if (has_post_thumbnail($sponsor->ID)) {
 										$html = get_the_post_thumbnail(
 											$sponsor->ID,
-											"sponsor_widget_$sponsor->level",
+											"sponsors_widget_$sponsor->level",
 											array(
 												'alt' => $sponsor->post_title,
 												'title' => $sponsor->post_title,
