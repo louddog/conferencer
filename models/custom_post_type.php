@@ -21,7 +21,7 @@ class Conferencer_CustomPostType {
 		Conferencer::$post_types[] = $this->slug;
 
 		$this->options['order'] = array(
-			'type' => 'internal',
+			'type' => 'int',
 			'label' => "Order",
 		);
 	}
