@@ -25,9 +25,16 @@ class Conferencer {
 	static $post_types = array(); // constructed in custom post type constuctor
 	
 	function __construct() {
+		add_action('admin_notices', array(&$this, 'admin_notices'));
+
+		if (!defined('POSTYPER_VERSION')) {
+			// TODO: put in a link to an explanation on conferencer.louddog.com
+			$this->add_admin_notice("Conferencer Requires <a href='http://wordpress.org/extend/plugins/postyper/' target='_blank'>Postyper</a>  Once installed and activated, Conferencer will be ready to configure.");
+			return;
+		}
+		
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scripts'));
-		add_action('admin_notices', array(&$this, 'admin_notices'));
 		register_activation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'activate'));
 		register_deactivation_hook(CONFERENCER_REGISTER_FILE, array(&$this, 'deactivate'));
 		add_theme_support('post-thumbnails');
@@ -36,16 +43,6 @@ class Conferencer {
 	
 	function include_files() {
 		foreach (array(
-			'/models/custom_post_type.php',
-			'/models/session.php',
-			'/models/speaker.php',
-			'/models/company.php',
-			'/models/room.php',
-			'/models/time_slot.php',
-			'/models/track.php',
-			'/models/sponsor.php',
-			'/models/sponsor_level.php',
-			
 			'/shortcodes/shortcode.php',
 			'/shortcodes/agenda.php',
 			'/shortcodes/session-meta.php',
