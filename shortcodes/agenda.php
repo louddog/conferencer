@@ -23,6 +23,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
+		'keynote_spans_tracks' => true,
 		'link_sessions' => true,
 		'link_speakers' => true,
 		'link_rooms' => true,
@@ -90,6 +91,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 			if ($column_type) {
 				$column_id = $session->$column_type ? $session->$column_type : 0;
+				if ($keynote_spans_tracks && $session->keynote) $column_id = -1;
 				$agenda[$time_slot_id][$column_id][$session->ID] = $session;
 				$column_post_counts[$column_id]++;
 			} else {
@@ -263,10 +265,12 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							</td>
 						
 							<?php // Display session cells --------------------- ?>
+							
+							<?php $colspan = $column_type ? count($column_headers) : 1; ?>
 
 							<?php if ($non_session) { // display a non-sessioned time slot ?>
 
-								<td class="sessions" colspan="<?php echo $column_type ? count($column_headers) : 1; ?>">
+								<td class="sessions" colspan="<?php echo $colspan; ?>">
 									<?php if ($link_time_slots) { ?>
 										<a href="<?php echo get_permalink($time_slot_id); ?>">
 									<?php } ?>
@@ -274,6 +278,16 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 									<?php if ($link_time_slots) { ?>
 										</a>
 									<?php } ?>
+								</td>
+								
+							<?php } else if (isset($cells[-1])) { ?>
+								
+								<td class="sessions keynote-sessions" colspan="<?php echo $colspan; ?>">
+									<?php
+										foreach ($cells[-1] as $session) {
+											$this->display_session($session);
+										}
+									?>
 								</td>
 
 							<?php } else if ($column_type) { // if split into columns, multiple cells  ?>
