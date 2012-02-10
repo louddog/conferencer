@@ -63,7 +63,7 @@ class Conferencer_CustomPostType {
 		// no action
 	}
 
-	function detail_trash() {
+	function detail_trash($post_id) {
 		// no action
 	}
 
