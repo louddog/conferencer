@@ -17,6 +17,7 @@ class Conferencer_CustomPostType {
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('manage_edit-'.$this->slug.'_columns', array(&$this, 'columns'));
 		add_action('manage_posts_custom_column', array(&$this, 'column'));
+		add_action('after_setup_theme', array(&$this, 'add_image_sizes'));
 		
 		Conferencer::$post_types[] = $this->slug;
 
@@ -135,4 +136,9 @@ class Conferencer_CustomPostType {
 				break;
 		}
 	}
+	
+	function add_image_sizes() {
+		// do nothing
+	}
+	
 }
