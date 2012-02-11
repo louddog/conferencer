@@ -271,13 +271,15 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							<?php if ($non_session) { // display a non-sessioned time slot ?>
 
 								<td class="sessions" colspan="<?php echo $colspan; ?>">
-									<?php if ($link_time_slots) { ?>
-										<a href="<?php echo get_permalink($time_slot_id); ?>">
-									<?php } ?>
-										<?php echo get_the_title($time_slot_id); ?>
-									<?php if ($link_time_slots) { ?>
-										</a>
-									<?php } ?>
+									<p>
+										<?php if ($link_time_slots) { ?>
+											<a href="<?php echo get_permalink($time_slot_id); ?>">
+										<?php } ?>
+											<?php echo get_the_title($time_slot_id); ?>
+										<?php if ($link_time_slots) { ?>
+											</a>
+										<?php } ?>
+									</p>
 								</td>
 								
 							<?php } else if (isset($cells[-1])) { ?>
