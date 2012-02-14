@@ -138,9 +138,7 @@ class Conferencer {
 		foreach (get_post_custom($post->ID) as $key => $value) {
 			if (strpos($key, '_conferencer_') !== 0) continue;
 			$key = substr($key, 13);
-			$tmp = unserialize($value[0]);
-			$value = $tmp ? $tmp : $value[0];
-			$post->$key = $value;
+			$post->$key = $tmp = @unserialize($value[0]) ? $tmp : $value[0];
 		}
 	}
 	
@@ -163,7 +161,7 @@ class Conferencer {
 			$posts[$post->ID] = $post;
 		}
 		
-		if (method_exists('Conferencer', $sort)) uasort($posts, array(self, $sort));
+		if (method_exists('Conferencer', $sort)) uasort($posts, array('Conferencer', $sort));
 		
 		return $posts;
 	}
