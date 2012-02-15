@@ -65,7 +65,10 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		// If the agenda is split into columns, fill rows with empty "cell" arrays
 	
 		if ($column_type) {
-			$column_post_counts = array();
+			$column_post_counts = array(
+				-1 => 0, // keynotes
+				0 => 0, // unscheduled
+			);
 			$column_posts = Conferencer::get_posts($column_type);
 		
 			foreach ($agenda as $time_slot_id => $time_slot) {
