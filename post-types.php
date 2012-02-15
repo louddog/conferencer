@@ -9,12 +9,12 @@ new Postype(array(
 	'plural' => "Sessions",
 	'menu_position' => $menu_position++,
 	'fields' => array(
-		array('name' => '_keynote', 'type' => 'boolean', 'label' => "Keynote", 'description' => "This session is a keynote session."),
-		array('name' => '_room', 'type' => 'post', 'label' => "Room", 'description' => "The room in which the session is to be held.", 'options' => array('post_type' => 'room')),
-		array('name' => '_time_slot', 'type' => 'post', 'label' => "Time Slot", 'description' => "The time slot for the session.", 'options' => array('post_type' => 'time_slot')),
-		array('name' => '_track', 'type' => 'post', 'label' => "Track", 'description' => "The track the session is in.", 'options' => array('post_type' => 'track')),
-		array('name' => '_speakers', 'type' => 'multi-post', 'label' => "Speakers", 'description' => "The people speaking at the session.", 'options' => array('post_type' => 'speaker')),
-		array('name' => '_sponsors', 'type' => 'multi-post', 'label' => "Sponsors", 'description' => "The companies sponsoring the session.", 'options' => array('post_type' => 'sponsor')),
+		array('name' => '_conferencer_keynote', 'type' => 'boolean', 'label' => "Keynote", 'description' => "This session is a keynote session."),
+		array('name' => '_conferencer_room', 'type' => 'post', 'label' => "Room", 'description' => "The room in which the session is to be held.", 'settings' => array('post_type' => 'room')),
+		array('name' => '_conferencer_time_slot', 'type' => 'post', 'label' => "Time Slot", 'description' => "The time slot for the session.", 'settings' => array('post_type' => 'time_slot')),
+		array('name' => '_conferencer_track', 'type' => 'post', 'label' => "Track", 'description' => "The track the session is in.", 'settings' => array('post_type' => 'track')),
+		array('name' => '_conferencer_speakers', 'type' => 'multi-post', 'label' => "Speakers", 'description' => "The people speaking at the session.", 'settings' => array('post_type' => 'speaker')),
+		array('name' => '_conferencer_sponsors', 'type' => 'multi-post', 'label' => "Sponsors", 'description' => "The companies sponsoring the session.", 'settings' => array('post_type' => 'sponsor')),
 	),
 ));
 
@@ -26,7 +26,7 @@ new Postype(array(
 	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_title', 'type' => 'text', 'label' => "Title", 'description' => "The speaker's title."),
-		array('name' => '_company', 'type' => 'post', 'label' => "Company", 'description' => "The speaker's company.", 'options' => array('post_type' => 'company')),
+		array('name' => '_company', 'type' => 'post', 'label' => "Company", 'description' => "The speaker's company.", 'settings' => array('post_type' => 'company')),
 	),
 ));
 
@@ -76,7 +76,7 @@ new Postype(array(
 	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_link', 'type' => 'url', 'label' => "Link", 'description' => "A link to the sponsor's page."),
-		array('name' => '_level', 'type' => 'post', 'label' => "Sponsor Level", 'description' => "The sponsorship level for this sponsor.", 'options' => array('post_type' => 'sponsor_level')),
+		array('name' => '_level', 'type' => 'post', 'label' => "Sponsor Level", 'description' => "The sponsorship level for this sponsor.", 'settings' => array('post_type' => 'sponsor_level')),
 	),
 ));
 
