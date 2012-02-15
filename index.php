@@ -29,11 +29,7 @@ class Conferencer {
 	function __construct() {
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 
-		if (!defined('POSTYPER_VERSION')) {
-			// TODO: put in a link to an explanation on conferencer.louddog.com
-			$this->add_admin_notice("Conferencer Requires <a href='http://wordpress.org/extend/plugins/postyper/' target='_blank'>Postyper</a>  Once installed and activated, Conferencer will be ready to configure.");
-			return;
-		}
+		if (!defined('POSTYPER_VERSION')) return;
 		
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 		add_action('init', array(&$this, 'styles_and_scripts'));
@@ -102,6 +98,10 @@ class Conferencer {
 	
 	function admin_notices() {
 		$messages = get_option('conferencer_messages', array());
+		
+		// TODO: put in a link to an explanation on conferencer.louddog.com
+		if (!defined('POSTYPER_VERSION')) $messages[] = "Conferencer Requires <a href='http://wordpress.org/extend/plugins/postyper/' target='_blank'>Postyper</a>  Once installed and activated, Conferencer will be ready to configure.";
+		
 		if (count($messages)) {
 			foreach ($messages as $message) { ?>
 				<div class="updated">
