@@ -259,9 +259,11 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							<td class="time_slot">
 								<?php
 									if ($time_slot_id) {
+										$time_slot_link = get_post_meta($time_slot_id, '_conferencer_link', true)
+											OR $time_slot_link = get_permalink($time_slot_id);
 										$html = date($row_time_format, $row_starts);
 										if ($show_row_ends) $html .= " &ndash; ".date($row_time_format, $row_ends);
-										if ($link_time_slots) $html = "<a href='".get_permalink($time_slot_id)."'>$html</a>";
+										if ($link_time_slots) $html = "<a href='$time_slot_link'>$html</a>";
 										echo $html;
 									}
 								?>
@@ -275,13 +277,11 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 								<td class="sessions" colspan="<?php echo $colspan; ?>">
 									<p>
-										<?php if ($link_time_slots) { ?>
-											<a href="<?php echo get_permalink($time_slot_id); ?>">
-										<?php } ?>
-											<?php echo get_the_title($time_slot_id); ?>
-										<?php if ($link_time_slots) { ?>
-											</a>
-										<?php } ?>
+										<?php
+											$html = get_the_title($time_slot_id);
+											if ($link_time_slots) $html = "<a href='$time_slot_link'>$html</a>";
+											echo $html;
+										?>
 									</p>
 								</td>
 								
