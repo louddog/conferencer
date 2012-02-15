@@ -24,7 +24,7 @@ include CONFERENCER_PATH.'/functions.php';
 
 new Conferencer();
 class Conferencer {
-	static $post_types = array(); // constructed in custom post type constuctor
+	static $post_types = array('session', 'speaker', 'company', 'room', 'time_slot', 'track', 'sponsor', 'sponsor_level');
 	
 	function __construct() {
 		add_action('plugins_loaded', array(&$this, 'load'));
@@ -45,6 +45,8 @@ class Conferencer {
 	
 	function include_files() {
 		foreach (array(
+			'/post-types.php',
+			
 			'/shortcodes/shortcode.php',
 			'/shortcodes/agenda.php',
 			'/shortcodes/session-meta.php',
