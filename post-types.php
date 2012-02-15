@@ -1,10 +1,13 @@
 <?php
 
+$menu_position = 42;
+
 new Postype(array(
 	'slug' => 'session',
 	'archive' => 'sessions',
 	'singular' => "Session",
 	'plural' => "Sessions",
+	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_keynote', 'type' => 'boolean', 'label' => "Keynote", 'description' => "This session is a keynote session."),
 		array('name' => '_room', 'type' => 'post', 'label' => "Room", 'description' => "The room in which the session is to be held.", 'options' => array('post_type' => 'room')),
@@ -20,6 +23,7 @@ new Postype(array(
 	'archive' => 'speakers',
 	'singular' => "Speaker",
 	'plural' => "Speakers",
+	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_title', 'type' => 'text', 'label' => "Title", 'description' => "The speaker's title."),
 		array('name' => '_company', 'type' => 'post', 'label' => "Company", 'description' => "The speaker's company.", 'options' => array('post_type' => 'company')),
@@ -31,6 +35,7 @@ new Postype(array(
 	'archive' => 'companies',
 	'singular' => "Company",
 	'plural' => "Companies",
+	'menu_position' => $menu_position++,
 ));
 
 new Postype(array(
@@ -38,6 +43,7 @@ new Postype(array(
 	'archive' => 'rooms',
 	'singular' => "Room",
 	'plural' => "Rooms",
+	'menu_position' => $menu_position++,
 ));
 
 new Postype(array(
@@ -45,6 +51,7 @@ new Postype(array(
 	'archive' => 'time-slots',
 	'singular' => "Time Slot",
 	'plural' => "Time Slots",
+	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_start', 'type' => "datetime", 'label' => "Start Time", 'description' => "The date and time the time slot starts."),
 		array('name' => '_end', 'type' => "datetime", 'label' => "End Time", 'description' => "The date and time the time slot ends."),
@@ -58,6 +65,7 @@ new Postype(array(
 	'archive' => 'tracks',
 	'singular' => "Track",
 	'plural' => "Tracks",
+	'menu_position' => $menu_position++,
 ));
 
 new Postype(array(
@@ -65,6 +73,7 @@ new Postype(array(
 	'archive' => 'sponsors',
 	'singular' => "Sponsor",
 	'plural' => "Sponsors",
+	'menu_position' => $menu_position++,
 	'fields' => array(
 		array('name' => '_link', 'type' => 'url', 'label' => "Link", 'description' => "A link to the sponsor's page."),
 		array('name' => '_level', 'type' => 'post', 'label' => "Sponsor Level", 'description' => "The sponsorship level for this sponsor.", 'options' => array('post_type' => 'sponsor_level')),
@@ -76,4 +85,5 @@ new Postype(array(
 	'archive' => 'sponsor-levels',
 	'singular' => "Sponsor Level",
 	'plural' => "Sponsor Levels",
+	'menu_position' => $menu_position++,
 ));
