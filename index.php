@@ -11,9 +11,11 @@ Author URI: http://conferencer.louddog.com/
 // TODO: Use local jQuery UI
 // TODO: Add underscore prefix to meta keys
 // TODO: Instead of serializing arrays in one meta value, maybe use single values in multiple meta values
+// TODO: Until we have a workaround, put the memory_limit fix into the FAQ
 
 session_start();
 
+define('CONFERENCER_VERSION', '0.1');
 define('CONFERENCER_PATH', dirname(__FILE__));
 define('CONFERENCER_URL', plugin_dir_url(__FILE__));
 define('CONFERENCER_REGISTER_FILE', __FILE__);
@@ -61,15 +63,15 @@ class Conferencer {
 		wp_register_style('conferencer-jquery-ui', CONFERENCER_URL.'css/jquery-ui-1.8.16.custom.css', false, '1.8.16');
 		wp_register_script('conferencer-jquery-ui', CONFERENCER_URL.'js/jquery-ui-1.8.16.custom.min.js', array('jquery'), '1.8.16', true);
 
-		wp_register_style('conferencer-admin', CONFERENCER_URL.'css/admin.css', array('conferencer-jquery-ui'), '1.0');
-		wp_register_script('conferencer-admin', CONFERENCER_URL.'js/admin.js', array('jquery'), '1.0', true);
-		wp_register_script('conferencer-cpt', CONFERENCER_URL.'js/cpt.js', array('conferencer-jquery-ui'), '1.0', true);
-		wp_register_script('conferencer-reorder', CONFERENCER_URL.'js/reorder.js', array('conferencer-jquery-ui'), '1.0', true);
-		wp_register_script('conferencer-regenerate-logos', CONFERENCER_URL.'js/regenerate-logos.js', array('conferencer-jquery-ui'), '1.0', true);
+		wp_register_style('conferencer-admin', CONFERENCER_URL.'css/admin.css', array('conferencer-jquery-ui'), CONFERENCER_VERSION);
+		wp_register_script('conferencer-admin', CONFERENCER_URL.'js/admin.js', array('jquery'), CONFERENCER_VERSION, true);
+		wp_register_script('conferencer-cpt', CONFERENCER_URL.'js/cpt.js', array('conferencer-jquery-ui'), CONFERENCER_VERSION, true);
+		wp_register_script('conferencer-reorder', CONFERENCER_URL.'js/reorder.js', array('conferencer-jquery-ui'), CONFERENCER_VERSION, true);
+		wp_register_script('conferencer-regenerate-logos', CONFERENCER_URL.'js/regenerate-logos.js', array('conferencer-jquery-ui'), CONFERENCER_VERSION, true);
 
-		wp_register_script('conferencer-fadeshow', CONFERENCER_URL.'js/jquery.fadeshow.js', array('jquery'), '1.0', true);
-		wp_register_style('conferencer', CONFERENCER_URL.'css/screen.css', false, '1.0.1');
-		wp_register_script('conferencer', CONFERENCER_URL.'js/site.js', array('conferencer-fadeshow'), '1.0.1', true);
+		wp_register_script('conferencer-fadeshow', CONFERENCER_URL.'js/jquery.fadeshow.js', array('jquery'), CONFERENCER_VERSION, true);
+		wp_register_style('conferencer', CONFERENCER_URL.'css/screen.css', false, CONFERENCER_VERSION);
+		wp_register_script('conferencer', CONFERENCER_URL.'js/site.js', array('conferencer-fadeshow'), CONFERENCER_VERSION, true);
 		
 		if (is_admin()) {
 			wp_enqueue_style('conferencer-admin');
@@ -135,9 +137,7 @@ class Conferencer {
 		foreach (get_post_custom($post->ID) as $key => $value) {
 			if (strpos($key, '_conferencer_') !== 0) continue;
 			$key = substr($key, 13);
-			$tmp = unserialize($value[0]);
-			$value = $tmp ? $tmp : $value[0];
-			$post->$key = $value;
+			$post->$key = $tmp = @unserialize($value[0]) ? $tmp : $value[0];
 		}
 	}
 	
@@ -160,7 +160,7 @@ class Conferencer {
 			$posts[$post->ID] = $post;
 		}
 		
-		if (method_exists('Conferencer', $sort)) uasort($posts, array(self, $sort));
+		if (method_exists('Conferencer', $sort)) uasort($posts, array('Conferencer', $sort));
 		
 		return $posts;
 	}

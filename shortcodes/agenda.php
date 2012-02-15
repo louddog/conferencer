@@ -17,11 +17,13 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		'show_empty_rows' => true,
 		'show_empty_columns' => true,
 		'show_empty_cells' => null,
+		'show_unassigned_column' => false,
 		'tabs' => 'days',
 		'tab_day_format' => 'M. j, Y',
 		'row_day_format' => 'l, F j, Y',
 		'row_time_format' => 'g:ia',
 		'show_row_ends' => false,
+		'keynote_spans_tracks' => true,
 		'link_sessions' => true,
 		'link_speakers' => true,
 		'link_rooms' => true,
@@ -89,6 +91,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 			if ($column_type) {
 				$column_id = $session->$column_type ? $session->$column_type : 0;
+				if ($keynote_spans_tracks && $session->keynote) $column_id = -1;
 				$agenda[$time_slot_id][$column_id][$session->ID] = $session;
 				$column_post_counts[$column_id]++;
 			} else {
@@ -156,7 +159,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				);
 			}
 		
-			if (count($column_post_counts[0])) {
+			if ($show_unassigned_column && count($column_post_counts[0])) {
 				// extra column header for sessions not assigned to a column
 				$column_headers[] = array(
 					'title' => $unassigned_column_header_text,
@@ -262,17 +265,31 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 							</td>
 						
 							<?php // Display session cells --------------------- ?>
+							
+							<?php $colspan = $column_type ? count($column_headers) : 1; ?>
 
 							<?php if ($non_session) { // display a non-sessioned time slot ?>
 
-								<td class="sessions" colspan="<?php echo $column_type ? count($column_headers) : 1; ?>">
-									<?php if ($link_time_slots) { ?>
-										<a href="<?php echo get_permalink($time_slot_id); ?>">
-									<?php } ?>
-										<?php echo get_the_title($time_slot_id); ?>
-									<?php if ($link_time_slots) { ?>
-										</a>
-									<?php } ?>
+								<td class="sessions" colspan="<?php echo $colspan; ?>">
+									<p>
+										<?php if ($link_time_slots) { ?>
+											<a href="<?php echo get_permalink($time_slot_id); ?>">
+										<?php } ?>
+											<?php echo get_the_title($time_slot_id); ?>
+										<?php if ($link_time_slots) { ?>
+											</a>
+										<?php } ?>
+									</p>
+								</td>
+								
+							<?php } else if (isset($cells[-1])) { ?>
+								
+								<td class="sessions keynote-sessions" colspan="<?php echo $colspan; ?>">
+									<?php
+										foreach ($cells[-1] as $session) {
+											$this->display_session($session);
+										}
+									?>
 								</td>
 
 							<?php } else if ($column_type) { // if split into columns, multiple cells  ?>
