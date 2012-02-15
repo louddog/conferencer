@@ -27,6 +27,10 @@ class Conferencer {
 	static $post_types = array(); // constructed in custom post type constuctor
 	
 	function __construct() {
+		add_action('plugins_loaded', array(&$this, 'load'));
+	}
+	
+	function load() {
 		add_action('admin_notices', array(&$this, 'admin_notices'));
 
 		if (!defined('POSTYPER_VERSION')) return;
