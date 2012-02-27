@@ -44,21 +44,15 @@ class Conferencer {
 	}
 	
 	function include_files() {
-		foreach (array(
-			'/post-types.php',
-			
-			'/shortcodes/shortcode.php',
-			'/shortcodes/agenda.php',
-			'/shortcodes/session-meta.php',
-			'/shortcodes/sessions.php',
-			
-			'/widgets/sponsors.php',
-			
-			'/settings/options.php',
-			'/settings/order.php',
-			'/settings/cache.php',
-			'/settings/regenerate-logos.php',
-		) as $include) include CONFERENCER_PATH.$include;
+		foreach (array('post-types.php', 'shortcode.php') as $file) {
+			include CONFERENCER_PATH.'/'.$file;
+		}
+
+		foreach (array('shortcodes', 'widgets', 'settings') as $dir) {
+			foreach (glob(CONFERENCER_PATH.'/'.$dir.'/*') as $file) {
+				include $file;
+			}
+		}
 	}
 	
 	function styles_and_scripts() {
