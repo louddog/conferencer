@@ -78,7 +78,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 				}
 				$agenda[$time_slot_id][0] = array();
 			}
-		} else echo "<p>no column type? [$column_type]</p>";
+		}
 	
 		// Get all session information
 	
