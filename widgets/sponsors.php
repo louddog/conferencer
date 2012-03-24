@@ -70,7 +70,7 @@ class Conferencer_Sponsors_Widget extends WP_Widget {
 										);
 									}
 									
-									if (!empty($sponsor->url)) $html = "<a href='$sponsor->url'>$html</a>";
+									if (!empty($sponsor->url)) $html = "<a href='$sponsor->url' target='_blank'>$html</a>";
 									
 									echo $html;
 								?>
