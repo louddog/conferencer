@@ -1,7 +1,7 @@
 <?php
 
-new Conferencer_Shortcode_Sesssion_Meta();
-class Conferencer_Shortcode_Sesssion_Meta extends Conferencer_Shortcode {
+new Conferencer_Shortcode_Session_Meta();
+class Conferencer_Shortcode_Session_Meta extends Conferencer_Shortcode {
 	var $shortcode = 'session_meta';
 	var $defaults = array(
 		'post_id' => false,
