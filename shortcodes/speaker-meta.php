@@ -14,7 +14,7 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 		'title_suffix' => "",
 		'company_suffix' => "",
 		
-		'link_companies' => true,
+		'link_companies' => false,
 	);
 
 	var $buttons = array('speaker_meta');
@@ -63,7 +63,7 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 				case 'company':
 					if (count($companies = Conferencer::get_posts('company', $post->company))) {
 						$html = comma_separated_post_titles($companies, $link_companies);
-						$meta[] = "<span class='companies'>".$company_prefix.$html.$company_suffix;
+						$meta[] = "<span class='companies'>".$company_prefix.$html.$company_suffix."</span>";
 					}
 					break;
 
