@@ -55,7 +55,7 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 			
 			switch ($type) {
 				case 'title':
-					$html = $post->post_title;
+					$html = $post->title;
 					if ($link_title) $html = "<a href='".get_permalink($post->ID)."'>$html</a>";
 					$meta[] = "<span class='title'>".$title_prefix.$html.$title_suffix."</span>";
 					break;
