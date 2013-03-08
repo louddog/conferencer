@@ -96,7 +96,7 @@ abstract class Conferencer_Shortcode {
 			created datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			shortcode text NOT NULL,
 			options text NOT NULL,
-			content text NOT NULL,
+			content mediumtext NOT NULL,
 			UNIQUE KEY id(id)
 		);");
 	}
