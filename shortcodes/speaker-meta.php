@@ -6,7 +6,7 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 	var $defaults = array(
 		'post_id' => false,
 		
-		'show' => "speaker,title,company",
+		'show' => "title,company",
 		
 		'speaker_prefix' => "",
 		'title_prefix' => "",
