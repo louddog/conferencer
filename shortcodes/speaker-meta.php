@@ -75,7 +75,7 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 					if ($post->company) {
 						$html = get_the_title($post->company);
 						if ($link_company) $html = "<a href='".get_permalink($post->company)."'>$html</a>";
-						$meta[] = "<span class='company'>".$room_prefix.$html.$room_suffix."</span>";
+						$meta[] = "<span class='company'>".$company_prefix.$html.$company_suffix."</span>";
 					}
 					break;
 
