@@ -6,15 +6,20 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 	var $defaults = array(
 		'post_id' => false,
 		
-		'show' => "title,company",
+		'show' => "speaker,title,company",
 		
+		'speaker_prefix' => "",
 		'title_prefix' => "",
 		'company_prefix' => "",
 
+		'speaker_suffix' => "",
 		'title_suffix' => "",
 		'company_suffix' => "",
 		
-		'link_companies' => false,
+		'link_all' => true,
+		'link_company' => true,
+		'link_title' => true,
+		'link_speaker' => true
 	);
 
 	var $buttons = array('speaker_meta');
@@ -34,6 +39,12 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 		
 		if (!$this->options['post_id'] && isset($GLOBALS['post'])) {
 			$this->options['post_id'] = $GLOBALS['post']->ID;
+		}
+
+		if ($this->options['link_all'] === false) {
+			$this->options['link_title'] = false;
+			$this->options['link_speaker'] = false;
+			$this->options['link_company'] = false;
 		}
 	}
 	
@@ -61,10 +72,17 @@ class Conferencer_Shortcode_Speaker_Meta extends Conferencer_Shortcode {
 					break;
 				
 				case 'company':
-					if (count($companies = Conferencer::get_posts('company', $post->company))) {
-						$html = comma_separated_post_titles($companies, $link_companies);
-						$meta[] = "<span class='companies'>".$company_prefix.$html.$company_suffix."</span>";
+					if ($post->company) {
+						$html = get_the_title($post->company);
+						if ($link_company) $html = "<a href='".get_permalink($post->company)."'>$html</a>";
+						$meta[] = "<span class='company'>".$room_prefix.$html.$room_suffix."</span>";
 					}
+					break;
+
+				case 'speaker':
+					$html = $post->post_title;
+					if ($link_speaker) $html = "<a href='".get_permalink($post->ID)."'>$html</a>";
+					$meta[] = "<span class='speaker'>".$speaker_prefix.$html.$speaker_suffix."</span>";
 					break;
 
 				default:
