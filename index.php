@@ -52,6 +52,7 @@ class Conferencer {
 			'/shortcodes/agenda.php',
 			'/shortcodes/session-meta.php',
 			'/shortcodes/sessions.php',
+			'/shortcodes/speaker-meta.php',			
 			
 			'/widgets/sponsors.php',
 			
