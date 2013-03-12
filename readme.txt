@@ -5,11 +5,11 @@ Requires at least: 3.3.1
 Tested up to: 3.5.1
 Stable tag: trunk
 
-Conferencer is a WordPress plugin for creating rich conference websites.  Find more information at [conferencer.louddog.com](http://conferencer.louddog.com).
+Conferencer is a WordPress plugin for creating rich conference websites.
 
 == Description ==
 
-Conferencer is a WordPress plugin for creating rich conference websites.  Find more information at [conferencer.louddog.com](http://conferencer.louddog.com).
+Find more information at [conferencer.louddog.com](http://conferencer.louddog.com).
 
 == Installation ==
 
