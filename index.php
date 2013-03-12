@@ -3,7 +3,7 @@
 Plugin Name: Conferencer
 Description: Creates a system of custom post types to create a conference schedule.
 Author: Loud Dog
-Version: 0.1
+Version: 0.2
 Author URI: http://conferencer.louddog.com/
 */
 
@@ -15,7 +15,7 @@ Author URI: http://conferencer.louddog.com/
 
 session_start();
 
-define('CONFERENCER_VERSION', '0.1');
+define('CONFERENCER_VERSION', '0.2');
 define('CONFERENCER_PATH', dirname(__FILE__));
 define('CONFERENCER_URL', plugin_dir_url(__FILE__));
 define('CONFERENCER_REGISTER_FILE', __FILE__);
