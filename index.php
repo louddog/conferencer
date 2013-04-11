@@ -141,7 +141,7 @@ class Conferencer {
 		foreach (get_post_custom($post->ID) as $key => $value) {
 			if (strpos($key, '_conferencer_') !== 0) continue;
 			$key = substr($key, 13);
-			$post->$key = $tmp = @unserialize($value[0]) ? $tmp : $value[0];
+			$post->$key = @unserialize($value[0]) ? @unserialize($value[0]) : $value[0];
 		}
 	}
 	
