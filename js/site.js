@@ -28,18 +28,25 @@ jQuery(function($) {
 		
 		$('a', tabs[options.selected]).click();
 	});
+
 	// Toggles session tooltip vs display details
-	$('.conferencer_display_agenda_details').click(function(){
-		$('.session-tooltip').toggleClass('session-details').toggleClass('session-tooltip');
-		$('.session-details .title').hide();
-		$('.conferencer_hide_agenda_details').show();
-		$(this).hide();
+	$('.conferencer_session_detail_toggle').show().click(function() {
+		var $agenda = $(this).closest('.conferencer_agenda');
+		var $tooltips = $('.session-tooltip', $agenda);
+		var $details = $('.session-details', $agenda);
+
+		$agenda.toggleClass('show_session_details');
+
+		$tooltips
+			.addClass('session-details')
+			.removeClass('session-tooltip');
+
+		$details
+			.addClass('session-tooltip')
+			.removeClass('session-details');
+
+		return false;
 	});
-	$('.conferencer_hide_agenda_details').click(function(){
-		$('.session-details').toggleClass('session-tooltip').toggleClass('session-details');
-		$('.session-tooltip .title').show();
-		$('.conferencer_display_agenda_details').show();
-		$(this).hide();
-	});
-// TODO: session tooltip helper, keep them in the viewport
+
+	// TODO: session tooltip helper, keep them in the viewport
 });

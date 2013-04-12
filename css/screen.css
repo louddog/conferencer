@@ -133,3 +133,14 @@
 	bottom: -16px;
 	border-top-color: #FFF;
 }
+
+.conferencer_session_detail_toggle,
+.conferencer_session_detail_toggle .hide,
+.conferencer_agenda.show_session_details .conferencer_session_detail_toggle .show,
+.conferencer_agenda.show_session_details.session-details .title {
+	display: none;
+}
+
+.conferencer_agenda.show_session_details .conferencer_session_detail_toggle .hide {
+	display: inline;
+}
