@@ -187,7 +187,8 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		?>
 	
 		<div class="conferencer_agenda">
-			
+     <a href="#" class="conferencer_display_agenda_details" alt="Display Agenda Details">Display Agenda Details</a>
+     <a href="#" class="conferencer_hide_agenda_details" alt="Hide Agenda Details" style="display:none">Hide Agenda Details</a>
 			<?php if ($tabs) { ?>
 				<div class="conferencer_tabs">
 				<ul class="tabs">
