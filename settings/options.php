@@ -26,10 +26,12 @@ class Conferencer_Settings_Options {
 		register_setting('conferencer_options', 'conferencer_options', array(&$this, 'validate'));
 		add_settings_section('conferencer_options', "Conferencer Options", array(&$this, 'settings_header'), 'conferencer_options');
 		add_settings_field('conferencer_options_add_to_page', "Add Content to Pages", array(&$this, 'show_field_add_to_page'), 'conferencer_options', 'conferencer_options');
+		add_settings_field('conferencer_options_details_toggle', "Show Session Detail Toggle", array(&$this, 'show_field_details_toggle'), 'conferencer_options', 'conferencer_options');
 	}
 	
 	function validate($input) {
 		$this->options['add_to_page'] = isset($input['add_to_page']);
+		$this->options['details_toggle'] = isset($input['details_toggle']);
 		return $this->options;
 	}
 	
@@ -46,6 +48,18 @@ class Conferencer_Settings_Options {
 		/>
 		<label for="conferencer_options_add_to_page">
 			Add Content to Page
+		</label>
+	<?php }
+	
+	function show_field_details_toggle() { ?>
+		<input
+			type="checkbox"
+			name="conferencer_options[details_toggle]"
+			id="conferencer_options_details_toggle"
+			<?php if ($this->options['details_toggle']) echo 'checked'; ?>
+		/>
+		<label for="conferencer_options_details_toggle">
+			Show Session Detail Toggle
 		</label>
 	<?php }
 	

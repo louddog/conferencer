@@ -50,6 +50,7 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 
 	function content() {
 		extract($this->options);
+		$conferencer_options = get_option('conferencer_options');
 
 		// Define main agenda variable
 
@@ -187,10 +188,12 @@ class Conferencer_Shortcode_Agenda extends Conferencer_Shortcode {
 		?>
 	
 		<div class="conferencer_agenda">
-			<a href="#" class="conferencer_session_detail_toggle">
-				<span class="show">display session details</span>
-				<span class="hide">hide session details</span>
-			</a>
+			<?php if ($conferencer_options['details_toggle']) { ?>
+				<a href="#" class="conferencer_session_detail_toggle">
+					<span class="show">display session details</span>
+					<span class="hide">hide session details</span>
+				</a>
+			<?php } ?>
 
 			<?php if ($tabs) { ?>
 				<div class="conferencer_tabs">
