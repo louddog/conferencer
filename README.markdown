@@ -24,6 +24,9 @@ We've not had any questions frequently asked yet.
 
 == Changelog ==
 
+= 0.3 =
+* Added option for agenda session detail toggle.  Thanks again, [Stacy Vlasits](https://github.com/stacyvlasits).
+
 = 0.2 =
 * Added [speaker-meta] shortcode.  Thanks [Stacy Vlasits](https://github.com/stacyvlasits).
 
